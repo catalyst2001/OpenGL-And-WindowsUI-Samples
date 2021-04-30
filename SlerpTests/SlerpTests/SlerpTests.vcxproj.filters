@@ -30,6 +30,9 @@
     <Image Include="SlerpTests.ico">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+    <Image Include="pmk.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">

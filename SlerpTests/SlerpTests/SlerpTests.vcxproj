@@ -157,6 +157,7 @@
     <ResourceCompile Include="SlerpTests.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="pmk.bmp" />
     <Image Include="SlerpTests.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
