@@ -1,6 +1,10 @@
 ﻿  SlerpTests.cpp
-c:\users\kikker\desktop\slerptests\slerptests\slerptests.cpp(110): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
-c:\users\kikker\desktop\slerptests\slerptests\slerptests.cpp(117): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
-c:\users\kikker\desktop\slerptests\slerptests\slerptests.cpp(124): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
-c:\users\kikker\desktop\slerptests\slerptests\slerptests.cpp(131): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
-  SlerpTests.vcxproj -> C:\Users\Kikker\Desktop\SlerpTests\x64\Debug\SlerpTests.exe
+e:\github\specialforkikker228\spriteviewer\slerptests\slerptests.cpp(197): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
+e:\github\specialforkikker228\spriteviewer\slerptests\slerptests.cpp(204): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
+e:\github\specialforkikker228\spriteviewer\slerptests\slerptests.cpp(211): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
+e:\github\specialforkikker228\spriteviewer\slerptests\slerptests.cpp(218): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
+e:\github\specialforkikker228\spriteviewer\slerptests\slerptests.cpp(274): warning C4101: iSelMax: неиспользованная локальная переменная
+e:\github\specialforkikker228\spriteviewer\slerptests\slerptests.cpp(274): warning C4101: iMax: неиспользованная локальная переменная
+e:\github\specialforkikker228\spriteviewer\slerptests\slerptests.cpp(274): warning C4101: iMin: неиспользованная локальная переменная
+e:\github\specialforkikker228\spriteviewer\slerptests\slerptests.cpp(274): warning C4101: iSelMin: неиспользованная локальная переменная
+  SlerpTests.vcxproj -> E:\GITHUB\SpecialForKikker228\SpriteViewer\x64\Debug\SlerpTests.exe
