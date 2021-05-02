@@ -16,6 +16,9 @@
     <ClCompile Include="CAnimatedSprite.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="CImage.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TGA.h">
@@ -25,6 +28,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="Opengl.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="CImage.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

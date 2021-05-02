@@ -6,6 +6,8 @@
 #include <intrin.h>
 #include <math.h>
 
+#include <inttypes.h> //for int
+
 #include <Windows.h>
 #include <gl/GL.h> //OpenGL
 #include <gl/GLU.h> //OpenGL Utility

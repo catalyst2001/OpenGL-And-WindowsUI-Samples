@@ -1,14 +1,11 @@
-﻿
-#include "Opengl.h"
+﻿#include "Opengl.h"
+#include "CImage.h"
 #include "CAnimatedSprite.h"
 #pragma warning(disable:4996)
 
 //
 // Global 
 //
-
-
-
 const char		g_Title[] = "OpenGL program";	//Заголовок окна
 HINSTANCE		g_hInstance;					//
 HWND			g_hWnd;							//Дескриптор главного созданного окна
@@ -17,8 +14,11 @@ HGLRC			g_rendering_context;			//Дескриптор контекста виз�
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-extern UINT g_Texture[100];
+//extern UINT g_Texture[100];
 UINT g_Texture[100];
+CImage	g_Image;
+
+CAnimatedSprite sprite;
 
 /**
  *	Вывод ошибки
@@ -57,39 +57,6 @@ void DrawTexturedRect(int mode, int posx, int posy, int width, int height, unsig
 	glDrawArrays(mode, 0, 4);
 }
 
-/*
-* CreateTexture
-*/
-
-bool CreateTexture(GLuint &textureID, const char * szFileName)                          // Creates Texture From A Bitmap File
-{
-	HBITMAP hBMP;                                                                 // Handle Of The Bitmap
-	BITMAP  bitmap;																  // Bitmap Structure
-
-	glGenTextures(1, &textureID);                                                 // Create The Texture
-	hBMP = (HBITMAP)LoadImageA(GetModuleHandle(NULL), szFileName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
-
-	if (!hBMP)                                                                    // Does The Bitmap Exist?
-		return FALSE;                                                           // If Not Return False
-
-	GetObject(hBMP, sizeof(bitmap), &bitmap);                                     // Get The Object
-																				  // hBMP:        Handle To Graphics Object
-																				  // sizeof(bitmap): Size Of Buffer For Object Information
-																				  // &bitmap:        Buffer For Object Information
-
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);                                        // Pixel Storage Mode (Word Alignment / 4 Bytes)
-
-	// Typical Texture Generation Using Data From The Bitmap
-	glBindTexture(GL_TEXTURE_2D, textureID);                                      // Bind To The Texture ID
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);			  // Linear Min Filter
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);			  // Linear Mag Filter
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, bitmap.bmWidth, bitmap.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, bitmap.bmBits);
-	// MUST NOT BE INDEX BMP, BUT RGB
-	DeleteObject(hBMP);                                                           // Delete The Object
-
-	return TRUE;                                                                  // Loading Was Successful
-}
-
 /**
  *	WinMain
  */
@@ -97,6 +64,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 {
 	AllocConsole();
 	freopen("conout$", "w", stdout);
+
 	g_hInstance = hInstance;
 	WNDCLASSEXA wcex;
 	wcex.cbSize = sizeof(WNDCLASSEX);
@@ -173,9 +141,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		return -6;
 	}
 
-	CreateTexture(g_Texture[0], "bitmap.bmp");
-	CreateTexture(g_Texture[1], "fire.bmp");
-	CreateTexture(g_Texture[2], "vec.bmp");
+	//CreateTexture(g_Texture[0], "bitmap.bmp");
+	//CreateTexture(g_Texture[1], "fire.bmp");
+	//CreateTexture(g_Texture[2], "vec.bmp");
+
+	g_Image.CreateTexture("textures\\bitmap.bmp");
+	g_Texture[0] = g_Image.m_TexID;
+	g_Image.CreateTexture("textures\\explode02.tga");
+	g_Texture[1] = g_Image.m_TexID;
+	g_Image.CreateTexture("textures\\vec.bmp");
+	g_Texture[2] = g_Image.m_TexID;
 
 	MSG msg = { NULL };
 	glEnable(GL_TEXTURE_2D);
@@ -201,7 +176,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		//DrawTexturedRect(GL_QUADS, 100, 100, 300, 300, g_Texture[0]);
-		logickSprite(GL_QUADS, 300, 256, 300, 300, g_Texture[2], 16);
+		//logickSprite(GL_QUADS, 300, 256, 300, 300, g_Texture[2], 16);
+		sprite.logickSprite(GL_QUADS, 300, 256, 600, 600, g_Texture[1], 64);
 		
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glEnableClientState(GL_VERTEX_ARRAY);
