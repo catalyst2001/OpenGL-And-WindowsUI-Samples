@@ -31,8 +31,8 @@ public:
 	const char *m_pName;
 	BaseElemsArray m_ChildElems;
 
-	IBaseGUIElement() {}
-	~IBaseGUIElement() {}
+	//IBaseGUIElement() {}
+	//~IBaseGUIElement() {}
 
 	virtual void Create(int x, int y, int width, int height) = 0;
 	virtual void MouseMove(int x, int y) = 0;
@@ -103,7 +103,7 @@ public:
 		//CInput() {}
 		//~CInput() {}
 		bool m_Buttons[1024];
-		bool m_Mousebuttons[MOUSE_NUM_BUTTONS];
+		bool m_MouseButtons[MOUSE_NUM_BUTTONS];
 	} m_Input;
 
 	//canvas colors
