@@ -1,0 +1,81 @@
+﻿"opengl.exe" (Win32). Загружено "C:\Users\Kikker\Documents\GitHub\SpecialForKikker228\OpenGL_Window\Debug\opengl.exe". Символы загружены.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\ntdll.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\kernel32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\KernelBase.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\user32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\win32u.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\gdi32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\gdi32full.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\msvcp_win.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\ucrtbase.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\opengl32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\msvcrt.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\vcruntime140d.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\ucrtbased.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\advapi32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\sechost.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\rpcrt4.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\combase.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\glu32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\imm32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\uxtheme.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\msctf.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\oleaut32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\kernel.appcore.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\bcryptprimitives.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\TextInputFramework.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\CoreUIComponents.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\CoreMessaging.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\ws2_32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\SHCore.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\ntmarta.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\WinTypes.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\WinTypes.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Выгружено "C:\Windows\SysWOW64\WinTypes.dll"
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\WinTypes.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Выгружено "C:\Windows\SysWOW64\WinTypes.dll"
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\ole32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\clbcatq.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\AppXDeploymentClient.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Выгружено "C:\Windows\SysWOW64\AppXDeploymentClient.dll"
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\atiglpxx.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\atioglxx.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\setupapi.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\cfgmgr32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\version.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\bcrypt.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\dwmapi.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\atiadlxy.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\shell32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\psapi.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\userenv.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\wtsapi32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\wsock32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\devobj.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\wintrust.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\crypt32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\msasn1.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\atigktxx.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\aticfx32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Выгружено "C:\Windows\SysWOW64\atigktxx.dll"
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\atigktxx.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\dxgi.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\d3d11.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\ResourcePolicyClient.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Выгружено "C:\Windows\SysWOW64\ResourcePolicyClient.dll"
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\atiuxpag.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\atidxx32.dll". Невозможно найти или открыть PDB-файл.
+DXX32: Warn: Registry value too long: MainVideo_SET in SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000\UMD
+DXX32: Warn: Registry value too long: MainVideo_SET in SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000\UMD
+"opengl.exe" (Win32). Выгружено "C:\Windows\SysWOW64\atidxx32.dll"
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\atidxx32.dll". Невозможно найти или открыть PDB-файл.
+"opengl.exe" (Win32). Загружено "C:\Windows\SysWOW64\DXCore.dll". Невозможно найти или открыть PDB-файл.
+Поток 0x10e4 завершился с кодом -1073741510 (0xc000013a).
+Поток 0x1db0 завершился с кодом -1073741510 (0xc000013a).
+Поток 0xabc завершился с кодом -1073741510 (0xc000013a).
+Поток 0x478 завершился с кодом -1073741510 (0xc000013a).
+Поток 0x20a0 завершился с кодом -1073741510 (0xc000013a).
+Поток 0x28c4 завершился с кодом -1073741510 (0xc000013a).
+Поток 0x26b0 завершился с кодом -1073741510 (0xc000013a).
+Поток 0x2848 завершился с кодом -1073741510 (0xc000013a).
+Программа "[11772] opengl.exe" завершилась с кодом -1073741510 (0xc000013a).
