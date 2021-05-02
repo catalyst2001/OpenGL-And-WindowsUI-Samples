@@ -151,7 +151,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CAnimatedSprite.cpp" />
+    <ClCompile Include="TGA.cpp" />
     <ClCompile Include="opengl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CAnimatedSprite.h" />
+    <ClInclude Include="Opengl.h" />
+    <ClInclude Include="TGA.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
