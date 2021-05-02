@@ -73,12 +73,12 @@ public:
 		glDrawArrays(mode, 0, 4);
 	}
 
-	void logickSprite(int mode, int posx, int posy, int width, int height, unsigned int texid, unsigned int numbs) {
-		int numbs_sqrt = sqrt(numbs);
+	void logickSprite(int mode, int posx, int posy, int width, int height, unsigned int texid, unsigned int numbs_sqrt) {
+		/*int numbs_sqrt = sqrt(numbs);*/
 		offset = 1.0f / numbs_sqrt;
 		glBindTexture(GL_TEXTURE_2D, texid);
 
-		if (AnimateNextFrame(36)) {
+		if (AnimateNextFrame(3)) {
 			if (cordx < numbs_sqrt + 1) { /*y++)*/
 				cordx++;
 				textureCoordsArray[0] = xtex;

@@ -265,6 +265,6 @@ bool CImage::LoadTGA(const char *pFileName)
 	fclose(pFile); // Close the file pointer that opened the file
 	m_Channels = channels;
 	m_TexWidth = width;
-	m_TexHeight = height;
+	m_TexHeight =  height;
 	return true;
 }

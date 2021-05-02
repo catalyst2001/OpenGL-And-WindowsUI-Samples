@@ -1,0 +1,6 @@
+﻿  SlerpTests.cpp
+c:\users\kikker\desktop\slerptests\slerptests\slerptests.cpp(110): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
+c:\users\kikker\desktop\slerptests\slerptests\slerptests.cpp(117): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
+c:\users\kikker\desktop\slerptests\slerptests\slerptests.cpp(124): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
+c:\users\kikker\desktop\slerptests\slerptests\slerptests.cpp(131): warning C4312: приведение типов: преобразование из "int" в "HMENU" большего размера
+  SlerpTests.vcxproj -> C:\Users\Kikker\Desktop\SlerpTests\x64\Debug\SlerpTests.exe

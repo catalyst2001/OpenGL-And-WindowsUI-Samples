@@ -147,10 +147,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	g_Image.CreateTexture("textures\\bitmap.bmp");
 	g_Texture[0] = g_Image.m_TexID;
-	g_Image.CreateTexture("textures\\explode02.tga");
+	g_Image.CreateTexture("textures\\fire.bmp");
 	g_Texture[1] = g_Image.m_TexID;
-	g_Image.CreateTexture("textures\\vec.bmp");
+	g_Image.CreateTexture("textures\\explode03.bmp");
 	g_Texture[2] = g_Image.m_TexID;
+	g_Image.CreateTexture("textures\\vec.bmp");
+	g_Texture[3] = g_Image.m_TexID;
 
 	MSG msg = { NULL };
 	glEnable(GL_TEXTURE_2D);
@@ -177,7 +179,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 		//DrawTexturedRect(GL_QUADS, 100, 100, 300, 300, g_Texture[0]);
 		//logickSprite(GL_QUADS, 300, 256, 300, 300, g_Texture[2], 16);
-		sprite.logickSprite(GL_QUADS, 300, 256, 600, 600, g_Texture[1], 64);
+		sprite.logickSprite(GL_QUADS, 100, 100, 300, 300, g_Texture[1], 6);
+		DrawTexturedRect(GL_QUADS, 400, 100, 300, 300, g_Texture[1]);
 		
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glEnableClientState(GL_VERTEX_ARRAY);
