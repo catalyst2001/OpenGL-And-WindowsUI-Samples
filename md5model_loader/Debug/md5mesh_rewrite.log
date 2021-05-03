@@ -1,0 +1,5 @@
+﻿  md5mesh.c
+d:\engine\okayengine\local\parts\modelviewer\md5mesh_rewrite\md5mesh.c(195): warning C4047: =: "vec3_t (*)" отличается по уровням косвенного обращения от "vec3_t *"
+d:\engine\okayengine\local\parts\modelviewer\md5mesh_rewrite\md5mesh.c(507): warning C4113: "void (__cdecl *)()" отличается в списках параметров от "void (__cdecl *)(void)"
+d:\engine\okayengine\local\parts\modelviewer\md5mesh_rewrite\md5mesh.c(542): warning C4113: "void (__cdecl *)()" отличается в списках параметров от "void (__cdecl *)(void)"
+  md5mesh_rewrite.vcxproj -> D:\ENGINE\OkayEngine\local\parts\ModelViewer\md5mesh_rewrite\Debug\md5mesh_rewrite.exe
