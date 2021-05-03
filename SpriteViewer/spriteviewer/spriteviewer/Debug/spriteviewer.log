@@ -1,2 +1,3 @@
 ﻿  spriteviewer.cpp
+e:\github\specialforkikker228\spriteviewer\spriteviewer\spriteviewer\spriteviewer.cpp(259): warning C4244: =: преобразование "double" в "float", возможна потеря данных
   spriteviewer.vcxproj -> E:\GITHUB\SpecialForKikker228\SpriteViewer\spriteviewer\Debug\spriteviewer.exe

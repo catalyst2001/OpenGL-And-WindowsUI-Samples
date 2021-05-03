@@ -15,8 +15,9 @@
 #include "Resource.h"
 
 // Глобальные переменные:
-char szTitle[] = "Linear interpolation & Record keyframes (2D)";
-char szWindowClass[] = "WindowClass";
+char szTitle[] = "Sprite Animation Viewer";
+char szWindowClass[] = "SAV2021RT";
+
 int i = 0;
 UINT g_Texture[100];
 float offset;
@@ -47,19 +48,25 @@ HFONT		hFont;
 //==================================================================================
 //	Controls
 //==================================================================================
-HWND		hButtonKeyframesRecord;
-HWND		hButtonKeyframesStoprecord;
 HWND		hButtonPlay;
 HWND		hButtonPause;
 HWND		hButtonStop;
-
-HWND		hCheckInterp;
-HWND		hButtonSetKeyFrames;
-HWND		hTextboxNumKeyFrames;
 HWND		hTrackKeyFrames;
-
-HWND		hStaticCurrentFrame;
 HWND		hStaticNumberOfFrames;
+
+HWND		hEditU, hEditV;
+HWND		hButtonApplyUV;
+HWND		hStaticTotalFrames;
+HWND		hStaticCurrentFrame;
+
+HWND		hEditFPS;
+HWND		hButtonApplyFPS;
+
+HBITMAP		hImagePlay;
+HBITMAP		hImagePause;
+HBITMAP		hImageStop;
+
+INT			iFPS;
 
 //==================================================================================
 //	Keyframes data
@@ -69,16 +76,12 @@ INT			 NumberOfTotalFrames;
 vec3_t		*pKeyframesData;
 
 enum IDCS {
-	IDC_BUTTON_RECORDKEYFRAMES = 1,
-	IDC_BUTTON_STOPRECORDKEYFRAMES,
-	IDC_BUTTON_PLAY,
+	IDC_BUTTON_PLAY = 1,
 	IDC_BUTTON_PAUSE,
 	IDC_BUTTON_STOP,
-	IDC_BUTTON_SETTOTALKEYFRAMES,
-	IDC_EDIT_NUM_KEYFRAMES,
-	IDC_TRACK_SWITCH_KEYFRAMES,
-	IDC_CHECK_INTERP,
-	IDC_TRACK_FRAMES
+	IDC_BUTTON_APPLUV,
+	IDC_TRACK_FRAMES,
+	IDC_SETFPS
 };
 
 
@@ -179,6 +182,14 @@ void LogicAnimSprite(int loop, int num) {
 	offset = 1.0f / num;
 	float cx = float(loop % num) / float(num);
 	float cy = float(loop / num) / float(num);
+
+	//Update UV edits
+	char text[256];
+	sprintf(text, "%f", cx);
+	SetWindowTextA(hEditU, text);
+	sprintf(text, "%f", cy);
+	SetWindowTextA(hEditV, text);
+
 	//x							
 	textureCoordsArray[0] = cx;
 	textureCoordsArray[2] = cx;
@@ -222,13 +233,30 @@ HWND CreateEditInput(HWND hParentWindow, int id, int posx, int posy, int width, 
 #define ISALPHA(ch) (ch >= 'a' && ch <= 'z' && ch >= 'A' && ch <= 'Z')
 #define ISNUMER(ch) (ch >= '0' && ch <= '9')
 #define ISSPACE(ch) (ch == ' ' || ch == '\t')
-bool GetCorrectTotalFrames(int *pVal, const char *pArg)
+bool get_correct_int(int *pVal, const char *pArg)
 {
-	for (; *pArg != '\0'; pArg++) {
-		if (!ISNUMER(*pArg))
+	for (int i = 0; pArg[i] != '\0'; i++) {
+		if (!ISNUMER(pArg[i]))
 			return false;
 	}
 	*pVal = atoi(pArg);
+	return true;
+}
+
+bool get_correct_float(float *pVal, const char *pArg)
+{
+	int point = 0;
+	for (int i = 0; pArg[i] != '\0'; i++) {
+		if (!ISNUMER(pArg[i]))
+			return false;
+
+		if (pArg[i] == '.')
+			point++;
+	}
+	if (point != 1)
+		return false;
+
+	*pVal = atof(pArg);
 	return true;
 }
 
@@ -260,7 +288,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	}
 
 	hInst = hInstance;
-	hWnd = CreateWindowExA(NULL, szWindowClass, szTitle, WS_OVERLAPPEDWINDOW/* ^ WS_THICKFRAME*/, 0, 0, 800, 700, nullptr, nullptr, hInstance, nullptr);
+	hWnd = CreateWindowExA(NULL, szWindowClass, szTitle, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX, 0, 0, 990, 700, nullptr, nullptr, hInstance, nullptr);
 	if (!hWnd) {
 		MessageBoxA(0, "Cannot create window!", "Error", MB_OK);
 		return -1;
@@ -269,19 +297,61 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	UpdateWindow(hWnd);
 	hFont = (HFONT)GetStockObject(ANSI_VAR_FONT);
 
+	int posx = 810;
 	int posy = 10;
 
-	//Record/Play controls
-	HWND hText = CreateWindowExA(NULL, WC_STATIC, "Record/Play", WS_VISIBLE | WS_CHILD, 815, posy, 150, 20, hWnd, (HMENU)NULL, NULL, NULL);
+	//UV
+	HWND hText = CreateWindowExA(NULL, WC_STATIC, "U:", WS_VISIBLE | WS_CHILD, posx, posy, 10, 20, hWnd, (HMENU)NULL, NULL, NULL);
 	SendMessageA(hText, WM_SETFONT, (WPARAM)hFont, (LPARAM)NULL);
-	hButtonKeyframesRecord = CreateButton(hWnd, "Record keyframes", IDC_BUTTON_RECORDKEYFRAMES, 815, posy += 30, 150, 30);
-	hButtonKeyframesStoprecord = CreateButton(hWnd, "Stop keyframes", IDC_BUTTON_STOPRECORDKEYFRAMES, 815, posy += 33, 150, 30);
+	hEditU = CreateEditInput(hWnd, NULL, posx + 20, posy, 60, 20);
+	posy += 25;
+	hText = CreateWindowExA(NULL, WC_STATIC, "V:", WS_VISIBLE | WS_CHILD, posx, posy, 10, 20, hWnd, (HMENU)NULL, NULL, NULL);
+	SendMessageA(hText, WM_SETFONT, (WPARAM)hFont, (LPARAM)NULL);
+	hEditV = CreateEditInput(hWnd, NULL, posx + 20, posy, 60, 20);
+	posy += 25;
+	hButtonApplyUV = CreateButton(hWnd, "Apply UV", IDC_BUTTON_APPLUV, posx, posy, 80, 20);
 
-	
-	hStaticCurrentFrame = CreateWindowExA(NULL, WC_STATIC, "Current frame: 0", WS_VISIBLE | WS_CHILD, 815, posy += 30, 100, 20, hWnd, (HMENU)NULL, NULL, NULL);
+	//Frames display
+	posy += 35;
+	hStaticTotalFrames = CreateWindowExA(NULL, WC_STATIC, "Total frames: 0", WS_VISIBLE | WS_CHILD, posx, posy, 150, 20, hWnd, (HMENU)NULL, NULL, NULL);
+	SendMessageA(hStaticTotalFrames, WM_SETFONT, (WPARAM)hFont, (LPARAM)NULL);
+	posy += 15;
+	hStaticCurrentFrame = CreateWindowExA(NULL, WC_STATIC, "Current frame: 0", WS_VISIBLE | WS_CHILD, posx, posy, 150, 20, hWnd, (HMENU)NULL, NULL, NULL);
 	SendMessageA(hStaticCurrentFrame, WM_SETFONT, (WPARAM)hFont, (LPARAM)NULL);
-	hStaticNumberOfFrames = CreateWindowExA(NULL, WC_STATIC, "Recorded frames: 0", WS_VISIBLE | WS_CHILD, 815, posy += 20, 100, 20, hWnd, (HMENU)NULL, NULL, NULL);
-	SendMessageA(hStaticNumberOfFrames, WM_SETFONT, (WPARAM)hFont, (LPARAM)NULL);
+
+	//FPS
+	posy += 25;
+	hText = CreateWindowExA(NULL, WC_STATIC, "fps", WS_VISIBLE | WS_CHILD, posx, posy, 10, 20, hWnd, (HMENU)NULL, NULL, NULL);
+	SendMessageA(hText, WM_SETFONT, (WPARAM)hFont, (LPARAM)NULL);
+	hEditFPS = CreateEditInput(hWnd, NULL, posx + 20, posy, 60, 20);
+	posy += 25;
+	hButtonApplyFPS = CreateButton(hWnd, "Set FPS", IDC_SETFPS, posx, posy, 80, 20);
+
+	// Play / Pasuse / Stop
+	posx = width;
+	posy = height;
+	HMODULE hThisMod = GetModuleHandleA(0);
+	hImagePlay = LoadBitmapA(hThisMod, MAKEINTRESOURCEA(IDB_BITMAP2));
+	hImagePause = LoadBitmapA(hThisMod, MAKEINTRESOURCEA(IDB_BITMAP1));
+	hImageStop = LoadBitmapA(hThisMod, MAKEINTRESOURCEA(IDB_BITMAP3));
+	hButtonPlay = CreateWindowExA(NULL, WC_BUTTON, "play", WS_VISIBLE|WS_CHILD|BS_BITMAP, posx += 10, posy, 30, 30, hWnd, (HMENU)IDC_BUTTON_PLAY, hThisMod, NULL);
+	SendMessageA(hButtonPlay, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)hImagePlay);
+	hButtonPause = CreateWindowExA(NULL, WC_BUTTON, "pause", WS_VISIBLE|WS_CHILD|BS_BITMAP, posx += 30, posy, 30, 30, hWnd, (HMENU)IDC_BUTTON_PAUSE, hThisMod, NULL);
+	SendMessageA(hButtonPause, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)hImagePause);
+	hButtonStop = CreateWindowExA(NULL, WC_BUTTON, "stop", WS_VISIBLE|WS_CHILD|BS_BITMAP, posx += 30, posy, 30, 30, hWnd, (HMENU)IDC_BUTTON_STOP, hThisMod, NULL);
+	SendMessageA(hButtonStop, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)hImageStop);
+
+	//TRACKBAR
+	int trackX = 0;
+	int trackY = height;
+	int trackWidth = width;
+	hTrackKeyFrames = CreateWindowExA(NULL, TRACKBAR_CLASSA, "", WS_VISIBLE | WS_CHILD, trackX + 10, trackY + 2, trackWidth, 40, hWnd, (HMENU)IDC_TRACK_FRAMES, NULL, NULL);
+	iFPS = 30;
+
+	//TODO: Set FPS
+	char fpsText[128];
+	sprintf(fpsText, "%d", iFPS);
+	SetWindowTextA(hEditFPS, fpsText);
 
 	//Create OpenGL viewport
 	hViewportWnd = CreateWindowExA(WS_EX_CLIENTEDGE, "static", "", WS_VISIBLE | WS_CHILD, 1, 1, width, height, hWnd, (HMENU)NULL, hInstance, NULL);
@@ -290,15 +360,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		return -11;
 	}
 
-	//Frames controls
-	HBITMAP hImage = LoadBitmapA(GetModuleHandleA(0), MAKEINTRESOURCEA(IDB_BITMAP1)); //pause
-	//hButtonPlay = CreateButton(hWnd, "play", IDC_BUTTON_PLAY, 815, posy += 33, 30, 30);
-	hButtonPlay = CreateWindowExA(NULL, WC_BUTTON, "play", WS_VISIBLE|WS_CHILD|BS_BITMAP, 815, posy += 33, 30, 30, hWnd, (HMENU)IDC_BUTTON_PLAY, NULL, NULL);
-	SendMessageA(hButtonPlay, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)hImage);
-
-	hButtonPause = CreateButton(hWnd, "pause", IDC_BUTTON_PAUSE, 815 + 30, posy, 30, 30);
-	hButtonStop = CreateButton(hWnd, "stop", IDC_BUTTON_STOP, 815 + 30 + 30, posy, 30, 30);
-	hTrackKeyFrames = CreateWindowExA(NULL, TRACKBAR_CLASSA, "", WS_VISIBLE | WS_CHILD, 0, posy += 500, 800, 40, hWnd, (HMENU)IDC_TRACK_FRAMES, NULL, NULL);
 	hDevCtx = GetDC(hViewportWnd);
 	if (!hDevCtx) {
 		MessageBoxA(0, "Cannot get device context!", "Error", MB_OK);
@@ -351,14 +412,19 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	MSG msg = { NULL };
 	int nums = 8;
+	int nFrames = nums * nums;
+
+	char totalframes[512];
+	sprintf(totalframes, "Total frames: %d", nFrames);
+	SetWindowTextA(hStaticTotalFrames, totalframes);
 	if (!CreateTexture(g_Texture[1], "explode03.bmp")) {
 		printf("Not texture");
 	}
 
 	// TrackBar
-	SendMessageA(hTrackKeyFrames, TBM_SETRANGE, (WPARAM)TRUE, (LPARAM)MAKELONG(0, nums*nums));  // min. & max. positions
+	SendMessageA(hTrackKeyFrames, TBM_SETRANGE, (WPARAM)TRUE, (LPARAM)MAKELONG(0, nFrames));  // min. & max. positions
 	SendMessageA(hTrackKeyFrames, TBM_SETPAGESIZE, 0, (LPARAM)1);                 
-	SendMessageA(hTrackKeyFrames, TBM_SETSEL, (WPARAM)FALSE, (LPARAM)MAKELONG(0, nums*nums));
+	SendMessageA(hTrackKeyFrames, TBM_SETSEL, (WPARAM)FALSE, (LPARAM)MAKELONG(0, nFrames));
 	SendMessageA(hTrackKeyFrames, TBM_SETPOS, (WPARAM)TRUE, (LPARAM)0); //
 
 	glEnable(GL_TEXTURE_2D);
@@ -376,15 +442,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		glOrtho(0, width, 0, height, -1, 1);
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		if (i == (nums*nums)) {
+		if (i == (nFrames)) {
 			i = 0;
 		}
-		if (AnimateNextFrame(30)) {
+		if (AnimateNextFrame(iFPS)) {
 			LogicAnimSprite(i, nums);
 			i++;
-			SendMessage(hTrackKeyFrames, TBM_SETPOS,
-				(WPARAM)TRUE,                   // redraw flag 
-				(LPARAM)i);
+			SendMessageA(hTrackKeyFrames, TBM_SETPOS, (WPARAM)TRUE, (LPARAM)i);
+
+			char frame[512];
+			sprintf(frame, "Current frame: %d", i);
+			SetWindowTextA(hStaticCurrentFrame, frame);
 		}
 		renderSprite(GL_QUADS, 100, 100, 300, 300, g_Texture[1]);
 		DrawTexturedRect(GL_QUADS, 400, 100, 300, 300, g_Texture[1]);
@@ -418,6 +486,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
 			break;
+
+		case IDC_SETFPS: {
+			char fpsText[128];
+			GetWindowTextA(hEditFPS, fpsText, sizeof(fpsText));
+			if (!get_correct_int(&iFPS, fpsText)) {
+				MessageBoxA(NULL, "FPS is not correct!", "Error set FPS", MB_OK);
+			}
+			printf("FPS: %d\n", iFPS);
+			break;
+		}
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
