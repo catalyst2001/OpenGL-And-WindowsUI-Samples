@@ -155,6 +155,7 @@
     <ClCompile Include="SampleGUI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="glwin.h" />
     <ClInclude Include="SampleGUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

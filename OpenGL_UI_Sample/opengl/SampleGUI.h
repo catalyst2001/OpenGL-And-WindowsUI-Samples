@@ -59,6 +59,11 @@ public:
 		m_Rect.x2.x = x + width;
 		m_Rect.x2.y = y + height;
 	}
+
+	void MouseMove(int x, int y) {};
+	void MouseClick(int x, int y, int button) {};
+	void Shutdown() {};
+	void Render() {};
 };
 
 class CSampleGUI : IBaseGUIElement
@@ -74,28 +79,26 @@ class CSampleGUI : IBaseGUIElement
 	~CSampleGUI() {}
 
 	void AddControl(IBaseGUIElement *canvas) { m_ChildElems.push_back(*canvas); }
-	void Create(int x, int y, int width, int height) {}
-	void MouseMove(int x, int y) {}
-	void MouseClick(int x, int y, int button) {}
+	void Create(int x, int y, int width, int height) {};
+	void MouseMove(int x, int y) {};
+	void MouseClick(int x, int y, int button) {};
+	void Shutdown() {};
+	void Render() {};
 
+	//void Event_MouseMove(int x, int y)
+	//{
 
-	void Shutdown() {}
-	void Render() {}
+	//}
 
-	void Event_MouseMove(int x, int y)
-	{
+	//void Event_MoveClick(int x, int y, int button)
+	//{
 
-	}
+	//}
 
-	void Event_MoveClick(int x, int y, int button)
-	{
+	//void Event_Keyboard(char ch)
+	//{
 
-	}
-
-	void Event_Keyboard(char ch)
-	{
-
-	}
+	//}
 
 public:
 	class CInput {

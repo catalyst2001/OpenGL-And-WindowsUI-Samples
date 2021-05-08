@@ -16,5 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SampleGUI.h" />
+    <ClInclude Include="glwin.h" />
   </ItemGroup>
 </Project>

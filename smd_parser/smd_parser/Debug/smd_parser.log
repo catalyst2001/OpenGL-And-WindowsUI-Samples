@@ -1,0 +1,7 @@
+﻿  smd_parser.cpp
+e:\github\specialforkikker228\smd_parser\smd_parser\smd_parser.cpp(36): warning C4477: "sscanf": в строке форматирования "%d" требуется аргумент типа "int *", но вариативный аргумент "1" имеет тип "char (*)[1024]"
+  e:\github\specialforkikker228\smd_parser\smd_parser\smd_parser.cpp(36): note: рекомендуется использовать "%hhd" в строке форматирования
+e:\github\specialforkikker228\smd_parser\smd_parser\smd_parser.cpp(37): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "1" имеет тип "char *"
+e:\github\specialforkikker228\smd_parser\smd_parser\smd_parser.cpp(88): warning C4018: <: несоответствие типов со знаком и без знака
+e:\github\specialforkikker228\smd_parser\smd_parser\smd_parser.cpp(94): warning C4018: <: несоответствие типов со знаком и без знака
+  smd_parser.vcxproj -> E:\GITHUB\SpecialForKikker228\smd_parser\Debug\smd_parser.exe

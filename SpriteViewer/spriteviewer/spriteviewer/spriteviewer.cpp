@@ -288,7 +288,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	}
 
 	hInst = hInstance;
-	hWnd = CreateWindowExA(NULL, szWindowClass, szTitle, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX, 0, 0, 990, 700, nullptr, nullptr, hInstance, nullptr);
+	hWnd = CreateWindowExA(NULL, szWindowClass, szTitle, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX, 0, 0, 930, 700, nullptr, nullptr, hInstance, nullptr);
 	if (!hWnd) {
 		MessageBoxA(0, "Cannot create window!", "Error", MB_OK);
 		return -1;
