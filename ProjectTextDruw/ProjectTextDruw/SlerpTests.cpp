@@ -262,6 +262,7 @@ void renderSpriteAnim(int mode, int posx, int posy, int width, int height, GLuin
 	posx + width, posy,
 	posx + width, posy + height
 	};
+	
 	/*printf("%f %f %f %f %f %f %f %f\n",
 		textureCoordsArray[0], textureCoordsArray[1],
 		textureCoordsArray[2], textureCoordsArray[3],
@@ -306,8 +307,6 @@ void LogicAnimSprite(int loop, int num, int idtextcord) {
 	textureCoords[idtextcord][5] = 1.0f - cy - offset;
 	textureCoords[idtextcord][1] = 1.0f - cy - 0.001f;
 	textureCoords[idtextcord][7] = 1.0f - cy - 0.001f;
-
-	
 }
 
 void LogicAnimSpriteAnim(int loop, int num) {
@@ -559,7 +558,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	//	(WPARAM)TRUE,									// redraw flag 
 	//	(LPARAM)0);
 
-	float cx = 0.062500f, cy = 0.0f;
+	//float cx = 0.062500f, cy = 0.0f;
 	glEnable(GL_TEXTURE_2D);
 	while (msg.message != WM_QUIT) {
 		if (PeekMessageA(&msg, NULL, NULL, NULL, PM_REMOVE)) {
