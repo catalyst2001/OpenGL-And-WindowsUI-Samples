@@ -103,6 +103,7 @@ void Print(font_t *pfont, int posx, int posy, const char *text)
 		if (text[i] == '\n') {
 			y -= WIDTH;
 			x = posx;
+			continue;
 		}
 		int idx = text[i] - 32;
 
@@ -113,10 +114,10 @@ void Print(font_t *pfont, int posx, int posy, const char *text)
 			idx = 255;
 
 		int coords[] = {
-			x, y,
-			x + WIDTH, y,
-			x + WIDTH, y + WIDTH,
-			x, y + WIDTH,
+			x,			y,
+			x + WIDTH,	y,
+			x + WIDTH,	y + WIDTH,
+			x,			y + WIDTH,
 		};
 		glBindTexture(GL_TEXTURE_2D, pfont->textureid);
 		glVertexPointer(2, GL_INT, 0, coords);
