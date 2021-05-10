@@ -1,0 +1,6 @@
+﻿  Camera.cpp
+e:\github\specialforkikker228\voxelstest\voxeledit\voxeledit\camera.cpp(355): warning C4305: +=: усечение из "double" в "float"
+e:\github\specialforkikker228\voxelstest\voxeledit\voxeledit\camera.cpp(356): warning C4305: +=: усечение из "double" в "float"
+e:\github\specialforkikker228\voxelstest\voxeledit\voxeledit\camera.cpp(361): warning C4305: -=: усечение из "double" в "float"
+e:\github\specialforkikker228\voxelstest\voxeledit\voxeledit\camera.cpp(362): warning C4305: -=: усечение из "double" в "float"
+  VoxelEdit.vcxproj -> E:\GITHUB\SpecialForKikker228\VoxelsTest\VoxelEdit\Debug\VoxelEdit.exe
