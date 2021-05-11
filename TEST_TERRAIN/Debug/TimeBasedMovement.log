@@ -1,0 +1,3 @@
+﻿  Main.cpp
+d:\3d engines\quadtree octree and terrains\test_terrain\main.cpp(85): warning C4244: аргумент: преобразование "GLdouble" в "float", возможна потеря данных
+  TimeBasedMovement.vcxproj -> D:\3D ENGINES\QUADTREE OCTREE AND TERRAINS\TEST_TERRAIN\.\Debug\TimeBasedMovement.exe
