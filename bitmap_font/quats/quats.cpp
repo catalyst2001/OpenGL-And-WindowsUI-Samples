@@ -57,7 +57,6 @@ bool init_font(font_t *pfont, int texid, int glyphs_per_line)
 	pfont->textureid = texid;
 	pfont->glyphs = (glyph_t *)malloc(sizeof(glyph_t) * 256);
 	if (!pfont->glyphs) {
-		//printf("Pizdec!\n");
 		return false;
 	}
 
