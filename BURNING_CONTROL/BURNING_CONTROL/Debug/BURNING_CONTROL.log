@@ -1,5 +1,0 @@
-﻿  BURNING_CONTROL.cpp
-e:\github\specialforkikker228\burning_control\burning_control\burning_control.cpp(128): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-e:\github\specialforkikker228\burning_control\burning_control\burning_control.cpp(129): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-e:\github\specialforkikker228\burning_control\burning_control\burning_control.cpp(130): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-  BURNING_CONTROL.vcxproj -> E:\GITHUB\SpecialForKikker228\BURNING_CONTROL\Debug\BURNING_CONTROL.exe
