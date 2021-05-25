@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MD5ModelLoader", "MD5ModelLoader\MD5ModelLoader.vcxproj", "{A9B90C97-4087-4D6E-8833-82BE6A87F567}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SOIL", "externals\Simple OpenGL Image Library\projects\VC9\SOIL.vcxproj", "{C32FB2B4-500C-43CD-A099-EECCE079D3F1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9B90C97-4087-4D6E-8833-82BE6A87F567}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A9B90C97-4087-4D6E-8833-82BE6A87F567}.Debug|Win32.Build.0 = Debug|Win32
+		{A9B90C97-4087-4D6E-8833-82BE6A87F567}.Release|Win32.ActiveCfg = Release|Win32
+		{A9B90C97-4087-4D6E-8833-82BE6A87F567}.Release|Win32.Build.0 = Release|Win32
+		{C32FB2B4-500C-43CD-A099-EECCE079D3F1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C32FB2B4-500C-43CD-A099-EECCE079D3F1}.Debug|Win32.Build.0 = Debug|Win32
+		{C32FB2B4-500C-43CD-A099-EECCE079D3F1}.Release|Win32.ActiveCfg = Release|Win32
+		{C32FB2B4-500C-43CD-A099-EECCE079D3F1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
