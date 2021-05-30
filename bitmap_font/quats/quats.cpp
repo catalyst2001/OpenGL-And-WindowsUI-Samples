@@ -65,12 +65,11 @@ bool init_font(font_t *pfont, int texid, int glyphs_per_line)
 		float x = (i % pfont->num_of_frames) / (float)pfont->num_of_frames;
 		float y = (i / pfont->num_of_frames) / (float)pfont->num_of_frames;
 		//printf("%f %f\n", x, y);
-
 		//int coords[] = {
 		//	x, y,
-		//	x + WIDTH, y,
-		//	x + WIDTH, y + WIDTH,
-		//	x, y + WIDTH,
+		//	x + glyph_width, y,
+		//	x + glyph_width, y + glyph_width,
+		//	x, y + glyph_width,
 		//};
 		pfont->glyphs[i].uv_left[0] = x;
 		pfont->glyphs[i].uv_left[1] = 1.f - y - glyph_width;
@@ -93,14 +92,15 @@ bool init_font(font_t *pfont, int texid, int glyphs_per_line)
 }
 
 //0.0625f - one glyph
-#define WIDTH 15
-#define offset 1.f
+#define glyph_width 9
+#define glyph_height 11
+#define space_width 8
 void Print(font_t *pfont, int posx, int posy, const char *text)
 {
 	int x = posx, y = posy;
 	for (int i = 0; text[i] != 0x0; i++) {
 		if (text[i] == '\n') {
-			y -= WIDTH;
+			y -= glyph_height;
 			x = posx;
 			continue;
 		}
@@ -112,17 +112,23 @@ void Print(font_t *pfont, int posx, int posy, const char *text)
 		if (idx > 255)
 			idx = 255;
 
+		//spacing
+		if (idx == NULL) {
+			x += space_width;
+			continue;
+		}
+
 		int coords[] = {
 			x,			y,
-			x + WIDTH,	y,
-			x + WIDTH,	y + WIDTH,
-			x,			y + WIDTH,
+			x + glyph_width,	y,
+			x + glyph_width,	y + glyph_height,
+			x,			y + glyph_height,
 		};
 		glBindTexture(GL_TEXTURE_2D, pfont->textureid);
 		glVertexPointer(2, GL_INT, 0, coords);
 		glTexCoordPointer(2, GL_FLOAT, 0, &pfont->glyphs[idx]);
 		glDrawArrays(GL_QUADS, 0, 4);
-		x += (int)WIDTH - WIDTH / 9.f;
+		x += (int)glyph_width - glyph_width / 6.f;
 	}
 }
 
