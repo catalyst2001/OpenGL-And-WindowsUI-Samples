@@ -310,7 +310,7 @@ void Draw3DSGrid(CCamera camera)
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, world_array);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 200);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, size*size);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	//prev_coord = pos;
@@ -334,112 +334,112 @@ void RenderScene()
 	SwapBuffers(g_hDC);	
 }
 
-//void gen_vertexes(int world_size)
-//{
-//	/////////////////////////////////////////////////////////////////////////////////////
-//	int world_x = world_size * 2;
-//	int ssize = sizeof(vec3_t) * (world_x * world_x) * 2;
-//	world_array = (vec3_t*)malloc(ssize);
-//
-//	//Set start pos
-//	//world_array[0].x = 0.f;
-//	//world_array[0].y = 0.f;
-//	//world_array[0].z = 0.f;
-//	int c = 0;
-//	bool is_right = true;
-//	for (int z = 0; z < world_x; z++) {
-//		int j = z * world_x;
-//		if (is_right) {
-//			for (int x = 0, i = 0; x < world_x; x += 2, i++) {
-//				world_array[c].z = (float)z;
-//				world_array[c].x = (float)i;
-//				world_array[c].y = 0.f;
-//				
-//				world_array[c + 1].z = (float)z + 1.f;
-//				world_array[c + 1].x = (float)i;
-//				world_array[c + 1].y = 0.f;
-//
-//				//printf("1 right  (x:%f ; z: %f)  index = %d\n",
-//				//	world_array[c].x,
-//				//	world_array[c].z,
-//				//	c);
-//				//printf("2 right  (x:%f ; z: %f)  index = %d\n",
-//				//	world_array[c + 1].x,
-//				//	world_array[c + 1].z,
-//				//	c + 1);
-//				c += 2;
-//			}
-//
-//			world_array[c].z = (float)z;
-//			world_array[c].x = (float)world_x / 2;
-//			world_array[c].y = 0.f;
-//			//printf("\nend right: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
-//			c++;
-//
-//			world_array[c].z = (float)z + 1;
-//			world_array[c].x = (float)world_x / 2;
-//			world_array[c].y = 0.f;
-//			//printf("\nend right: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
-//			c++;
-//
-//			if (z <= world_size-3)
-//			{
-//				world_array[c].z = (float)z + 2;
-//				world_array[c].x = (float)world_x / 2;
-//				world_array[c].y = 0.f;
-//				//printf("\nend right: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
-//				c++;
-//
-//				world_array[c].z = (float)z + 1;
-//				world_array[c].x = (float)world_x / 2;
-//				world_array[c].y = 0.f;
-//				//printf("\nend right: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
-//				c++;
-//			}
-//		}
-//		else
-//		{
-//			for (int x = world_x, i = world_x / 2; x >= 2; x -= 2, i--) {
-//				world_array[c].z = (float)z;
-//				world_array[c].x = (float)i;
-//				world_array[c].y = 0.f;
-//
-//				world_array[c + 1].z = (float)z + 1.f;
-//				world_array[c + 1].x = (float)i - 1;
-//				world_array[c + 1].y = 0.f;
-//
-//				//printf("1 left  (x:%f ; z: %f)  index = %d\n",
-//				//	world_array[c].x,
-//				//	world_array[c].z,
-//				//	c);
-//				//printf("2 left  (x:%f ; z: %f)  index = %d\n",
-//				//	world_array[c + 1].x,
-//				//	world_array[c + 1].z,
-//				//	c + 1);
-//				c += 2;
-//			}
-//			world_array[c].z = (float)z + 1;
-//			world_array[c].x = 0.f;
-//			world_array[c].y = 0.f;
-//			//printf("\nend left: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
-//			c++;
-//
-//			world_array[c].z = (float)z - 1;
-//			world_array[c].x = 0.f;
-//			world_array[c].y = 0.f;
-//			//printf("\nend left: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
-//			c++;
-//
-//			world_array[c].z = (float)z + 1;
-//			world_array[c].x = 0.f;
-//			world_array[c].y = 0.f;
-//			//printf("\nend left: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
-//			c++;
-//		}
-//		is_right = !is_right;
-//	}
-//	/////////////////////////////////////////////////////////////////////////////////////
-//}
+ void gen_vertexes(int world_size)
+ {
+	 /////////////////////////////////////////////////////////////////////////////////////
+	 int world_x = world_size * 2;
+	 int ssize = sizeof(vec3_t) * (world_x * world_x) * 2;
+	 world_array = (vec3_t*)malloc(ssize);
+
+	 //set start pos
+	 //world_array[0].x = 0.f;
+	 //world_array[0].y = 0.f;
+	 //world_array[0].z = 0.f;
+	 int c = 0;
+	 bool is_right = true;
+	 for (int z = 0; z < world_x; z++) {
+		 int j = z * world_x;
+		 if (is_right) {
+			 for (int x = 0, i = 0; x < world_x; x += 2, i++) {
+				 world_array[c].z = (float)z;
+				 world_array[c].x = (float)i;
+				 world_array[c].y = 0.f;
+				
+				 world_array[c + 1].z = (float)z + 1.f;
+				 world_array[c + 1].x = (float)i;
+				 world_array[c + 1].y = 0.f;
+
+				 //printf("1 right  (x:%f ; z: %f)  index = %d\n",
+				 //	world_array[c].x,
+				 //	world_array[c].z,
+				 //	c);
+				 //printf("2 right  (x:%f ; z: %f)  index = %d\n",
+				 //	world_array[c + 1].x,
+				 //	world_array[c + 1].z,
+				 //	c + 1);
+				 c += 2;
+			 }
+
+			 world_array[c].z = (float)z;
+			 world_array[c].x = (float)world_x / 2;
+			 world_array[c].y = 0.f;
+			 //printf("\nend right: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
+			 c++;
+
+			 world_array[c].z = (float)z + 1;
+			 world_array[c].x = (float)world_x / 2;
+			 world_array[c].y = 0.f;
+			 //printf("\nend right: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
+			 c++;
+
+			 if (z <= world_size-3)
+			 {
+				 world_array[c].z = (float)z + 2;
+				 world_array[c].x = (float)world_x / 2;
+				 world_array[c].y = 0.f;
+				 //printf("\nend right: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
+				 c++;
+
+				 world_array[c].z = (float)z + 1;
+				 world_array[c].x = (float)world_x / 2;
+				 world_array[c].y = 0.f;
+				 //printf("\nend right: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
+				 c++;
+			 }
+		 }
+		 else
+		 {
+			 for (int x = world_x, i = world_x / 2; x >= 2; x -= 2, i--) {
+				 world_array[c].z = (float)z;
+				 world_array[c].x = (float)i;
+				 world_array[c].y = 0.f;
+
+				 world_array[c + 1].z = (float)z + 1.f;
+				 world_array[c + 1].x = (float)i - 1;
+				 world_array[c + 1].y = 0.f;
+
+				 //printf("1 left  (x:%f ; z: %f)  index = %d\n",
+				 //	world_array[c].x,
+				 //	world_array[c].z,
+				 //	c);
+				 //printf("2 left  (x:%f ; z: %f)  index = %d\n",
+				 //	world_array[c + 1].x,
+				 //	world_array[c + 1].z,
+				 //	c + 1);
+				 c += 2;
+			 }
+			 world_array[c].z = (float)z + 1;
+			 world_array[c].x = 0.f;
+			 world_array[c].y = 0.f;
+			 //printf("\nend left: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
+			 c++;
+
+			 world_array[c].z = (float)z - 1;
+			 world_array[c].x = 0.f;
+			 world_array[c].y = 0.f;
+			 //printf("\nend left: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
+			 c++;
+
+			 world_array[c].z = (float)z + 1;
+			 world_array[c].x = 0.f;
+			 world_array[c].y = 0.f;
+			 //printf("\nend left: x:%f z:%f  index: %d\n\n", world_array[c].x, world_array[c].z, c);
+			 c++;
+		 }
+		 is_right = !is_right;
+	 }
+	 /////////////////////////////////////////////////////////////////////////////////////
+ }
 
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
