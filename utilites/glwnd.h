@@ -127,6 +127,8 @@ typedef void(*WINDOWQUIT)(HWND wnd);
 #define KEY_UP 1 //button up
 typedef void(*MOUSECLICKFN)(INT x, INT y, INT button, INT state);
 
+typedef void(*MENUCALLBACK)(HMENU hMenu, INT id);
+
 struct GLWINDOW {
 	HMODULE			hModule;
 	HWND			h_window;
@@ -143,6 +145,7 @@ struct GLWINDOW {
 	KEYDOWNFN		p_ketdownfn;
 	WINDOWCREATE	p_windowcreate;
 	WINDOWQUIT		p_windowquit;
+	MENUCALLBACK	p_menucallback;
 } global_window_data;
 
 void error(const char *message, ...)
@@ -162,6 +165,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
+	case WM_COMMAND:
+		if (global_window_data.p_menucallback)
+			global_window_data.p_menucallback((HMENU)lParam, LOWORD(wParam));
+		break;
 	case WM_SIZE:
 	{
 		if (global_window_data.p_resizefn)
@@ -202,6 +209,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		if (global_window_data.p_ketdownfn)
 			global_window_data.p_ketdownfn(KEY_UP, wParam, lParam);
+		break;
+
+	case WM_MOUSEMOVE:
+		if (global_window_data.p_mousemovefn)
+			global_window_data.p_mousemovefn(LOWORD(lParam), HIWORD(lParam));
 		break;
 
 	case WM_CLOSE:
@@ -327,4 +339,9 @@ void create_window(const char *p_windowname,
 		global_window_data.p_drawfn();
 		SwapBuffers(global_window_data.h_devicecontext);
 	}
+}
+
+void set_menu_callback(MENUCALLBACK menufn)
+{
+	global_window_data.p_menucallback = menufn;
 }
