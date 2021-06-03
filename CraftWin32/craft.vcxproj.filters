@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="depends">
+      <UniqueIdentifier>{d4e1372d-51ff-4d7e-af79-d8927545f6ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="depends\sqlite">
+      <UniqueIdentifier>{3c8f2227-31bb-4835-8938-4e715224e721}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="deps\glew\include\GL\glew.h">
+      <Filter>depends</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\glew\include\GL\glxew.h">
+      <Filter>depends</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\glew\include\GL\wglew.h">
+      <Filter>depends</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\glfw\include\GLFW\glfw3.h">
+      <Filter>depends</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\glfw\include\GLFW\glfw3native.h">
+      <Filter>depends</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\lodepng\lodepng.h">
+      <Filter>depends</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\noise\noise.h">
+      <Filter>depends</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\tinycthread\tinycthread.h">
+      <Filter>depends</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\sqlite\sqlite3.h">
+      <Filter>depends\sqlite</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\sqlite\sqlite3ext.h">
+      <Filter>depends\sqlite</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="deps\lodepng\lodepng.c">
+      <Filter>depends</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\noise\noise.c">
+      <Filter>depends</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\tinycthread\tinycthread.c">
+      <Filter>depends</Filter>
+    </ClCompile>
+    <ClCompile Include="deps\sqlite\sqlite3.c">
+      <Filter>depends\sqlite</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

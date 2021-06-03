@@ -1,0 +1,134 @@
+﻿  main.c
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(130): warning C4005: APIENTRY: изменение макроопределения
+  e:\3d engines\terraain\craft-master\deps\glfw\include\glfw\glfw3.h(85): note: см. предыдущее определение "APIENTRY"
+e:\3d engines\terraain\craft-master\src\main.c(167): warning C4244: return: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(175): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(184): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(188): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(206): warning C4244: функция: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(208): warning C4244: функция: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(217): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(245): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(294): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(436): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(438): warning C4305: +=: усечение из "double" в "float"
+e:\3d engines\terraain\craft-master\src\main.c(441): warning C4305: -=: усечение из "double" в "float"
+e:\3d engines\terraain\craft-master\src\main.c(458): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(456): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(516): warning C4305: инициализация: усечение из "double" в "float"
+e:\3d engines\terraain\craft-master\src\main.c(556): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(557): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(558): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(559): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(560): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(561): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(562): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(563): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(594): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(595): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(621): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(622): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(623): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(695): warning C4244: функция: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(695): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(715): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(716): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(717): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(752): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(753): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(754): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(778): warning C4244: функция: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(794): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(785): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(792): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(831): warning C4018: <: несоответствие типов со знаком и без знака
+e:\3d engines\terraain\craft-master\src\main.c(833): warning C4267: +=: преобразование из "size_t" в "int"; возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(839): warning C4018: <: несоответствие типов со знаком и без знака
+e:\3d engines\terraain\craft-master\src\main.c(842): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(924): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(925): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(923): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1097): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1119): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1122): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1128): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1460): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1461): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1476): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1477): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1510): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1511): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1517): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1518): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1558): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1565): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1566): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1573): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1576): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1594): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1595): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1635): warning C4244: функция: преобразование "int" в "GLfloat", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1702): warning C4267: функция: преобразование из "size_t" в "int"; возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1703): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1754): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1754): warning C4305: функция: усечение из "double" в "float"
+e:\3d engines\terraain\craft-master\src\main.c(1765): warning C4244: функция: преобразование "int" в "GLfloat", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(1804): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2193): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2213): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2292): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2395): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2397): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2400): warning C4244: -=: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2403): warning C4305: +=: усечение из "double" в "float"
+e:\3d engines\terraain\craft-master\src\main.c(2406): warning C4305: -=: усечение из "double" в "float"
+e:\3d engines\terraain\craft-master\src\main.c(2408): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2409): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2394): warning C4305: инициализация: усечение из "double" в "float"
+e:\3d engines\terraain\craft-master\src\main.c(2426): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2452): warning C4244: функция: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2474): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2424): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2448): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2449): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2454): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2493): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2502): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2596): warning C4244: функция: преобразование "time_t" в "unsigned int", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2778): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2898): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2903): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2939): warning C4244: функция: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2863): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\3d engines\terraain\craft-master\src\main.c(2867): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+MSVCRTD.lib(initializers.obj) : warning LNK4098: библиотека по умолчанию "libcmt.lib" противоречит использованию других библиотек; используйте параметр /NODEFAULTLIB:library
+main.obj : warning LNK4217: локально определенный символ glewInit импортирован в функцию main
+main.obj : warning LNK4049: импортирован локально определенный символ __glewActiveTexture
+main.obj : warning LNK4049: импортирован локально определенный символ __glewBindBuffer
+main.obj : warning LNK4049: импортирован локально определенный символ __glewDisableVertexAttribArray
+main.obj : warning LNK4049: импортирован локально определенный символ __glewEnableVertexAttribArray
+main.obj : warning LNK4049: импортирован локально определенный символ __glewGetAttribLocation
+main.obj : warning LNK4049: импортирован локально определенный символ __glewGetUniformLocation
+main.obj : warning LNK4049: импортирован локально определенный символ __glewUniform1f
+main.obj : warning LNK4049: импортирован локально определенный символ __glewUniform1i
+main.obj : warning LNK4049: импортирован локально определенный символ __glewUniform3f
+main.obj : warning LNK4049: импортирован локально определенный символ __glewUniformMatrix4fv
+main.obj : warning LNK4049: импортирован локально определенный символ __glewUseProgram
+main.obj : warning LNK4049: импортирован локально определенный символ __glewVertexAttribPointer
+glew32s.lib(glew.obj) : warning LNK4099: "vc120.pdb" PDB не найден с "glew32s.lib(glew.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\vc120.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(context.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(context.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(init.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(init.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(input.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(input.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(monitor.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(monitor.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(vulkan.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(vulkan.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(window.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(window.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_init.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(win32_init.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_joystick.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(win32_joystick.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_monitor.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(win32_monitor.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_time.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(win32_time.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_thread.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(win32_thread.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_window.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(win32_window.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(wgl_context.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(wgl_context.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(egl_context.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(egl_context.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(osmesa_context.obj) : warning LNK4099: "glfw.pdb" PDB не найден с "glfw3.lib(osmesa_context.obj)" или на "E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\glfw.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+  craft.vcxproj -> E:\3D ENGINES\TERRAAIN\Craft-master\x64\Debug\craft.exe
