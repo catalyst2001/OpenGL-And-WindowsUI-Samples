@@ -80,7 +80,7 @@ void fn_draw()
 
 		POINT start;
 		start.x = point_start.x - 100;
-		start.y = point_start.y - 100;
+		start.y = point_end.y - 100;
 		if (start.x < 0)
 			start.x = 0;
 		if (start.x > texture.width)
@@ -92,7 +92,7 @@ void fn_draw()
 
 		POINT end;
 		end.x = point_end.x - 100;
-		end.y = point_end.y - 100;
+		end.y = point_start.y - 100;
 		if (end.x < 0)
 			end.x = 0;
 		if (end.x > texture.width)
@@ -101,6 +101,7 @@ void fn_draw()
 			end.y = 0;
 		if (end.y > texture.height)
 			end.y = texture.height;
+		
 
 		if (start.x != -1 && start.y != -1) {
 			glPushAttrib(GL_CURRENT_BIT);
@@ -110,25 +111,29 @@ void fn_draw()
 			glEnable(GL_TEXTURE_2D);
 			glPopAttrib();
 		}
-	
-		//point_start.x, point_start.y, point_end.x - point_start.x, point_end.y - point_start.y
-		//texcoords[0] = start.x / (float)texture.width;
-		//texcoords[1] = end.y / (float)texture.height;
-		//texcoords[2] = end.x / (float)texture.width;
-		//texcoords[3] = end.y / (float)texture.height;
-		//texcoords[4] = end.x / (float)texture.width;
-		//texcoords[5] = start.y / (float)texture.height;
-		//texcoords[6] = start.x / (float)texture.width;
-		//texcoords[7] = start.y / (float)texture.height;
+		printf("1 = %d start %d\n", end.y, start.y);
+		
+		end.y = texture.height - end.y;
+		start.y = texture.height - start.y;
 
-		texcoords[6] = start.x / (float)texture.width;
-		texcoords[7] = end.y / (float)texture.height;
+		//point_start.x, point_start.y, point_end.x - point_start.x, point_end.y - point_start.y
+		texcoords[0] = start.x / (float)texture.height;
+		texcoords[1] = end.y / (float)texture.height;
 		texcoords[2] = end.x / (float)texture.width;
 		texcoords[3] = end.y / (float)texture.height;
-		texcoords[0] = end.x / (float)texture.width;
-		texcoords[1] = start.y / (float)texture.height;
-		texcoords[4] = start.x / (float)texture.width;
+		texcoords[4] = end.x / (float)texture.width;
 		texcoords[5] = start.y / (float)texture.height;
+		texcoords[6] = start.x / (float)texture.width;
+		texcoords[7] = start.y / (float)texture.height;
+
+		//texcoords[6] = start.x / (float)texture.width;
+		//texcoords[7] = end.y / (float)texture.height;
+		//texcoords[2] = end.x / (float)texture.width;
+		//texcoords[3] = end.y / (float)texture.height;
+		//texcoords[0] = end.x / (float)texture.width;
+		//texcoords[1] = start.y / (float)texture.height;
+		//texcoords[4] = start.x / (float)texture.width;
+		//texcoords[5] = start.y / (float)texture.height;
 		draw_textured_rectv(verts, texcoords, texture.texID);
 	}
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
