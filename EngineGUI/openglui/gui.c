@@ -60,11 +60,6 @@ void UI_Init(int reserved_size, int reserved_newelements)
 //	}
 //}
 
-static void DrawTrackbar(ui_handle_t *hElem)
-{
-
-}
-
 ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *hparent, ui_param uparam1, ui_param uparam2, ui_param uparam3, ui_param uparam4, int posx, int posy, int width, int height, long flags)
 {
 #pragma region LEGACY_CODE
@@ -200,7 +195,7 @@ ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *
 #pragma endregion
 	for (int i = 0; i < MEM_SIZE(&uidata.registred_elems); i++) {
 		ui_register_t *p_elem = &MEM_GETELEMENT(&uidata.registred_elems, ui_register_t, i);
-		printf("idx: %d | elem: %d\n", i, p_elem->n_identifier);
+		//printf("idx: %d | elem: %d\n", i, p_elem->n_identifier);
 
 		if (p_elem->n_identifier == n_identifier) {
 			ui_handle_t *hRetElement = (ui_handle_t *)malloc(sizeof(ui_handle_t));
@@ -230,9 +225,7 @@ ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *
 			hRetElement->clip.top = create_data.y;
 			hRetElement->clip.right = create_data.x + create_data.width;
 			hRetElement->clip.bottom = create_data.y + create_data.height;
-
 			hRetElement->elemptr = hRetElement->p_msgfunc(hRetElement, UIMSG_CREATE, (ui_param)id, (ui_param)&create_data);
-			printf("hRetElement->elemptr address: 0x%x\n", hRetElement->elemptr);
 			if (hparent) {
 				if (!hparent->child_controls.ptr) {
 					MEM_INIT(&hparent->child_controls, sizeof(ui_handle_t*), 1);
@@ -372,7 +365,6 @@ void UIEvent_MouseMove(int x, int y)
 		ui_handle_t *p_element = MEM_GETELEMENT(&uidata.elems, ui_handle_t *, i);
 		if (p_element && p_element->enabled && p_element->p_msgfunc) {
 			if (POINT_IN_RECT(p_element->clip.left, p_element->clip.top, p_element->clip.right, p_element->clip.bottom, x, y)) {
-				printf("IN RECT\n");
 				p_element->p_msgfunc(p_element, UIMSG_MOUSEMOVE, (ui_param)((input.mouse[0] & 0xffff) | ((input.mouse[1] & 0xffff) << 16)), (ui_param)NULL);
 
 				//TODO: handling child elements

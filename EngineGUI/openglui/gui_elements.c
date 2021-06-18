@@ -149,7 +149,7 @@ ui_param msg_button(ui_handle_t *handle, int message, ui_param param1, ui_param 
 		printf("\n0x%x address\n", p_create_data);
 		printf("name: %s\n\n", p_create_data->name);
 
-		memset(pbutton, NULL, sizeof(ui_canvas_t));
+		memset(pbutton, NULL, sizeof(ui_button_t));
 		pbutton->name = p_create_data->name; //TODO: CANVAS NAME strdup not used
 		pbutton->rect_color.r = 40;
 		pbutton->rect_color.g = 40;
@@ -182,6 +182,9 @@ ui_param msg_button(ui_handle_t *handle, int message, ui_param param1, ui_param 
 		handle->clip.top = p_create_data->y;
 		handle->clip.right = p_create_data->x + p_create_data->width;
 		handle->clip.bottom = p_create_data->y + p_create_data->height;
+
+		handle->id = p_create_data->id;
+		pbutton->button_click_callback = p_create_data->param1;
 		return pbutton;
 	}
 
@@ -192,6 +195,32 @@ ui_param msg_button(ui_handle_t *handle, int message, ui_param param1, ui_param 
 		pButton->b_touched = (bool)POINT_IN_RECT(handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom, input.mouse[0], input.mouse[1]);
 		printf("Mouse move event for BUTTON  x: %d  y: %d  %s ", xPos, yPos, pButton->b_touched ? "IN BUTTON!" : "");
 		printf("clip: left(%d)  top(%d)  right(%d)  bottom(%d)\n", handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom);
+		break;
+	}
+
+	case UIMSG_MOUSECLICK: {
+		char button = (char)param1 & 0xff;
+		char state = (char)(param1 >> 8) & 0xff;
+		short x = param2 & 0xffff, y = (param2 >> 16) & 0xffff;
+		ui_button_t *p_button = (ui_button_t *)handle->elemptr;
+		if (p_button && p_button->button_click_callback && POINT_IN_RECT(handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom, x, y)) {
+			p_button->button_click_callback(handle->id, handle);
+		}
+
+		printf("button: %d  state: %d  posx: %d   posy: %d\n", button, state, x, y);
+		//switch (button) {
+		//case MOUSELBUTTON:
+
+		//	break;
+
+		//case MOUSERBUTTON:
+
+		//	break;
+
+		//case MOUSEMBUTTON:
+
+		//	break;
+		//}
 		break;
 	}
 

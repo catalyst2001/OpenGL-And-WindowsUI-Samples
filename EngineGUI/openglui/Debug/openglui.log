@@ -1,4 +1,4 @@
-﻿  openglui.c
+﻿  gui_elements.c
 d:\engine\okayengine\local\parts\enginegui\openglui\memutils.h(26): warning C4005: MEM_RESET: изменение макроопределения
   c:\program files (x86)\windows kits\8.1\include\um\winnt.h(12183): note: см. предыдущее определение "MEM_RESET"
 d:\engine\okayengine\local\parts\enginegui\openglui\memutils.h(33): warning C4005: MEM_FREE: изменение макроопределения
@@ -6,30 +6,20 @@ d:\engine\okayengine\local\parts\enginegui\openglui\memutils.h(33): warning C400
 d:\engine\okayengine\local\parts\enginegui\openglui\gui_primitives.h(32): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
 d:\engine\okayengine\local\parts\enginegui\openglui\gui_primitives.h(33): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
 d:\engine\okayengine\local\parts\enginegui\openglui\gui_primitives.h(42): warning C4244: функция: преобразование "int" в "GLfloat", возможна потеря данных
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(77): warning C4047: функция: "ui_param" отличается по уровням косвенного обращения от "void *"
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(77): warning C4024: ui_create: различные типы для формального и фактического параметров 5
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(77): warning C4024: ui_create: различные типы для формального и фактического параметров 6
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(77): warning C4024: ui_create: различные типы для формального и фактического параметров 7
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(77): warning C4024: ui_create: различные типы для формального и фактического параметров 8
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(84): warning C4047: функция: "ui_param" отличается по уровням косвенного обращения от "void *"
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(84): warning C4024: ui_create: различные типы для формального и фактического параметров 5
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(84): warning C4024: ui_create: различные типы для формального и фактического параметров 6
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(84): warning C4024: ui_create: различные типы для формального и фактического параметров 7
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(84): warning C4024: ui_create: различные типы для формального и фактического параметров 8
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(84): warning C4047: функция: "long" отличается по уровням косвенного обращения от "void *"
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(84): warning C4024: ui_create: различные типы для формального и фактического параметров 13
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(85): warning C4047: функция: "ui_param" отличается по уровням косвенного обращения от "void *"
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(85): warning C4024: ui_create: различные типы для формального и фактического параметров 5
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(85): warning C4024: ui_create: различные типы для формального и фактического параметров 6
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(85): warning C4024: ui_create: различные типы для формального и фактического параметров 7
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(85): warning C4024: ui_create: различные типы для формального и фактического параметров 8
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(85): warning C4047: функция: "long" отличается по уровням косвенного обращения от "void *"
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(85): warning C4024: ui_create: различные типы для формального и фактического параметров 13
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(86): warning C4047: функция: "ui_param" отличается по уровням косвенного обращения от "void *"
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(86): warning C4024: ui_create: различные типы для формального и фактического параметров 5
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(86): warning C4024: ui_create: различные типы для формального и фактического параметров 6
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(86): warning C4024: ui_create: различные типы для формального и фактического параметров 7
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(86): warning C4024: ui_create: различные типы для формального и фактического параметров 8
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(86): warning C4047: функция: "long" отличается по уровням косвенного обращения от "void *"
-d:\engine\okayengine\local\parts\enginegui\openglui\openglui.c(86): warning C4024: ui_create: различные типы для формального и фактического параметров 13
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(77): warning C4047: return: "ui_param" отличается по уровням косвенного обращения от "void *"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(79): warning C4477: "printf": в строке форматирования "%x" требуется аргумент типа "unsigned int", но вариативный аргумент "1" имеет тип "ui_create_data_t *"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(82): warning C4047: функция: "int" отличается по уровням косвенного обращения от "void *"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(82): warning C4024: memset: различные типы для формального и фактического параметров 2
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(83): warning C4090: =: разные квалификаторы "const"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(107): warning C4047: return: "ui_param" отличается по уровням косвенного обращения от "ui_canvas_t *"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(147): warning C4047: return: "ui_param" отличается по уровням косвенного обращения от "void *"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(149): warning C4477: "printf": в строке форматирования "%x" требуется аргумент типа "unsigned int", но вариативный аргумент "1" имеет тип "ui_create_data_t *"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(152): warning C4047: функция: "int" отличается по уровням косвенного обращения от "void *"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(152): warning C4024: memset: различные типы для формального и фактического параметров 2
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(153): warning C4090: =: разные квалификаторы "const"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(187): warning C4047: =: "BTNCLICKFN" отличается по уровням косвенного обращения от "ui_param"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(188): warning C4047: return: "ui_param" отличается по уровням косвенного обращения от "ui_button_t *"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(236): warning C4133: функция: несовместимые типы - из "ui_color4_t *" в "const GLubyte *"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(238): warning C4133: функция: несовместимые типы - из "ui_color4_t *" в "const GLubyte *"
+d:\engine\okayengine\local\parts\enginegui\openglui\gui_elements.c(230): warning C4715: msg_button: значение возвращается не при всех путях выполнения
   openglui.vcxproj -> D:\ENGINE\OkayEngine\local\parts\EngineGUI\Debug\openglui.exe

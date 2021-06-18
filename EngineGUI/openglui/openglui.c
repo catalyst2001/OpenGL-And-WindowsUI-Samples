@@ -23,15 +23,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 circleprimitive_t circle;
 
-//void buttonclick_callback(int id, ui_handle_t *this)
-//{
-//	if(this->flags == FL_BTNNORMAL)
-//		printf("~~~ Button %d clicked!\n", id);
-//
-//	if (this->flags == FL_BTNCHECK) {
-//		printf("~~~ Check button clicked!  Value: (%s)\n", *(((UIBUTTONCHECK*)this->elemptr)->b_value) ? "True" : "False");
-//	}
-//}
+void buttonclick_callback(int id, ui_handle_t *this)
+{
+	printf("button pressed: %d\n", id);
+}
 
 int main(int argc, char *argv[])
 {
@@ -81,9 +76,9 @@ int main(int argc, char *argv[])
 
 	//bool bTest = false;
 	//bool bTest2 = false;
-	ui_create(UI_BUTTON, 1, "Test button", helem, NULL, (void*)1, NULL, NULL, 40, posy += 40, 200, 40, NULL);
-	ui_create(UI_BUTTON, 2, "Test button 1", helem, NULL, (void*)1, NULL, NULL, 40, posy += 50, 200, 40, NULL);
-	ui_create(UI_BUTTON, 3, "Test button 2", helem, NULL, (void*)1, NULL, NULL, 40, posy += 50, 200, 40, NULL);
+	ui_create(UI_BUTTON, 1, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 40, posy += 40, 200, 40, NULL);
+	ui_create(UI_BUTTON, 2, "Test button 1", helem, buttonclick_callback, (void*)1, NULL, NULL, 40, posy += 50, 200, 40, NULL);
+	ui_create(UI_BUTTON, 3, "Test button 2", helem, buttonclick_callback, (void*)1, NULL, NULL, 40, posy += 50, 200, 40, NULL);
 	//ui_create(UI_BUTTON, 2, "Test check button", helem, buttonclick_callback, (void*)2, &bTest, NULL, 40, posy += 40 + 2, 200, 40, FL_BTNCHECK);
 	//ui_create(UI_BUTTON, 3, "Test check button", helem, buttonclick_callback, (void*)3, &bTest2, NULL, 40, posy += 40 + 2, 200, 40, FL_BTNRADIO);
 	//ui_create(UIELEM_BUTTON, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 40, posy += 40 + 2, 200, 40, NULL);

@@ -105,7 +105,6 @@ typedef struct ui_handle_s {
 	ui_msg_handler_fn p_msgfunc;
 	ui_cliprect_t clip;
 	void (*draw)(ui_handle_t *);
-	void (*remove)(ui_handle_t *);
 	dynamic_memory_t child_controls;
 } ui_handle_t;
 
