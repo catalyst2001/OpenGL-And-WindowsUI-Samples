@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="gui.c" />
+    <ClCompile Include="gui_primitives.c" />
+    <ClCompile Include="memutils.c" />
+    <ClCompile Include="openglui.c" />
+    <ClCompile Include="gui_elements.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gui.h" />
+    <ClInclude Include="gui_primitives.h" />
+    <ClInclude Include="memutils.h" />
+    <ClInclude Include="gui_elements.h" />
+  </ItemGroup>
+</Project>
