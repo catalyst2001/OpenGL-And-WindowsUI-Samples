@@ -11,8 +11,8 @@
 #include "gui_elements.h"
 
 #define WINDOWCLASS "OpenGLUI"
-#define WIDTH 1280
-#define HEIGHT 1024
+#define WIDTH 800
+#define HEIGHT 600
 #define DEPTH_BUFFER_BITS 24
 
 HDC hDevCtx;
@@ -106,7 +106,8 @@ int main(int argc, char *argv[])
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		//gluOrtho2D(0, WIDTH, 0, HEIGHT);
-		gluOrtho2D(0, WIDTH, HEIGHT, 0);
+		gluOrtho2D(0, input.window_width, input.window_height, 0);
+		//glViewport(0, 0, input.window_width, input.window_height);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		UIEvent_Render();
@@ -135,6 +136,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		UINT width = LOWORD(lParam);
 		UINT height = HIWORD(lParam);
 		glViewport(0, 0, width, height);
+		//glMatrixMode(GL_PROJECTION);
+		//glLoadIdentity();
+		//gluPerspective(45.0, width / (double)height, -1.0, 1.0);
+		//glMatrixMode(GL_MODELVIEW);
+		//glLoadIdentity();
 		UIEvent_WindowResize(width, height);
 		break;
 	}

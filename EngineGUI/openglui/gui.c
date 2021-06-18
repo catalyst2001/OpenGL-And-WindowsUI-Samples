@@ -389,7 +389,6 @@ void UIEvent_MouseMove(int x, int y)
 
 void UIEvent_MouseClick(int x, int y, char button)
 {
-	y = input.window_height - y;
 #pragma region LEGACY_CODE
 	//for (int i = 0; i < MEM_SIZE(&uidata.elems); i++) {
 	//	ui_handle_t *hElem = MEM_GETELEMENT(&uidata.elems, ui_handle_t *, i);

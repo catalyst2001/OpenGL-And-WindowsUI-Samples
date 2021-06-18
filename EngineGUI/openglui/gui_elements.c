@@ -186,7 +186,7 @@ ui_param msg_button(ui_handle_t *handle, int message, ui_param param1, ui_param 
 	}
 
 	case UIMSG_MOUSEMOVE: {
-		short xPos = (param1 & 0xffff); //TODO: change bitwise operators to macros
+		short xPos = param1 & 0xffff; //TODO: change bitwise operators to macros
 		short yPos = (param1 >> 16) & 0xffff;
 		ui_button_t *pButton = (ui_button_t *)handle->elemptr;
 		pButton->b_touched = (bool)POINT_IN_RECT(handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom, input.mouse[0], input.mouse[1]);

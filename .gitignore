@@ -1,3 +1,14 @@
 
 /.vs/
 *.suo
+*.idb
+*.tlog
+*.ipch
+*.obj
+*.db
+*.tlog
+*.tlog
+*.tlog
+*.idb
+*.ilk
+*.enc
