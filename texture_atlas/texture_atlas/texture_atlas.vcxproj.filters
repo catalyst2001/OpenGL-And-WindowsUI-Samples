@@ -10,13 +10,24 @@
     <ClCompile Include="texture_atlas.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="controls.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="viewport.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\utilites\glwnd.h">
+    <ClInclude Include="..\..\utilites\texture.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utilites\glutils.h" />
-    <ClInclude Include="..\..\utilites\texture.h">
+    <ClInclude Include="viewport.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="controls.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utilites\glutils.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

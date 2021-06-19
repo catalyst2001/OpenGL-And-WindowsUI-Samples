@@ -1,5 +1,6 @@
 #pragma once
-#include "glwnd.h"
+#include <Windows.h>
+#include <gl/gl.h>
 
 static void draw_rect(int mode, int x, int y, int width, int height)
 {

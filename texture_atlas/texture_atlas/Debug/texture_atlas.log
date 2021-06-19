@@ -1,6 +1,8 @@
 ﻿  texture_atlas.cpp
-c:\users\kikker\documents\github\opengl-and-windowsui-samples\texture_atlas\texture_atlas\texture_atlas.cpp(86): warning C4018: >: несоответствие типов со знаком и без знака
-c:\users\kikker\documents\github\opengl-and-windowsui-samples\texture_atlas\texture_atlas\texture_atlas.cpp(90): warning C4018: >: несоответствие типов со знаком и без знака
-c:\users\kikker\documents\github\opengl-and-windowsui-samples\texture_atlas\texture_atlas\texture_atlas.cpp(98): warning C4018: >: несоответствие типов со знаком и без знака
-c:\users\kikker\documents\github\opengl-and-windowsui-samples\texture_atlas\texture_atlas\texture_atlas.cpp(102): warning C4018: >: несоответствие типов со знаком и без знака
-  texture_atlas.vcxproj -> C:\Users\Kikker\Documents\GitHub\OpenGL-And-WindowsUI-Samples\texture_atlas\Debug\texture_atlas.exe
+e:\github\specialforkikker228\texture_atlas\texture_atlas\texture_atlas.cpp(209): warning C4302: приведение типов: усечение из "LPWSTR" к "WORD"
+e:\github\specialforkikker228\texture_atlas\texture_atlas\texture_atlas.cpp(284): warning C4838: преобразование из "GLuint" в "int" требует сужающего преобразования
+e:\github\specialforkikker228\texture_atlas\texture_atlas\texture_atlas.cpp(324): warning C4018: >: несоответствие типов со знаком и без знака
+e:\github\specialforkikker228\texture_atlas\texture_atlas\texture_atlas.cpp(328): warning C4018: >: несоответствие типов со знаком и без знака
+e:\github\specialforkikker228\texture_atlas\texture_atlas\texture_atlas.cpp(336): warning C4018: >: несоответствие типов со знаком и без знака
+e:\github\specialforkikker228\texture_atlas\texture_atlas\texture_atlas.cpp(340): warning C4018: >: несоответствие типов со знаком и без знака
+  texture_atlas.vcxproj -> E:\GITHUB\SpecialForKikker228\texture_atlas\Debug\texture_atlas.exe

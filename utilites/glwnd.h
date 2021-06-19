@@ -114,10 +114,10 @@
 #include <stdarg.h>
 
 typedef void(*DRAWFN)();
-typedef void(*RESIZEFN)(INT width, INT height);
-typedef void(*MOUSEMOVEFN)(INT x, INT y);
-typedef void(*CHARFN)(CHAR sym);
-typedef void(*KEYDOWNFN)(INT state, WPARAM wParam, LPARAM lParam);
+typedef void(*RESIZEFN)(HWND window, INT width, INT height);
+typedef void(*MOUSEMOVEFN)(HWND window, INT x, INT y);
+typedef void(*CHARFN)(HWND window, CHAR sym);
+typedef void(*KEYDOWNFN)(HWND window, INT state, WPARAM wParam, LPARAM lParam);
 typedef void(*WINDOWCREATE)(HWND wnd);
 typedef void(*WINDOWQUIT)(HWND wnd);
 
@@ -125,9 +125,9 @@ typedef void(*WINDOWQUIT)(HWND wnd);
 #define RBUTTON 1 //right mouse button
 #define KEY_DOWN 0 //button dwown
 #define KEY_UP 1 //button up
-typedef void(*MOUSECLICKFN)(INT x, INT y, INT button, INT state);
+typedef void(*MOUSECLICKFN)(HWND wnd, INT x, INT y, INT button, INT state);
 
-typedef void(*MENUCALLBACK)(HMENU hMenu, INT id);
+typedef void(*MENUCALLBACK)(HWND wnd, HMENU hMenu, INT id);
 
 struct GLWINDOW {
 	HMODULE			hModule;
@@ -167,53 +167,53 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_COMMAND:
 		if (global_window_data.p_menucallback)
-			global_window_data.p_menucallback((HMENU)lParam, LOWORD(wParam));
+			global_window_data.p_menucallback(hWnd, (HMENU)lParam, LOWORD(wParam));
 		break;
 	case WM_SIZE:
 	{
 		if (global_window_data.p_resizefn)
-			global_window_data.p_resizefn(LOWORD(lParam), HIWORD(lParam));
+			global_window_data.p_resizefn(hWnd, LOWORD(lParam), HIWORD(lParam));
 		break;
 	}
 
 	case WM_LBUTTONDOWN:
 		if(global_window_data.p_mouseclickfn)
-			global_window_data.p_mouseclickfn(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), LBUTTON, KEY_DOWN);
+			global_window_data.p_mouseclickfn(hWnd, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), LBUTTON, KEY_DOWN);
 		break;
 
 	case WM_LBUTTONUP:
 		if(global_window_data.p_mouseclickfn)
-			global_window_data.p_mouseclickfn(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), LBUTTON, KEY_UP);
+			global_window_data.p_mouseclickfn(hWnd, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), LBUTTON, KEY_UP);
 		break;
 
 	case WM_RBUTTONDOWN:
 		if(global_window_data.p_mouseclickfn)
-			global_window_data.p_mouseclickfn(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), RBUTTON, KEY_DOWN);
+			global_window_data.p_mouseclickfn(hWnd, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), RBUTTON, KEY_DOWN);
 		break;
 
 	case WM_RBUTTONUP:
 		if(global_window_data.p_mouseclickfn)
-			global_window_data.p_mouseclickfn(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), RBUTTON, KEY_UP);
+			global_window_data.p_mouseclickfn(hWnd, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), RBUTTON, KEY_UP);
 		break;
 
 	case WM_CHAR:
 		if (global_window_data.p_keyboardfn)
-			global_window_data.p_keyboardfn((char)wParam);
+			global_window_data.p_keyboardfn(hWnd, (char)wParam);
 		break;
 
 	case WM_KEYDOWN:
 		if (global_window_data.p_ketdownfn)
-			global_window_data.p_ketdownfn(KEY_DOWN, wParam, lParam);
+			global_window_data.p_ketdownfn(hWnd, KEY_DOWN, wParam, lParam);
 		break;
 
 	case WM_KEYUP:
 		if (global_window_data.p_ketdownfn)
-			global_window_data.p_ketdownfn(KEY_UP, wParam, lParam);
+			global_window_data.p_ketdownfn(hWnd, KEY_UP, wParam, lParam);
 		break;
 
 	case WM_MOUSEMOVE:
 		if (global_window_data.p_mousemovefn)
-			global_window_data.p_mousemovefn(LOWORD(lParam), HIWORD(lParam));
+			global_window_data.p_mousemovefn(hWnd, LOWORD(lParam), HIWORD(lParam));
 		break;
 
 	case WM_CLOSE:
@@ -228,6 +228,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return 0;
 }
+
+GLWINDOW *GetStruct() { return &global_window_data; }
 
 void create_window(const char *p_windowname,
 	const char *p_classname,
