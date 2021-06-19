@@ -64,7 +64,6 @@ int main(int argc, char *argv[])
 
 	hRndCtx = wglCreateContext(hDevCtx);
 	wglMakeCurrent(hDevCtx, hRndCtx);
-	glEnable(GL_DEPTH_TEST);
 
 	UI_Init(1, 1);
 	ui_register_elements();
@@ -76,13 +75,16 @@ int main(int argc, char *argv[])
 
 	//bool bTest = false;
 	//bool bTest2 = false;
-	ui_create(UI_BUTTON, 1, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 40, posy += 40, 200, 40, NULL);
-	ui_create(UI_BUTTON, 2, "Test button 1", helem, buttonclick_callback, (void*)1, NULL, NULL, 40, posy += 50, 200, 40, NULL);
-	ui_create(UI_BUTTON, 3, "Test button 2", helem, buttonclick_callback, (void*)1, NULL, NULL, 40, posy += 50, 200, 40, NULL);
+	
+	ui_create(UI_BUTTON, 1, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, NULL);
+	ui_create(UI_BUTTON, 2, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, NULL);
+	ui_create(UI_BUTTON, 3, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, NULL);
+	ui_create(UI_BUTTON, 4, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, BF_DEFAULT);
+
 	//ui_create(UI_BUTTON, 2, "Test check button", helem, buttonclick_callback, (void*)2, &bTest, NULL, 40, posy += 40 + 2, 200, 40, FL_BTNCHECK);
 	//ui_create(UI_BUTTON, 3, "Test check button", helem, buttonclick_callback, (void*)3, &bTest2, NULL, 40, posy += 40 + 2, 200, 40, FL_BTNRADIO);
 	//ui_create(UIELEM_BUTTON, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 40, posy += 40 + 2, 200, 40, NULL);
-
+	
 	while (true) {
 		MSG msg;
 		if (PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE))
@@ -150,14 +152,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN: {
 		UINT x = LOWORD(lParam);
 		UINT y = HIWORD(lParam);
-		UIEvent_MouseClick(x, y, MOUSELBUTTON);
+		UIEvent_MouseClick(x, y, MLEFTBUTTON);
 		break;
 	}
 
 	case WM_RBUTTONDOWN: {
 		UINT x = LOWORD(lParam);
 		UINT y = HIWORD(lParam);
-		UIEvent_MouseClick(x, y, MOUSERBUTTON);
+		UIEvent_MouseClick(x, y, MRIGHTBUTTON);
 		break;
 	}
 

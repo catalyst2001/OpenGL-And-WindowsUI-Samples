@@ -77,13 +77,13 @@ ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *
 //		pCanvas->edge_color = canvas_edge_color;
 //		pCanvas->rect_color = canvas_rect_color;
 //		pCanvas->text_color = canvas_text_color;
-//		hRetElement->type = UIELEM_CANVAS;
-//		hRetElement->elemptr = pCanvas;
-//		hRetElement->draw = &DrawCanvas;
-//		hRetElement->enabled = true;
-//		MEM_INIT(&hRetElement->child_controls, sizeof(ui_handle_t*), 1);
-//		MEM_PUSH(&uidata.elems, ui_handle_t *, hRetElement);
-//		return hRetElement;
+//		p_handle->type = UIELEM_CANVAS;
+//		p_handle->elemptr = pCanvas;
+//		p_handle->draw = &DrawCanvas;
+//		p_handle->enabled = true;
+//		MEM_INIT(&p_handle->child_controls, sizeof(ui_handle_t*), 1);
+//		MEM_PUSH(&uidata.elems, ui_handle_t *, p_handle);
+//		return p_handle;
 //	}
 //
 //	case UIELEM_BUTTON: {
@@ -100,12 +100,12 @@ ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *
 //			pButton->rect.t = posy + height;
 //			pButton->rect.width = width;
 //			pButton->rect.height = height;
-//			pButton->button_click_callback = (BTNCLICKFN)uparam1;
+//			pButton->button_callback = (ui_button_action_fn)uparam1;
 //			pButton->b_touched = false;
 //			pButton->rect_color = button_rect_color;
 //			pButton->rect_focus_color = button_rect_focus_color;
-//			hRetElement->elemptr = pButton;
-//			hRetElement->flags = flags;
+//			p_handle->elemptr = pButton;
+//			p_handle->flags = flags;
 //		}
 //		else if (flags & FL_BTNCHECK) {
 //			UIBUTTONCHECK *pButtonCheck = (UIBUTTONCHECK *)malloc(sizeof(UIBUTTONCHECK));
@@ -117,9 +117,9 @@ ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *
 //			pButtonCheck->rect.width = CHECKBUTTON_WIDTH;
 //			pButtonCheck->rect.height = CHECKBUTTON_HEIGHT;
 //			pButtonCheck->b_value = (bool *)uparam3;
-//			pButtonCheck->button_click_callback = (BTNCLICKFN)uparam1;
-//			hRetElement->elemptr = pButtonCheck;
-//			hRetElement->flags = flags;
+//			pButtonCheck->button_callback = (ui_button_action_fn)uparam1;
+//			p_handle->elemptr = pButtonCheck;
+//			p_handle->flags = flags;
 //		}
 //		else if (flags & FL_BTNRADIO) {
 //			UIRADIOBUTTON *pRadioButton = (UIRADIOBUTTON *)malloc(sizeof(UIRADIOBUTTON));
@@ -133,28 +133,28 @@ ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *
 //			pRadioButton->rect.width = (RADIOBUTTON_EDGE_RADIUS + RADIOBUTTON_EDGE_RADIUS);
 //			pRadioButton->rect.height = (RADIOBUTTON_EDGE_RADIUS + RADIOBUTTON_EDGE_RADIUS);
 //			pRadioButton->b_value = (bool *)uparam3;
-//			pRadioButton->button_click_callback = (BTNCLICKFN)uparam1;
-//			hRetElement->elemptr = pRadioButton;
-//			hRetElement->flags = flags;
+//			pRadioButton->button_callback = (ui_button_action_fn)uparam1;
+//			p_handle->elemptr = pRadioButton;
+//			p_handle->flags = flags;
 //		}
-//		hRetElement->id = (int)uparam2;
-//		hRetElement->draw = &DrawButton;
-//		hRetElement->type = UIELEM_BUTTON;
-//		hRetElement->enabled = true;
+//		p_handle->id = (int)uparam2;
+//		p_handle->draw = &DrawButton;
+//		p_handle->type = UIELEM_BUTTON;
+//		p_handle->enabled = true;
 //		if (hparent) {
 //			if (hparent->type == UIELEM_CANVAS) {
 //				printf("Button: child element added to %d\n", hparent->type);
 //				//Prevent 'push' to NULL pointer
 //				if (hparent->child_controls.ptr) {
-//					MEM_PUSH(&hparent->child_controls, ui_handle_t *, hRetElement);
+//					MEM_PUSH(&hparent->child_controls, ui_handle_t *, p_handle);
 //				}
 //			}
-//			return hRetElement;
+//			return p_handle;
 //		}
 //
 //		//If not parent, push element to root ui
-//		MEM_PUSH(&uidata.elems, ui_handle_t *, hRetElement);
-//		return hRetElement;
+//		MEM_PUSH(&uidata.elems, ui_handle_t *, p_handle);
+//		return p_handle;
 //	}
 //
 //	case UIELEM_TRACKBAR: {
@@ -174,21 +174,21 @@ ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *
 //		hTrackbar->rect.t = posy + height;
 //		hTrackbar->rect.width = width;
 //		hTrackbar->rect.height = height;
-//		hRetElement->id = (int)uparam2;
-//		hRetElement->flags = (int)uparam3;
-//		hRetElement->draw = &DrawTrackbar;
-//		hRetElement->elemptr = hTrackbar;
-//		hRetElement->type = UIELEM_TRACKBAR;
-//		hRetElement->enabled = true;
+//		p_handle->id = (int)uparam2;
+//		p_handle->flags = (int)uparam3;
+//		p_handle->draw = &DrawTrackbar;
+//		p_handle->elemptr = hTrackbar;
+//		p_handle->type = UIELEM_TRACKBAR;
+//		p_handle->enabled = true;
 //		if (hparent && hparent->type == UIELEM_CANVAS) {
 //			if (hparent->child_controls.ptr) {
-//				MEM_PUSH(&hparent->child_controls, ui_handle_t *, hRetElement);
-//				return hRetElement;
+//				MEM_PUSH(&hparent->child_controls, ui_handle_t *, p_handle);
+//				return p_handle;
 //			}
 //		}
 //		//If not parent, push element to root ui
-//		MEM_PUSH(&uidata.elems, ui_handle_t *, hRetElement);
-//		return hRetElement;
+//		MEM_PUSH(&uidata.elems, ui_handle_t *, p_handle);
+//		return p_handle;
 //		break;
 //	}
 //	}
@@ -198,22 +198,22 @@ ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *
 		//printf("idx: %d | elem: %d\n", i, p_elem->n_identifier);
 
 		if (p_elem->n_identifier == n_identifier) {
-			ui_handle_t *hRetElement = (ui_handle_t *)malloc(sizeof(ui_handle_t));
-			memset(hRetElement, 0, sizeof(ui_handle_t));
-			hRetElement->draw = p_elem->p_drawfunc;
-			hRetElement->p_msgfunc = p_elem->p_msgfunc;
-			hRetElement->enabled = true;
+			ui_handle_t *p_handle = (ui_handle_t *)malloc(sizeof(ui_handle_t));
+			memset(p_handle, 0, sizeof(ui_handle_t));
+			p_handle->draw = p_elem->p_drawfunc;
+			p_handle->p_msgfunc = p_elem->p_msgfunc;
+			p_handle->enabled = true;
 
 			ui_create_data_t create_data;
 			memset(&create_data, NULL, sizeof(ui_create_data_t));
 			create_data.n_identifier = n_identifier;
 			create_data.id = id;
 			create_data.name = name;
-			create_data.hparent;
-			create_data.param1;
-			create_data.param2;
-			create_data.param3;
-			create_data.param4;
+			create_data.hparent = hparent;
+			create_data.param1 = uparam1;
+			create_data.param2 = uparam2;
+			create_data.param3 = uparam3;
+			create_data.param4 = uparam4;
 			create_data.x = posx;
 			create_data.y = posy;
 			create_data.width = width;
@@ -221,20 +221,21 @@ ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *
 			create_data.flags = flags;
 
 			//compute clip rect
-			hRetElement->clip.left = create_data.x;
-			hRetElement->clip.top = create_data.y;
-			hRetElement->clip.right = create_data.x + create_data.width;
-			hRetElement->clip.bottom = create_data.y + create_data.height;
-			hRetElement->elemptr = hRetElement->p_msgfunc(hRetElement, UIMSG_CREATE, (ui_param)id, (ui_param)&create_data);
+			p_handle->clip.left = create_data.x;
+			p_handle->clip.top = create_data.y;
+			p_handle->clip.right = create_data.x + create_data.width;
+			p_handle->clip.bottom = create_data.y + create_data.height;
+			p_handle->elemptr = p_handle->p_msgfunc(p_handle, UIMSG_CREATE, (ui_param)id, (ui_param)&create_data);
+			p_handle->flags = flags;
 			if (hparent) {
 				if (!hparent->child_controls.ptr) {
 					MEM_INIT(&hparent->child_controls, sizeof(ui_handle_t*), 1);
 				}
-				MEM_PUSH(&hparent->child_controls, ui_handle_t *, hRetElement);
-				return hRetElement;
+				MEM_PUSH(&hparent->child_controls, ui_handle_t *, p_handle);
+				return p_handle;
 			}
-			MEM_PUSH(&uidata.elems, ui_handle_t *, hRetElement);
-			return hRetElement;
+			MEM_PUSH(&uidata.elems, ui_handle_t *, p_handle);
+			return p_handle;
 		}
 	}
 	printf("ui_create: element not registred!\n");
@@ -244,6 +245,18 @@ ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *
 ui_param ui_send(ui_handle_t *p_control, int message, ui_param param1, ui_param param2)
 {
 	return p_control->p_msgfunc(p_control, message, param1, param2);
+}
+
+long ui_getflags(ui_handle_t *handle)
+{
+	return handle->flags;
+}
+
+long ui_setflags(ui_handle_t *handle, long flags)
+{
+	long fl_old = handle->flags;
+	handle->flags = flags;
+	return fl_old;
 }
 
 //TODO: Unimplemented
@@ -387,7 +400,7 @@ void UIEvent_MouseClick(int x, int y, char button)
 	//	if (!hElem->enabled)
 	//		continue;
 
-	//	if (button == MOUSELBUTTON) {
+	//	if (button == MLEFTBUTTON) {
 	//		switch (hElem->type) {
 	//		case UIELEM_CANVAS: {
 	//			UICANVAS *pCanvas = (UICANVAS *)hElem->elemptr;
@@ -396,16 +409,16 @@ void UIEvent_MouseClick(int x, int y, char button)
 	//					ui_handle_t *pUIElem = MEM_GETELEMENT(&hElem->child_controls, ui_handle_t *, j);
 	//					if (pUIElem->flags & FL_BTNNORMAL) {
 	//						UIBUTTON *pBtn = (UIBUTTON *)pUIElem->elemptr;
-	//						if (pBtn->button_click_callback && POINT_IN_RECT(pBtn->rect.x, pBtn->rect.y, pBtn->rect.r, pBtn->rect.t, x, y)) {
-	//							pBtn->button_click_callback(hElem->id, pUIElem);
+	//						if (pBtn->button_callback && POINT_IN_RECT(pBtn->rect.x, pBtn->rect.y, pBtn->rect.r, pBtn->rect.t, x, y)) {
+	//							pBtn->button_callback(hElem->id, pUIElem);
 	//						}
 	//					}
 
 	//					if (pUIElem->flags & FL_BTNCHECK) {
 	//						UIBUTTONCHECK *pBtnChk = (UIBUTTONCHECK *)pUIElem->elemptr;
 	//						if (POINT_IN_RECT(pBtnChk->rect.x, pBtnChk->rect.y, pBtnChk->rect.r, pBtnChk->rect.t, x, y)) {
-	//							if (pBtnChk->button_click_callback) {
-	//								pBtnChk->button_click_callback(hElem->id, pUIElem);
+	//							if (pBtnChk->button_callback) {
+	//								pBtnChk->button_callback(hElem->id, pUIElem);
 	//							}
 
 	//							if (pBtnChk->b_value) { //if address not NULL
@@ -417,8 +430,8 @@ void UIEvent_MouseClick(int x, int y, char button)
 	//					if (pUIElem->flags & FL_BTNRADIO) {
 	//						UIRADIOBUTTON *pBtnRadio = (UIRADIOBUTTON *)pUIElem->elemptr;
 	//						if (POINT_IN_RECT(pBtnRadio->rect.x, pBtnRadio->rect.y, pBtnRadio->rect.r, pBtnRadio->rect.t, x, y)) {
-	//							if (pBtnRadio->button_click_callback) {
-	//								pBtnRadio->button_click_callback(hElem->id, pUIElem);
+	//							if (pBtnRadio->button_callback) {
+	//								pBtnRadio->button_callback(hElem->id, pUIElem);
 	//							}
 
 	//							if (pBtnRadio->b_value) { //if address not NULL
@@ -434,8 +447,8 @@ void UIEvent_MouseClick(int x, int y, char button)
 
 	//		case UIELEM_BUTTON: {
 	//			UIBUTTON *pButton = (UIBUTTON *)hElem->elemptr;
-	//			if (pButton->button_click_callback && POINT_IN_RECT(pButton->rect.x, pButton->rect.y, pButton->rect.r, pButton->rect.t, x, y)) {
-	//				pButton->button_click_callback(hElem->id, hElem);
+	//			if (pButton->button_callback && POINT_IN_RECT(pButton->rect.x, pButton->rect.y, pButton->rect.r, pButton->rect.t, x, y)) {
+	//				pButton->button_callback(hElem->id, hElem);
 	//			}
 	//			break;
 	//		}
@@ -450,10 +463,12 @@ void UIEvent_MouseClick(int x, int y, char button)
 			p_element->p_msgfunc(p_element, UIMSG_MOUSECLICK, (ui_param)((button & 0xff) | ((state & 0xff) << 8)), (ui_param)((x & 0xffff) | ((y & 0xffff) << 16)));
 
 			//TODO: handling child elements
-			for (int iparent = 0; iparent < MEM_SIZE(&p_element->child_controls); iparent++) {
-				ui_handle_t *p_child = MEM_GETELEMENT(&p_element->child_controls, ui_handle_t*, iparent);
-				if (p_child && p_child->p_msgfunc) {
-					p_child->p_msgfunc(p_child, UIMSG_MOUSECLICK, (ui_param)((button & 0xff) | ((state & 0xff) << 8)), (ui_param)((x & 0xffff) | ((y & 0xffff) << 16)));
+			if (POINT_IN_RECT(p_element->clip.left, p_element->clip.top, p_element->clip.right, p_element->clip.bottom, input.mouse[0], input.mouse[1])) {
+				for (int iparent = 0; iparent < MEM_SIZE(&p_element->child_controls); iparent++) {
+					ui_handle_t *p_child = MEM_GETELEMENT(&p_element->child_controls, ui_handle_t*, iparent);
+					if (p_child && p_child->p_msgfunc) {
+						p_child->p_msgfunc(p_child, UIMSG_MOUSECLICK, (ui_param)((button & 0xff) | ((state & 0xff) << 8)), (ui_param)((x & 0xffff) | ((y & 0xffff) << 16)));
+					}
 				}
 			}
 		}
@@ -462,20 +477,20 @@ void UIEvent_MouseClick(int x, int y, char button)
 
 void UIEvent_Render()
 {
+	glDisable(GL_DEPTH_TEST);
 	for (int i = 0; i < MEM_SIZE(&uidata.elems); i++) {
 		ui_handle_t *hElem = MEM_GETELEMENT(&uidata.elems, ui_handle_t *, i);
 		if (!hElem->enabled) //If ui element disabled
 			continue;
 
-
-		//TODO: PROBLEM MESTO
-		for (int j = 0; j < MEM_SIZE(&hElem->child_controls); j++) {
+		hElem->draw(hElem);
+		for (int j = 0; j < MEM_SIZE(&hElem->child_controls); j++) { //TODO: PROBLEM MESTO
 			ui_handle_t *hChildElem = MEM_GETELEMENT(&hElem->child_controls, ui_handle_t *, j);
 			//if (!hChildElem->enabled)
 			//	continue;
 
 			hChildElem->draw(hChildElem);
 		}
-		hElem->draw(hElem);
 	}
+	glEnable(GL_DEPTH_TEST);
 }

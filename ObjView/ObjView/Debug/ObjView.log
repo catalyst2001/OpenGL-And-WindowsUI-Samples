@@ -1,0 +1,4 @@
+﻿  main.cpp
+e:\github\specialforkikker228\objview\objview\main.cpp(149): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
+e:\github\specialforkikker228\objview\objview\main.cpp(149): warning C4244: аргумент: преобразование "double" в "GLint", возможна потеря данных
+  ObjView.vcxproj -> E:\GITHUB\SpecialForKikker228\ObjView\Debug\ObjView.exe

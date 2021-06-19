@@ -1,13 +1,18 @@
 // -------------------------------------------------------------------------------------------------- //
 //	Engine Graphics User Interface
-//	
-//	Author: K.N Deryabin
+//	Authors: Deryabin K., Tynin R.
 //	Created: 30.01.2021
-//	Modified: 14.06.2021
-//	
-//	Copyright (c) 2021
+//	Modified: 19.06.2021
+//	Copyright (c) 2021.
 // -------------------------------------------------------------------------------------------------- //
-
+//	CHANGELOG:
+//		18.06.2021 - Changed all handlers
+//		19.06.2021 - Buttons
+//	
+//
+//	
+//	
+// -------------------------------------------------------------------------------------------------- //
 #pragma once
 #include <stdio.h>
 #include <stdbool.h>
@@ -20,17 +25,12 @@
 #include "gui_primitives.h"
 #pragma warning(disable:4996)
 
+/**
+*	UI Utilites
+*/
+typedef unsigned short ushort_t;
 #define POINT_IN_RECT(rectx, recty, rectright, recttop, pointx, pointy) (rectx < pointx && recty < pointy && rectright > pointx && recttop > pointy)
 
-//*** UI Elements types ***//
-typedef enum {
-	UIELEM_CANVAS = 0,
-	UIELEM_BUTTON,
-	UIELEM_TRACKBAR,
-} uielement_t;
-
-#define UI_CANVAS 1
-#define UI_BUTTON 2
 #define UI_TRACKBAR 3
 
 #define FL_BTNNORMAL (1 << 0)
@@ -42,23 +42,30 @@ typedef enum {
 #define FL_NOCENTER (1 << 5)
 #define FL_NOTEXT (1 << 6)
 
-circleprimitive_t radiobutton_edge, radiobutton_selection;
+/**
+*	Mouse buttons
+*/
+#define MLEFTBUTTON 0x0
+#define MRIGHTBUTTON 0x1
+#define MWHEELBUTTON 0x2
+#define MBUTTONADT1 0x3
+#define MBUTTONADT2 0x4
+#define MBUTTONADT3 0x5
+#define MBUTTONADT4 0x6
+#define MBUTTONADT5 0x7
 
-enum {
-	MOUSELBUTTON = 0,
-	MOUSERBUTTON,
-	MOUSEMBUTTON
-};
+/**
+*	Button definitions
+*/
+#define BUTTONDOWN 0x0
+#define BUTTONUP 0x1
 
-typedef void *pvoid_t;
-
-//*** UI Rectangle structure ***//
-typedef struct {
+typedef struct ui_point_s {
 	int x, y;
-} UIPOINT;
+} ui_point_t;
 
-typedef struct {
-	UIPOINT p1, p2, p3, p4;
+typedef struct ui_rect_s {
+	ui_point_t p1, p2, p3, p4;
 } ui_rect_t;
 
 typedef struct ui_cliprect_s {
@@ -94,38 +101,36 @@ typedef struct ui_handle_s ui_handle_t;
 */
 typedef ui_param (*ui_msg_handler_fn)(ui_handle_t *handle, int message, ui_param param1, ui_param param2); //control messages handler prototype
 
-//*** Any UI Element data ***//
-typedef struct ui_handle_s {
-	int id;
-	int texid;
-	long flags;
-	bool enabled;
-	uielement_t type;
-	void *elemptr;
-	ui_msg_handler_fn p_msgfunc;
-	ui_cliprect_t clip;
-	void (*draw)(ui_handle_t *);
-	dynamic_memory_t child_controls;
-} ui_handle_t;
-
 /**
 *	Registers a control draw handler
 *	ATTENTION: This procedure only deals with rendering the control!
 */
 typedef void(*ui_draw_handler_fn)(ui_handle_t *); //control draw handler prototype
 
+// UI element handle struct
+typedef struct ui_handle_s {
+	int id;
+	int texid;
+	long flags;
+	bool enabled;
+	ushort_t type;
+	void *elemptr;
+	ui_msg_handler_fn p_msgfunc;
+	ui_cliprect_t clip;
+	ui_draw_handler_fn draw;
+	dynamic_memory_t child_controls;
+} ui_handle_t;
+
 struct ui_input {
 	int mouse[2];
 	int prevmouse[2];
 	int window_width, window_height;
-} input;
-extern struct ui_input input;
+} input; extern struct ui_input input;
 
-struct ui_data {
+struct ui_data_s {
 	dynamic_memory_t elems;
 	dynamic_memory_t registred_elems;
-} uidata;
-extern struct ui_data uidata;
+} uidata; extern struct ui_data_s uidata;
 
 #define UIEvent_WindowResize(width, height)\
 	input.window_width = width;\
@@ -133,10 +138,6 @@ extern struct ui_data uidata;
 
 char *m_strdup(const char *src);
 void UI_Init(int reserved_size, int reserved_newelements);
-
-/**
-*	Creates a GUI Element
-*/
 
 //Contains all parameters passed to ui_create function
 typedef struct ui_create_data_s {
@@ -152,12 +153,31 @@ typedef struct ui_create_data_s {
 	long flags;
 } ui_create_data_t;
 
+/**
+*	Creates a UI element
+*/
 ui_handle_t *ui_create(int n_identifier, int id, const char *name, ui_handle_t *hparent, ui_param uparam1, ui_param uparam2, ui_param uparam3, ui_param uparam4, int posx, int posy, int width, int height, long flags);
 
 /**
-*	Send message to GUI element
+*	Send message to UI element
+*	
+*	message - specific or standard element message
+*	param1, param2 - specific or standard parameter
+*	return - the value or pointer that the handler will return.
 */
-ui_param ui_send(ui_handle_t *p_control, int message, ui_param param1, ui_param param2);
+ui_param ui_send(ui_handle_t *handle, int message, ui_param param1, ui_param param2);
+
+/**
+*	Get element flags
+*	return - bit flags.
+*/
+long ui_getflags(ui_handle_t *handle);
+
+/**
+*	Set element new flags
+*	return - old element flags.
+*/
+long ui_setflags(ui_handle_t *handle, long flags);
 
 /**
 *	Input messages
@@ -172,7 +192,7 @@ ui_param ui_send(ui_handle_t *p_control, int message, ui_param param1, ui_param 
 // 			(8 - 16 bits)	button state
 // 			(16 - 32 bits)	unused
 // param2 - (0 - 16 bits)	mouse position X
-// 			(16 - 32 bits)	mouse position Y
+// 			(16 - 32 bits)	mouse position Y.
 #define UIMSG_MOUSECLICK 0x3
 
 // dispatched as soon as the mouse wheel move up or down.
@@ -197,13 +217,14 @@ ui_param ui_send(ui_handle_t *p_control, int message, ui_param param1, ui_param 
 /**
 *	General messages
 */
-// dispatched as soon as the control is created.
+
+// DISPATCHED AS SOON AS THE CONTROL IS CREATED.
 // param1 - control unique id
 // param2 - pointer to a structure that stores the data passed to ui_create function
-// RETURN - ATTENTION: ADDRESS ALLOCATED MEMORY FOR ELEMENT DATA!
+// RETURN - ATTENTION!!! : ADDRESS ALLOCATED MEMORY FOR ELEMENT DATA!
 #define UIMSG_CREATE 0x0
 
-// dispatched as soon as the control is destroyed. 
+// DISPATCHED AS SOON AS THE CONTROL IS DESTROYED. 
 #define UIMSG_DESTROY 0x1
 
 // dispatch activate control state

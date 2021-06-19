@@ -15,7 +15,7 @@ typedef struct {
 	ui_color4_t rect_focus_color;
 	ui_color4_t text_color;
 	bool *b_value;
-	//BTNCLICKFN button_click_callback;
+	//ui_button_action_fn button_callback;
 } UIBUTTONCHECK;
 
 /**
@@ -26,13 +26,13 @@ typedef struct {
 #define RADIOBUTTON_CIRCLE_STRIDE 10
 typedef struct {
 	char *name;
-	UIPOINT pos;
+	ui_point_t pos;
 	ui_rect_t rect;
 	ui_color4_t radio_disabled_color;
 	ui_color4_t radio_enabled_color;
 	ui_color4_t text_color;
 	bool *b_value;
-	//BTNCLICKFN button_click_callback;
+	//ui_button_action_fn button_callback;
 } UIRADIOBUTTON;
 
 /**
@@ -45,7 +45,7 @@ typedef struct { float min, max; } TRACKBARBOUNDS;
 typedef struct {
 	bool b_touched;
 	bool b_pressed;
-	UIPOINT pos;
+	ui_point_t pos;
 	ui_rect_t rect;
 	float minval;
 	float maxval;
@@ -115,9 +115,11 @@ ui_param msg_canvas(ui_handle_t *handle, int message, ui_param param1, ui_param 
 void draw_canvas(ui_handle_t *handle)
 {
 	ui_canvas_t *p_canvas = (ui_canvas_t *)handle->elemptr;
-	glColor4ub(p_canvas->rect_color.r, p_canvas->rect_color.g, p_canvas->rect_color.b, p_canvas->rect_color.a);
 	glVertexPointer(2, GL_INT, 0, &p_canvas->rect);
+	glColor4ubv((const unsigned char *)&p_canvas->rect_color);
 	glDrawArrays(GL_QUADS, 0, 4);
+	glColor4ub(128, 128, 128, 1);
+	glDrawArrays(GL_LINE_LOOP, 0, 4);
 }
 #pragma endregion
 
@@ -125,18 +127,6 @@ void draw_canvas(ui_handle_t *handle)
 *	Button
 */
 #pragma region BUTTON
-typedef void(*BTNCLICKFN)(int id, ui_handle_t *this_elem);
-typedef struct ui_button_s {
-	bool b_touched;
-	char *name;
-	ui_rect_t rect;
-	ui_color4_t edge_color;
-	ui_color4_t rect_color;
-	ui_color4_t rect_focus_color;
-	ui_color4_t text_color;
-	BTNCLICKFN button_click_callback;
-} ui_button_t;
-
 ui_param msg_button(ui_handle_t *handle, int message, ui_param param1, ui_param param2)
 {
 	switch (message) {
@@ -145,9 +135,6 @@ ui_param msg_button(ui_handle_t *handle, int message, ui_param param1, ui_param 
 		ui_button_t *pbutton = (ui_button_t *)malloc(sizeof(ui_button_t));
 		if (!pbutton)
 			return NULL;
-
-		printf("\n0x%x address\n", p_create_data);
-		printf("name: %s\n\n", p_create_data->name);
 
 		memset(pbutton, NULL, sizeof(ui_button_t));
 		pbutton->name = p_create_data->name; //TODO: CANVAS NAME strdup not used
@@ -177,47 +164,58 @@ ui_param msg_button(ui_handle_t *handle, int message, ui_param param1, ui_param 
 		pbutton->rect.p4.x = p_create_data->x;
 		pbutton->rect.p4.y = pbutton->rect.p3.y;
 
-		//fill clip rect
+		//compute clip rect
 		handle->clip.left = p_create_data->x;
 		handle->clip.top = p_create_data->y;
 		handle->clip.right = p_create_data->x + p_create_data->width;
 		handle->clip.bottom = p_create_data->y + p_create_data->height;
-
+		if (!p_create_data->flags) {
+			handle->flags = BF_DEFAULT;
+		}
 		handle->id = p_create_data->id;
-		pbutton->button_click_callback = p_create_data->param1;
+		pbutton->button_callback = (ui_button_action_fn)p_create_data->param1;
 		return pbutton;
 	}
 
 	case UIMSG_MOUSEMOVE: {
 		short xPos = param1 & 0xffff; //TODO: change bitwise operators to macros
 		short yPos = (param1 >> 16) & 0xffff;
-		ui_button_t *pButton = (ui_button_t *)handle->elemptr;
-		pButton->b_touched = (bool)POINT_IN_RECT(handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom, input.mouse[0], input.mouse[1]);
-		printf("Mouse move event for BUTTON  x: %d  y: %d  %s ", xPos, yPos, pButton->b_touched ? "IN BUTTON!" : "");
-		printf("clip: left(%d)  top(%d)  right(%d)  bottom(%d)\n", handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom);
+		ui_button_t *p_button = (ui_button_t *)handle->elemptr;
+		static bool b_last_touch = false;
+		p_button->b_touched = (bool)POINT_IN_RECT(handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom, input.mouse[0], input.mouse[1]);
+
+		//TODO: button touch event not work!
+		//if (p_button->b_touched && !b_last_touch && p_button->button_callback) {
+		//	p_button->button_callback(handle->id, handle, UI_BUTTON_ACTION_TOUCH, NULL, NULL);
+		//	b_last_touch = true;
+		//}
+		//if (!p_button->b_touched && b_last_touch) {
+		//	b_last_touch = false;
+		//}
+		//printf("%s\n", p_button->b_touched ? "TRUE" : "FALSE");
+		//printf("Mouse move event for BUTTON  x: %d  y: %d  %s ", xPos, yPos, p_button->b_touched ? "IN BUTTON!" : "");
+		//printf("clip: left(%d)  top(%d)  right(%d)  bottom(%d)\n", handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom);
 		break;
 	}
 
 	case UIMSG_MOUSECLICK: {
 		char button = (char)param1 & 0xff;
-		char state = (char)(param1 >> 8) & 0xff;
+		char state = (char)(param1 >> 8) & 0xff; //TODO: unused
 		short x = param2 & 0xffff, y = (param2 >> 16) & 0xffff;
 		ui_button_t *p_button = (ui_button_t *)handle->elemptr;
-		if (p_button && p_button->button_click_callback && POINT_IN_RECT(handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom, x, y)) {
-			p_button->button_click_callback(handle->id, handle);
+		if (p_button && p_button->button_callback && POINT_IN_RECT(handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom, x, y)) {
+			p_button->button_callback(handle->id, handle, /*state*/UI_BUTTON_ACTION_CLICK, button, BUTTONDOWN);
 		}
-
-		printf("button: %d  state: %d  posx: %d   posy: %d\n", button, state, x, y);
 		//switch (button) {
-		//case MOUSELBUTTON:
+		//case MLEFTBUTTON:
 
 		//	break;
 
-		//case MOUSERBUTTON:
+		//case MRIGHTBUTTON:
 
 		//	break;
 
-		//case MOUSEMBUTTON:
+		//case MWHEELBUTTON:
 
 		//	break;
 		//}
@@ -232,12 +230,24 @@ ui_param msg_button(ui_handle_t *handle, int message, ui_param param1, ui_param 
 void draw_button(ui_handle_t *handle)
 {
 	ui_button_t *p_button = (ui_button_t *)handle->elemptr;
-	if(p_button->b_touched)
-	 glColor4ubv(&p_button->rect_focus_color);
-	else
-	 glColor4ubv(&p_button->rect_color);
-	glVertexPointer(2, GL_INT, 0, &p_button->rect);
-	glDrawArrays(GL_QUADS, 0, 4);
+
+	if (handle->flags & BF_DRAWBACKGROUND) {
+		if ((handle->flags & BF_DRAWTOUCH) && p_button->b_touched) {
+			glColor4ubv((const unsigned char *)&p_button->rect_focus_color);
+		}
+		else glColor4ubv((const unsigned char *)&p_button->rect_color);
+		glVertexPointer(2, GL_INT, 0, &p_button->rect);
+		glDrawArrays(GL_QUADS, 0, 4);
+	}
+
+	if (handle->flags & BF_DRAWEDGE) {
+		glColor4ub(128, 128, 128, 1);
+		glDrawArrays(GL_LINE_LOOP, 0, 4);
+	}
+
+	if (handle->flags & BF_DRAWTEXT) {
+		//TODO: BUTTON DRAW. draw text there
+	}
 }
 #pragma endregion
 
