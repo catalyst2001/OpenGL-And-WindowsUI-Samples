@@ -1,5 +1,18 @@
 #include "gui_elements.h"
 
+//  ^ y
+//  |  (1)-----(2)
+//  | 	|		|
+//  | 	|		|
+//  |  (4)-----(3)
+//  +---------------> x
+static ui_pointf_t texcoord_defaut[] = {
+	{0.0f, 1.0f},
+	{1.0f, 1.0f},
+	{1.0f, 0.0f},
+	{0.0f, 0.0f},
+};
+
 /**
 *	Checkbox
 */
@@ -116,6 +129,7 @@ void draw_canvas(ui_handle_t *handle)
 {
 	ui_canvas_t *p_canvas = (ui_canvas_t *)handle->elemptr;
 	glVertexPointer(2, GL_INT, 0, &p_canvas->rect);
+	glTexCoordPointer(2, GL_FLOAT, 0, &texcoord_defaut);
 	glColor4ubv((const unsigned char *)&p_canvas->rect_color);
 	glDrawArrays(GL_QUADS, 0, 4);
 	glColor4ub(128, 128, 128, 1);
@@ -230,18 +244,28 @@ ui_param msg_button(ui_handle_t *handle, int message, ui_param param1, ui_param 
 void draw_button(ui_handle_t *handle)
 {
 	ui_button_t *p_button = (ui_button_t *)handle->elemptr;
-
 	if (handle->flags & BF_DRAWBACKGROUND) {
-		if ((handle->flags & BF_DRAWTOUCH) && p_button->b_touched) {
-			glColor4ubv((const unsigned char *)&p_button->rect_focus_color);
-		}
+		if ((handle->flags & BF_DRAWTOUCH) && p_button->b_touched)
+		 glColor4ubv((const unsigned char *)&p_button->rect_focus_color);
 		else glColor4ubv((const unsigned char *)&p_button->rect_color);
-		glVertexPointer(2, GL_INT, 0, &p_button->rect);
-		glDrawArrays(GL_QUADS, 0, 4);
+
+		if (handle->flags & BF_DRAWTEXTURE && handle->texid > 0) {
+			//TODO: временно uv по дефолту
+			//glBindTexture(GL_TEXTURE_2D, handle->texid);
+			//glTexCoordPointer(2, GL_FLOAT, 0, &texcoord_defaut);
+		}
+
 	}
+
+	glBindTexture(GL_TEXTURE_2D, handle->texid);
+	glVertexPointer(2, GL_INT, 0, &p_button->rect);
+	glTexCoordPointer(2, GL_FLOAT, 0, &texcoord_defaut);
+	glDrawArrays(GL_QUADS, 0, 4);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	if (handle->flags & BF_DRAWEDGE) {
 		glColor4ub(128, 128, 128, 1);
+		glVertexPointer(2, GL_INT, 0, &p_button->rect);
 		glDrawArrays(GL_LINE_LOOP, 0, 4);
 	}
 

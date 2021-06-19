@@ -64,6 +64,10 @@ typedef struct ui_point_s {
 	int x, y;
 } ui_point_t;
 
+typedef struct ui_pointf_s {
+	float x, y;
+} ui_pointf_t;
+
 typedef struct ui_rect_s {
 	ui_point_t p1, p2, p3, p4;
 } ui_rect_t;

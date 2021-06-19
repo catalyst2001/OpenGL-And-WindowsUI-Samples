@@ -4,6 +4,7 @@
 #include <gl/gl.h>
 #include <gl/glu.h>
 #include <time.h>
+#include "texture.h"
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
 
@@ -27,6 +28,8 @@ void buttonclick_callback(int id, ui_handle_t *this)
 {
 	printf("button pressed: %d\n", id);
 }
+
+Texture button_texture_test;
 
 int main(int argc, char *argv[])
 {
@@ -68,6 +71,9 @@ int main(int argc, char *argv[])
 	UI_Init(1, 1);
 	ui_register_elements();
 
+	if (!LoadTexture("dbutton.bmp", &button_texture_test))
+		printf("Error loading texture!\n");
+
 	ui_handle_t *helem = ui_create(UI_CANVAS, 1, "Canvas", NULL, NULL, NULL, NULL, NULL, 40, 100, 800, 300, 0);
 
 	//helem = NULL;
@@ -76,15 +82,17 @@ int main(int argc, char *argv[])
 	//bool bTest = false;
 	//bool bTest2 = false;
 	
-	ui_create(UI_BUTTON, 1, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, NULL);
-	ui_create(UI_BUTTON, 2, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, NULL);
-	ui_create(UI_BUTTON, 3, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, NULL);
-	ui_create(UI_BUTTON, 4, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, BF_DEFAULT);
+	ui_create(UI_BUTTON, 1, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, BF_DEFAULT);
+	ui_create(UI_BUTTON, 2, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, BF_DEFAULT);
+	ui_create(UI_BUTTON, 3, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, BF_DEFAULT);
+	ui_handle_t *texbutton = ui_create(UI_BUTTON, 4, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 100, 100, BF_DRAWTEXTURE);
+	texbutton->texid = button_texture_test.texID;
 
 	//ui_create(UI_BUTTON, 2, "Test check button", helem, buttonclick_callback, (void*)2, &bTest, NULL, 40, posy += 40 + 2, 200, 40, FL_BTNCHECK);
 	//ui_create(UI_BUTTON, 3, "Test check button", helem, buttonclick_callback, (void*)3, &bTest2, NULL, 40, posy += 40 + 2, 200, 40, FL_BTNRADIO);
 	//ui_create(UIELEM_BUTTON, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 40, posy += 40 + 2, 200, 40, NULL);
 	
+	glEnable(GL_TEXTURE_2D);
 	while (true) {
 		MSG msg;
 		if (PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE))
@@ -107,7 +115,9 @@ int main(int argc, char *argv[])
 		//glViewport(0, 0, input.window_width, input.window_height);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		UIEvent_Render();
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
 
 		glPopMatrix();
