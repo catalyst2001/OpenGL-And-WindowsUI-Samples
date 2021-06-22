@@ -31,6 +31,13 @@ void buttonclick_callback(int id, ui_handle_t *this)
 
 Texture button_texture_test;
 
+bool checkbox_callback(int id, ui_handle_t *handle, bool *pvalue)
+{
+	if(pvalue)
+	printf("checkbox %s\n", *pvalue ? "enabled" : "disabled");
+	return true;
+}
+
 int main(int argc, char *argv[])
 {
 	WNDCLASSA wndclass;
@@ -71,22 +78,28 @@ int main(int argc, char *argv[])
 	UI_Init(1, 1);
 	ui_register_elements();
 
-	if (!LoadTexture("dbutton.bmp", &button_texture_test))
+	if (!LoadTexture("dbutton.tga", &button_texture_test))
 		printf("Error loading texture!\n");
 
 	ui_handle_t *helem = ui_create(UI_CANVAS, 1, "Canvas", NULL, NULL, NULL, NULL, NULL, 40, 100, 800, 300, 0);
 
 	//helem = NULL;
 	int posy = 60;
+	int posx = 45;
 
 	//bool bTest = false;
 	//bool bTest2 = false;
 	
-	ui_create(UI_BUTTON, 1, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, BF_DEFAULT);
-	ui_create(UI_BUTTON, 2, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, BF_DEFAULT);
-	ui_create(UI_BUTTON, 3, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 80, 40, BF_DEFAULT);
-	ui_handle_t *texbutton = ui_create(UI_BUTTON, 4, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 100, 100, BF_DRAWTEXTURE);
+	ui_create(UI_BUTTON, 1, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, posx, posy += 45, 80, 40, BF_DEFAULT);
+	ui_create(UI_BUTTON, 2, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, posx, posy += 45, 80, 40, BF_DEFAULT);
+	ui_create(UI_BUTTON, 3, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, posx, posy += 45, 80, 40, BF_DEFAULT);
+	ui_handle_t *texbutton = ui_create(UI_BUTTON, 4, "Test button", helem, buttonclick_callback, (void*)1, NULL, NULL, 45, posy += 45, 50, 50, BF_DRAWTEXTURE);
 	texbutton->texid = button_texture_test.texID;
+
+	posy = 60;
+	posx = 130;
+	bool value = false;
+	ui_create(UI_CHECKBOX, 1, "Test checkbox", helem, checkbox_callback, &value, NULL, NULL, posx, posy += 45, 20, 20, CF_SWITCH);
 
 	//ui_create(UI_BUTTON, 2, "Test check button", helem, buttonclick_callback, (void*)2, &bTest, NULL, 40, posy += 40 + 2, 200, 40, FL_BTNCHECK);
 	//ui_create(UI_BUTTON, 3, "Test check button", helem, buttonclick_callback, (void*)3, &bTest2, NULL, 40, posy += 40 + 2, 200, 40, FL_BTNRADIO);
@@ -117,6 +130,31 @@ int main(int argc, char *argv[])
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		UIEvent_Render();
+
+
+//#define XX 500
+//#define YY 500
+//#define WW 300
+//#define HH 300
+//		int verts[] = {
+//			XX, YY,
+//			XX + WW, YY,
+//			XX + WW, YY + HH,
+//			XX, YY + HH
+//		};
+//
+//		float tcoords[] = {
+//			0.f, 1.f,
+//			1.f, 1.f,
+//			1.f, 0.f,
+//			0.f, 0.f,
+//		};
+//		glBindTexture(GL_TEXTURE_2D, button_texture_test.texID);
+//		glVertexPointer(2, GL_INT, 0, verts);
+//		glTexCoordPointer(2, GL_FLOAT, 0, tcoords);
+//		glDrawArrays(GL_QUADS, 0, 4);
+//		glBindTexture(GL_TEXTURE_2D, 0);
+
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
 

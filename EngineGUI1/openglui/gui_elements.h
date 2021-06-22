@@ -2,12 +2,13 @@
 #include "gui.h"
 
 /**
-*	UI Canvas definitions
+*	UI Canvas
 */
 #define UI_CANVAS 1
 
+
 /**
-*	UI Button definitions
+*	UI Button
 */
 #define UI_BUTTON 2
 #define UI_BUTTON_ACTION_CLICK 0x0
@@ -37,6 +38,40 @@ typedef struct ui_button_s {
 	ui_color4_t text_color;
 	ui_button_action_fn button_callback;
 } ui_button_t;
+
+
+/**
+*	UI Checkbox
+*/
+#define UI_CHECKBOX 3
+#define CHECKBUTTON_WIDTH 20
+#define CHECKBUTTON_HEIGHT 20
+
+// checkbox style flags
+#define CF_NORMAL (1 << 0) //check
+#define CF_SWITCH (1 << 1) //on / off
+#define CF_TEXTALIGNRIGHT (1 << 2)
+#define CF_TEXTALIGNLEFT (1 << 3)
+#define CF_DRAWTOUCH (1 << 4)
+#define CF_DRAWTEXT (1 << 5)
+#define CF_DEFAULT (CF_NORMAL|CF_TEXTALIGNRIGHT|CF_DRAWTOUCH|CF_DRAWTEXT)
+
+// id - unique checkbox id
+// handle - handle the checkbox
+// pvalue - address of the variable storing the value
+typedef bool (*ui_checkbox_action_fn)(int id, ui_handle_t *handle, bool *pvalue);
+typedef struct ui_checkbox_s {
+	bool b_touched;
+	char *name;
+	unsigned int n_disabled_texid, n_enabled_texid;
+	ui_rect_t rect;
+	ui_color4_t edge_color;
+	ui_color4_t rect_enabled_color;
+	ui_color4_t rect_disabled_color;
+	ui_color4_t text_color;
+	bool *b_value;
+	ui_checkbox_action_fn checkbox_callback;
+} ui_checkbox_t;
 
 void ui_register_elements();
 void ui_unregister_elements();

@@ -200,6 +200,7 @@ void UIEvent_MouseClick(int x, int y, char button)
 void UIEvent_Render()
 {
 	glDisable(GL_DEPTH_TEST);
+	glPushAttrib(GL_CURRENT_BIT);
 	for (int i = 0; i < MEM_SIZE(&uidata.elems); i++) {
 		ui_handle_t *hElem = MEM_GETELEMENT(&uidata.elems, ui_handle_t *, i);
 		if (!hElem->enabled) //If ui element disabled
@@ -210,9 +211,10 @@ void UIEvent_Render()
 			ui_handle_t *hChildElem = MEM_GETELEMENT(&hElem->child_controls, ui_handle_t *, j);
 			//if (!hChildElem->enabled)
 			//	continue;
-
+			
 			hChildElem->draw(hChildElem); //draw child
 		}
 	}
+	glPopAttrib();
 	glEnable(GL_DEPTH_TEST);
 }

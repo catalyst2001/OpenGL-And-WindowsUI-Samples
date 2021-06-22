@@ -12,5 +12,6 @@
     <ClInclude Include="gui_primitives.h" />
     <ClInclude Include="memutils.h" />
     <ClInclude Include="gui_elements.h" />
+    <ClInclude Include="texture.h" />
   </ItemGroup>
 </Project>

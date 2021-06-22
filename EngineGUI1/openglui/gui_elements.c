@@ -7,29 +7,12 @@
 //  |  (4)-----(3)
 //  +---------------> x
 static ui_pointf_t texcoord_defaut[] = {
+	// u     v
 	{0.0f, 1.0f},
 	{1.0f, 1.0f},
 	{1.0f, 0.0f},
 	{0.0f, 0.0f},
 };
-
-/**
-*	Checkbox
-*/
-#define CHECKBUTTON_WIDTH 20
-#define CHECKBUTTON_HEIGHT 20
-typedef struct {
-	bool b_touched;
-	char *name;
-	ui_rect_t rect;
-	ui_color4_t edge_color;
-	ui_color4_t rect_color;
-	ui_color4_t rect_enabled_color;
-	ui_color4_t rect_focus_color;
-	ui_color4_t text_color;
-	bool *b_value;
-	//ui_button_action_fn button_callback;
-} UIBUTTONCHECK;
 
 /**
 *	Radio button
@@ -248,20 +231,19 @@ void draw_button(ui_handle_t *handle)
 		if ((handle->flags & BF_DRAWTOUCH) && p_button->b_touched)
 		 glColor4ubv((const unsigned char *)&p_button->rect_focus_color);
 		else glColor4ubv((const unsigned char *)&p_button->rect_color);
-
-		if (handle->flags & BF_DRAWTEXTURE && handle->texid > 0) {
-			//TODO: временно uv по дефолту
-			//glBindTexture(GL_TEXTURE_2D, handle->texid);
-			//glTexCoordPointer(2, GL_FLOAT, 0, &texcoord_defaut);
-		}
-
 	}
 
-	glBindTexture(GL_TEXTURE_2D, handle->texid);
+	if (handle->flags & BF_DRAWTEXTURE && handle->texid > 0) {
+		glColor4ub(255, 255, 255, 255);
+		glBindTexture(GL_TEXTURE_2D, handle->texid);
+	}
+
 	glVertexPointer(2, GL_INT, 0, &p_button->rect);
 	glTexCoordPointer(2, GL_FLOAT, 0, &texcoord_defaut);
 	glDrawArrays(GL_QUADS, 0, 4);
-	glBindTexture(GL_TEXTURE_2D, 0);
+
+	if(handle->flags & BF_DRAWTEXTURE)
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 	if (handle->flags & BF_DRAWEDGE) {
 		glColor4ub(128, 128, 128, 1);
@@ -271,6 +253,146 @@ void draw_button(ui_handle_t *handle)
 
 	if (handle->flags & BF_DRAWTEXT) {
 		//TODO: BUTTON DRAW. draw text there
+	}
+}
+#pragma endregion
+
+/**
+*	UI Checkbox
+*/
+#pragma region CHECKBOX
+ui_param msg_checkbox(ui_handle_t *handle, int message, ui_param param1, ui_param param2)
+{
+	switch (message) {
+	case UIMSG_CREATE: {
+		ui_create_data_t *p_create_data = (ui_create_data_t *)param2;
+		ui_checkbox_t *p_checkbox = (ui_checkbox_t *)malloc(sizeof(ui_checkbox_t));
+		if (!p_checkbox)
+			return NULL;
+
+		memset(p_checkbox, NULL, sizeof(ui_checkbox_t));
+		p_checkbox->name = p_create_data->name; //TODO: CANVAS NAME strdup not used
+
+		p_checkbox->edge_color.r = 120;
+		p_checkbox->edge_color.g = 120;
+		p_checkbox->edge_color.b = 120;
+		p_checkbox->edge_color.a = 255;
+
+		p_checkbox->rect_enabled_color.r = 70;
+		p_checkbox->rect_enabled_color.g = 120;
+		p_checkbox->rect_enabled_color.b = 50;
+		p_checkbox->rect_enabled_color.a = 255;
+
+		p_checkbox->rect_disabled_color.r = 40;
+		p_checkbox->rect_disabled_color.g = 40;
+		p_checkbox->rect_disabled_color.b = 40;
+		p_checkbox->rect_disabled_color.a = 255;
+
+		//left top
+		p_checkbox->rect.p1.x = p_create_data->x;
+		p_checkbox->rect.p1.y = p_create_data->y;
+
+		//right top
+		p_checkbox->rect.p2.x = p_create_data->x + p_create_data->width;
+		p_checkbox->rect.p2.y = p_create_data->y;
+
+		//right bottom
+		p_checkbox->rect.p3.x = p_checkbox->rect.p2.x;
+		p_checkbox->rect.p3.y = p_create_data->y + p_create_data->height;
+
+		//left bottom
+		p_checkbox->rect.p4.x = p_create_data->x;
+		p_checkbox->rect.p4.y = p_checkbox->rect.p3.y;
+
+		//compute clip rect
+		handle->clip.left = p_create_data->x;
+		handle->clip.top = p_create_data->y;
+		handle->clip.right = p_create_data->x + p_create_data->width;
+		handle->clip.bottom = p_create_data->y + p_create_data->height;
+
+		//if flags not set, set default checkbox flag
+		if (!p_create_data->flags) {
+			handle->flags = CF_DEFAULT;
+		}
+
+		//if checkbox have flag SWITCH, set static
+		if (p_create_data->flags & CF_SWITCH) {
+			
+		}
+
+		handle->id = p_create_data->id;
+		p_checkbox->checkbox_callback = (ui_checkbox_action_fn)p_create_data->param1;
+		p_checkbox->b_value = (bool *)p_create_data->param2;
+		return p_checkbox;
+	}
+
+	case UIMSG_MOUSEMOVE: {
+		short xPos = param1 & 0xffff; //TODO: change bitwise operators to macros
+		short yPos = (param1 >> 16) & 0xffff;
+		ui_checkbox_t *p_checkbox = (ui_checkbox_t *)handle->elemptr;
+		static bool b_last_touch = false;
+		p_checkbox->b_touched = (bool)POINT_IN_RECT(handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom, input.mouse[0], input.mouse[1]);
+		break;
+	}
+
+	case UIMSG_MOUSECLICK: {
+		char button = (char)param1 & 0xff;
+		char state = (char)(param1 >> 8) & 0xff; //TODO: unused
+		short x = param2 & 0xffff, y = (param2 >> 16) & 0xffff;
+		ui_checkbox_t *p_checkbox = (ui_checkbox_t *)handle->elemptr;
+		if (p_checkbox && p_checkbox->checkbox_callback && POINT_IN_RECT(handle->clip.left, handle->clip.top, handle->clip.right, handle->clip.bottom, x, y)) {
+			if (p_checkbox->checkbox_callback(handle->id, handle, p_checkbox->b_value)) { //if allow change, invert value
+				*p_checkbox->b_value = !(*p_checkbox->b_value);
+			}
+		}
+		break;
+	}
+
+	default:
+		return ui_default_handler(handle, message, param1, param2);
+	}
+}
+
+void draw_checkbox(ui_handle_t *handle)
+{
+	ui_checkbox_t *p_checkbox = (ui_checkbox_t *)handle->elemptr;
+	ui_color4_t temp_egde_color;
+	glVertexPointer(2, GL_INT, 0, &p_checkbox->rect);
+	glTexCoordPointer(2, GL_FLOAT, 0, &texcoord_defaut);
+	if (handle->flags & CF_NORMAL) {
+		if (p_checkbox->b_value && *p_checkbox->b_value) {
+			glColor4ubv((const unsigned char *)&p_checkbox->rect_enabled_color);
+			temp_egde_color.r = 210;
+			temp_egde_color.g = 210;
+			temp_egde_color.b = 210;
+			temp_egde_color.a = 255;
+		}
+		else {
+			glColor4ubv((const unsigned char *)&p_checkbox->rect_disabled_color);
+			if (!p_checkbox->b_touched) {
+				temp_egde_color = p_checkbox->edge_color;
+			}
+		}
+		glDrawArrays(GL_QUADS, 0, 4);
+		glColor4ubv((const unsigned char *)&temp_egde_color);
+		glVertexPointer(2, GL_INT, 0, &p_checkbox->rect);
+		glDrawArrays(GL_LINE_LOOP, 0, 4);
+	}
+	else if (handle->flags & CF_SWITCH) {
+		ui_rect_t switchrect;
+		int n_center = (p_checkbox->rect.p2.x - p_checkbox->rect.p1.x) / 2; //div2
+		if (p_checkbox->b_value && *p_checkbox->b_value) {
+
+		}
+		else {
+
+		}
+		glVertexPointer(2, GL_INT, 0, &switchrect);
+		glDrawArrays(GL_QUADS, 0, 4);
+	}
+
+	if (handle->flags & CF_DRAWTEXT) {
+		//TODO: CHECKBOX DRAW. draw text there
 	}
 }
 #pragma endregion
@@ -294,16 +416,26 @@ void ui_register_elements()
 	*	UI Button
 	*/
 	register_element.n_identifier = UI_BUTTON;
-	register_element.n_bytes_child = 1;
-	register_element.n_bytes_reserve = 1;
 	register_element.p_drawfunc = draw_button;
 	register_element.p_msgfunc = msg_button;
 	if (ui_register_element(&register_element) != UI_REGISTER_SUCCESS) {
 		printf("UI_BUTTON not registred!\n");
+	}
+
+	/**
+	*	UI Checkbox
+	*/
+	register_element.n_identifier = UI_CHECKBOX;
+	register_element.p_drawfunc = draw_checkbox;
+	register_element.p_msgfunc = msg_checkbox;
+	if (ui_register_element(&register_element) != UI_REGISTER_SUCCESS) {
+		printf("UI_CHECKBOX not registred!\n");
 	}
 }
 
 void ui_unregister_elements()
 {
 	ui_unregister_element(UI_CANVAS);
+	ui_unregister_element(UI_BUTTON);
+	ui_unregister_element(UI_CHECKBOX);
 }
