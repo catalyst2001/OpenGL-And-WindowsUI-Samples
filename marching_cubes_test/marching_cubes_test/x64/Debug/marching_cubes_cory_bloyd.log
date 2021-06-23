@@ -1,0 +1,18 @@
+﻿  marching_cubes_cory_bloyd.cpp
+e:\1terrains\marching cubes\marching_cubes_test\marching_cubes_test\marching_cubes_cory_bloyd.cpp(119): warning C4326: возвращаемый тип "main" должен быть "int", а не "void"
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutInit в функции main
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutInitDisplayMode в функции main
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutInitWindowPosition в функции main
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutInitWindowSize в функции main
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutMainLoop в функции main
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutCreateWindow в функции main
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutPostRedisplay в функции "void __cdecl vIdle(void)" (?vIdle@@YAXXZ)
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutSwapBuffers в функции "void __cdecl vDrawScene(void)" (?vDrawScene@@YAXXZ)
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutDisplayFunc в функции main
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutReshapeFunc в функции main
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutKeyboardFunc в функции main
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutIdleFunc в функции main
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutSpecialFunc в функции main
+marching_cubes_cory_bloyd.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_glutWireCube в функции "void __cdecl vDrawScene(void)" (?vDrawScene@@YAXXZ)
+glut32.lib : warning LNK4272: тип компьютера библиотеки "x86" конфликтует с типом целевого компьютера "x64"
+E:\1TERRAINS\MARCHING CUBES\marching_cubes_test\marching_cubes_test\x64\Debug\marching_cubes_cory_bloyd.exe : fatal error LNK1120: неразрешенных внешних элементов: 14
