@@ -1,4 +1,3 @@
 ﻿  quats.cpp
 e:\github\specialforkikker228\bitmap_font\quats\glwin.h(187): warning C4838: преобразование из "int" в "BYTE" требует сужающего преобразования
-e:\github\specialforkikker228\bitmap_font\quats\quats.cpp(131): warning C4244: +=: преобразование "float" в "int", возможна потеря данных
   quats.vcxproj -> E:\GITHUB\SpecialForKikker228\bitmap_font\x64\Debug\quats.exe

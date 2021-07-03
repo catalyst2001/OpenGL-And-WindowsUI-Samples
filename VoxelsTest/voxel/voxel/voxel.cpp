@@ -1,6 +1,7 @@
 ﻿#include <stdio.h>
 #include "../../../utilites/glwnd.h"
 #include "../../../utilites/camera.h"
+#include "../../../utilites/texture.h"
 
 INT Width, Height;
 camera_t camera;
@@ -41,7 +42,7 @@ float cube[] = {
 };
 
 int indexes[] = {
-	23,
+	0,
 	1,
 	2,
 	3,
@@ -64,8 +65,12 @@ int indexes[] = {
 	20,
 	21,
 	22,
-	0
+	23
 };
+
+//float texcoords[] = {
+//
+//};
 
 void fn_draw()
 {
@@ -79,15 +84,15 @@ void fn_draw()
 	camera_look(&camera);
 
 	//glPointSize(2);
-	//glBegin(GL_POINTS);
-	//for (int y = 0; y < CHUNK_SIZE; y++) {
-	//	for (int x = 0; x < CHUNK_SIZE; x++) {
-	//		for (int z = 0; z < CHUNK_SIZE; z++) {
-	//			glVertex3f((float)x, (float)y, (float)z);
-	//		}
-	//	}
-	//}
-
+	glBegin(GL_POINTS);
+	for (int y = 0; y < CHUNK_SIZE; y++) {
+		for (int x = 0; x < CHUNK_SIZE; x++) {
+			for (int z = 0; z < CHUNK_SIZE; z++) {
+				glVertex3f((float)x, (float)y, (float)z);
+			}
+		}
+	}
+	glEnd();
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, cube);
@@ -99,7 +104,7 @@ void fn_draw()
 	glEnd();
 }
 
-void fn_window_resize(int width, int height)
+void fn_window_resize(HWND window, int width, int height)
 {
 	if (!height)
 		height = 1;
@@ -116,20 +121,20 @@ void fn_window_resize(int width, int height)
 	camera_update_viewport(&camera, width, height);
 }
 
-void fn_mousemove(int x, int y)
+void fn_mousemove(HWND window, int x, int y)
 {
 }
 
-void fn_mouseclick(int x, int y, int button, int state)
+void fn_mouseclick(HWND window, int x, int y, int button, int state)
 {
 }
 
-void fn_charinput(char symbol)
+void fn_charinput(HWND window, char symbol)
 {
 }
 
 //https://docs.microsoft.com/ru-ru/windows/win32/inputdev/wm-keydown
-void fn_keydown(INT state, WPARAM wparam, LPARAM lparam)
+void fn_keydown(HWND window, INT state, WPARAM wparam, LPARAM lparam)
 {
 	INT key = (INT)wparam;
 	if (state == KEY_DOWN) {

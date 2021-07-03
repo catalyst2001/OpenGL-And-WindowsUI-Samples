@@ -385,5 +385,5 @@ void CCamera::Look()
 {
 	// Give openGL our camera position, then camera view, then camera up vector
 	gluLookAt(m_vPosition.x, m_vPosition.y, m_vPosition.z,	m_vView.x,	 m_vView.y, m_vView.z,	m_vUpVector.x, m_vUpVector.y, m_vUpVector.z);
-	printf("pos ( %f %f %f )  view: ( %f %f %f ) up: ( %f %f %f )\n", m_vPosition.x, m_vPosition.y, m_vPosition.z, m_vView.x, m_vView.y, m_vView.z, m_vUpVector.x, m_vUpVector.y, m_vUpVector.z);
+	//printf("pos ( %f %f %f )  view: ( %f %f %f ) up: ( %f %f %f )\n", m_vPosition.x, m_vPosition.y, m_vPosition.z, m_vView.x, m_vView.y, m_vView.z, m_vUpVector.x, m_vUpVector.y, m_vUpVector.z);
 }

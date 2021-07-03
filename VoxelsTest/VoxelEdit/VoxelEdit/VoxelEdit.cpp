@@ -28,6 +28,7 @@ void Draw()
 	glEnd();
 	glPopAttrib();
 
+	glColor3ub(255, 255, 255);
 	for (int x = 0; x < WORLD_MAX; x++) {
 		glBegin(GL_TRIANGLE_STRIP);
 		for (int z = 0; z < WORLD_MAX; z++) {
@@ -91,7 +92,7 @@ void Keyboard(char ch)
 void Init(HWND wnd)
 {
 	memset(world, 0, WORLD_MAX*WORLD_MAX);
-	camera.PositionCamera(1.5, 6.5f, -8.f,   0, 1.5f, 0,   0, 1, 0);
+	camera.PositionCamera(0.f, 0.f, 0.f,   0, 1.5f, 0,   0, 1, 0);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }

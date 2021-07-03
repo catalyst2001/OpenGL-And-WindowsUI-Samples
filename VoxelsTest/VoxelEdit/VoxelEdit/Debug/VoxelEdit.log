@@ -3,4 +3,7 @@ e:\github\specialforkikker228\voxelstest\voxeledit\voxeledit\camera.cpp(355): wa
 e:\github\specialforkikker228\voxelstest\voxeledit\voxeledit\camera.cpp(356): warning C4305: +=: усечение из "double" в "float"
 e:\github\specialforkikker228\voxelstest\voxeledit\voxeledit\camera.cpp(361): warning C4305: -=: усечение из "double" в "float"
 e:\github\specialforkikker228\voxelstest\voxeledit\voxeledit\camera.cpp(362): warning C4305: -=: усечение из "double" в "float"
+  VoxelEdit.cpp
+e:\github\specialforkikker228\utilites\glwin.h(192): warning C4838: преобразование из "int" в "BYTE" требует сужающего преобразования
+  Создание кода...
   VoxelEdit.vcxproj -> E:\GITHUB\SpecialForKikker228\VoxelsTest\VoxelEdit\Debug\VoxelEdit.exe

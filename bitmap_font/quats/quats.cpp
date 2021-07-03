@@ -1,6 +1,30 @@
 ﻿#include "glwin.h"
 #include <math.h>
 
+int *widths = 0;
+
+void compute_char_sizes(unsigned char *data, int width, int cnt, int **widtharray, int byte)
+{
+	int pixelsPerChar = width / 16;
+	for (int k = 0; k < 256; k++) {
+		int x = (k % 16) * pixelsPerChar;
+		int y = (k / 16) * pixelsPerChar;
+
+		int i;
+		unsigned char alpha;
+		for (i = x + pixelsPerChar - 1; i > x; i--) {
+			for (int j = y + pixelsPerChar - 1; j > y; j--) {
+				alpha = data[(j * width + i) * cnt + byte];
+				if (alpha > 0)
+					break;
+			}
+			if (alpha > 0)
+				break;
+		}
+		(*widtharray)[k] = (i - x) / pixelsPerChar;
+	}
+}
+
 bool CreateTextureBMP(unsigned int &textureID, const char *szFileName)                          // Creates Texture From A Bitmap File
 {
 	HBITMAP hBMP;                                                                 // Handle Of The Bitmap
@@ -26,6 +50,13 @@ bool CreateTextureBMP(unsigned int &textureID, const char *szFileName)          
 	glBindTexture(GL_TEXTURE_2D, textureID);                                      // Bind To The Texture ID
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);			  // Linear Min Filter
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);			  // Linear Mag Filter
+
+	//widths = (int *)malloc(sizeof(int) * 256);
+	//compute_char_sizes((unsigned char *)bitmap.bmBits, bitmap.bmWidth, bitmap.bmBitsPixel / 8, &widths, 1); // 3 - RGB (4 - RGBA)
+	//for (int i = 0; i < 256; i++)
+	//	printf("Width: %d\n", widths[i]);
+
+	//printf("bpp %d\n", bitmap.bmBitsPixel / 8);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, bitmap.bmWidth, bitmap.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, bitmap.bmBits);
 	// MUST NOT BE INDEX BMP, BUT RGB
 	DeleteObject(hBMP);                                                           // Delete The Object
@@ -128,7 +159,8 @@ void Print(font_t *pfont, int posx, int posy, const char *text)
 		glVertexPointer(2, GL_INT, 0, coords);
 		glTexCoordPointer(2, GL_FLOAT, 0, &pfont->glyphs[idx]);
 		glDrawArrays(GL_QUADS, 0, 4);
-		x += (int)glyph_width - glyph_width / 6.f;
+		//x += (int)glyph_width - glyph_width / 6.f;
+		x += glyph_width;
 	}
 }
 

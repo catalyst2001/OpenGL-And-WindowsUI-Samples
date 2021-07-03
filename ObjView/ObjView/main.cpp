@@ -18,7 +18,31 @@ HDC viewport_device_context;
 HGLRC viewport_rendering_context;
 RECT window_rect;
 
-CGui gui;
+void draw_image(unsigned int texid)
+{
+#define sx 100
+#define xy 100
+#define ww 500
+#define hh 500
+	int vertsarray[] = {
+		sx,			xy,
+		sx,			xy + hh,
+		sx + ww,	xy + hh,
+		sx + ww,	xy
+	};
+
+	float texcoords[] = {
+		0.f, 0.f,
+		0.f, 1.f,
+		1.f, 1.f,
+		1.f, 0.f
+	};
+	glBindTexture(GL_TEXTURE_2D, texid);
+	glVertexPointer(2, GL_INT, 0, vertsarray);
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+	glDrawArrays(GL_QUADS, 0, 4);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -40,14 +64,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	AllocConsole();
 	freopen("conout$", "w", stdout);
-
-	DynamicHeap<int> heap;
-	for (int i = 0; i < 1000; i++)
-		heap.Push(i);
-
-	for (int i = 0; i < heap.Size(); i++) {
-		printf("%d\n", heap[i]);
-	}
 
 #pragma region WINDOW
 	hInst = hInstance;
@@ -107,9 +123,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	UpdateWindow(hwnd_main);
 #pragma endregion
 
-	CCanvas ss;
-	gui.AddCanvas(&ss, NULL, 1, 50, 50, 500, 500, { 80, 80, 80, 255 }, { 255, 255, 255, 255 });
-
 	MSG msg = {NULL};
 	while (!bclose) {
 		if (PeekMessageA(&msg, NULL, NULL, NULL, PM_REMOVE))
@@ -120,10 +133,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 		glMatrixMode(GL_PROJECTION);
 		gluOrtho2D(0, 0, window_rect.right, window_rect.bottom);
-
 		glColor3ub(255, 255, 255);
+
 		glEnableClientState(GL_VERTEX_ARRAY);
-		gui.Render();
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		draw_image(unsigned int texid);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
 
 		SwapBuffers(viewport_device_context);

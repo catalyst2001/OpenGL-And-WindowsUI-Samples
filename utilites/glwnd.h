@@ -25,7 +25,7 @@
 
 	}
 
-	void fn_window_resize(int width, int height)
+	void fn_window_resize(HWND hWnd, int width, int height)
 	{
 		if(!height)
 			height = 1;
@@ -40,20 +40,20 @@
 		glLoadIdentity();
 	}
 
-	void fn_mousemove(int x, int y)
+	void fn_mousemove(HWND hWnd, int x, int y)
 	{
 	}
 
-	void fn_mouseclick(int x, int y, int button, int state)
+	void fn_mouseclick(HWND hWnd, int x, int y, int button, int state)
 	{
 	}
 
-	void fn_charinput(char symbol)
+	void fn_charinput(HWND hWnd, char symbol)
 	{
 	}
 
 	//https://docs.microsoft.com/ru-ru/windows/win32/inputdev/wm-keydown
-	void fn_keydown(INT state, WPARAM wparam, LPARAM lparam)
+	void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 	{
 		INT key = (INT)wparam;
 		if (state == KEY_DOWN) {
@@ -223,6 +223,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			global_window_data.p_windowquit(hWnd);
 		break;
 
+		//case WM_NCHITTEST:
+		//return HTCAPTION;
+
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -276,7 +279,7 @@ void create_window(const char *p_windowname,
 	global_window_data.p_windowcreate = pWindowCreateFn;
 	global_window_data.p_windowquit = pWindowQuitFn;
 	global_window_data.p_ketdownfn = pKeydownFn;
-	global_window_data.h_window = CreateWindowExA(NULL, p_classname, p_windowname, WS_OVERLAPPEDWINDOW, posx, posy, width, height, NULL, (HMENU)NULL, global_window_data.hModule, NULL);
+	global_window_data.h_window = CreateWindowExA(NULL, p_classname, p_windowname, /*WS_VISIBLE|WS_POPUP*/WS_OVERLAPPEDWINDOW, posx, posy, width, height, NULL, (HMENU)NULL, global_window_data.hModule, NULL);
 	if (!global_window_data.h_window) {
 		error("Error create window!\nGetLastError() = 0x%x", GetLastError());
 		exit(-2);

@@ -1,0 +1,11 @@
+﻿  CGUI.cpp
+e:\github\specialforkikker228\gui_test_cplusplus\gui_test_cplusplus\cgui.h(293): warning C4018: <: несоответствие типов со знаком и без знака
+e:\github\specialforkikker228\gui_test_cplusplus\gui_test_cplusplus\cgui.h(305): warning C4018: <: несоответствие типов со знаком и без знака
+e:\github\specialforkikker228\gui_test_cplusplus\gui_test_cplusplus\cgui.h(319): warning C4018: <: несоответствие типов со знаком и без знака
+  gui_test_cplusplus.cpp
+e:\github\specialforkikker228\gui_test_cplusplus\gui_test_cplusplus\cgui.h(293): warning C4018: <: несоответствие типов со знаком и без знака
+e:\github\specialforkikker228\gui_test_cplusplus\gui_test_cplusplus\cgui.h(305): warning C4018: <: несоответствие типов со знаком и без знака
+e:\github\specialforkikker228\gui_test_cplusplus\gui_test_cplusplus\cgui.h(319): warning C4018: <: несоответствие типов со знаком и без знака
+e:\github\specialforkikker228\gui_test_cplusplus\gui_test_cplusplus\gui_test_cplusplus.cpp(75): warning C4305: аргумент: усечение из "double" в "GLclampf"
+  Создание кода...
+  gui_test_cplusplus.vcxproj -> E:\GITHUB\SpecialForKikker228\gui_test_cplusplus\Debug\gui_test_cplusplus.exe
