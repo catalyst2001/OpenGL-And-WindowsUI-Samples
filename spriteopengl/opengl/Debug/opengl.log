@@ -1,3 +1,0 @@
-﻿  opengl.cpp
-c:\users\kikker\documents\github\specialforkikker228\opengl_window\opengl\opengl.cpp(113): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
-  opengl.vcxproj -> C:\Users\Kikker\Documents\GitHub\SpecialForKikker228\OpenGL_Window\Debug\opengl.exe

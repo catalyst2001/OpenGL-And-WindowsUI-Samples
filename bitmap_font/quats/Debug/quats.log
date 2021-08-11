@@ -1,4 +1,0 @@
-﻿  quats.cpp
-c:\users\admin\source\repos\quats\quats\glwin.h(187): warning C4838: преобразование из "int" в "BYTE" требует сужающего преобразования
-c:\users\admin\source\repos\quats\quats\quats.cpp(125): warning C4244: +=: преобразование "float" в "int", возможна потеря данных
-  quats.vcxproj -> C:\Users\Admin\source\repos\quats\Debug\quats.exe

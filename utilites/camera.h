@@ -46,8 +46,8 @@ void camera_look(camera_t *pcamera)
 	//update view by mouse
 	if (pcamera->active) {
 		GetCursorPos(&pcamera->mousexy);
-		pcamera->angleX += (pcamera->width / 2 - pcamera->mousexy.x) / 1.1f; //2 — чувствительность
-		pcamera->angleY += (pcamera->height / 2 - pcamera->mousexy.y) / 1.1f;
+		pcamera->angleX += (pcamera->width / 2 - pcamera->mousexy.x) / 2.5f; //2 — чувствительность
+		pcamera->angleY += (pcamera->height / 2 - pcamera->mousexy.y) / 2.5f;
 		SetCursorPos(pcamera->width / 2, pcamera->height / 2);
 	
 		if(pcamera->angleY < -89.0)

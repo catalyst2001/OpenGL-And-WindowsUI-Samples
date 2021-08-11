@@ -1,8 +1,0 @@
-﻿  main.c
-e:\github\specialforkikker228\marching-cubes-opengl-master\main.c(8): warning C4005: max: изменение макроопределения
-  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdlib.h(1289): note: см. предыдущее определение "max"
-e:\github\specialforkikker228\marching-cubes-opengl-master\main.c(9): warning C4005: min: изменение макроопределения
-  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdlib.h(1290): note: см. предыдущее определение "min"
-e:\github\specialforkikker228\marching-cubes-opengl-master\main.c(526): warning C4113: "void (__cdecl *)()" отличается в списках параметров от "void (__cdecl *)(void)"
-e:\github\specialforkikker228\marching-cubes-opengl-master\main.c(536): warning C4113: "void (__cdecl *)()" отличается в списках параметров от "void (__cdecl *)(void)"
-  marchingcubes.vcxproj -> E:\GITHUB\SpecialForKikker228\Marching-Cubes-OpenGL-master\Debug\marchingcubes.exe
