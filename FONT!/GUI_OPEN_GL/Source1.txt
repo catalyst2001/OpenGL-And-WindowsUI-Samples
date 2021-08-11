@@ -1,0 +1,6 @@
+
+
+CFTFont font; //глобально
+
+g_defaultFont.Init("ARIALNBI.TTF", 18); //загрузка шритфа
+

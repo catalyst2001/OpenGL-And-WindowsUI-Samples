@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Class GUI">
+      <UniqueIdentifier>{2a9569d1-5c05-459e-94c4-c0eba1d2b7d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class GUI\.cpp">
+      <UniqueIdentifier>{1fa62166-f1d9-4d16-b1ce-64358619f01d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class GUI\.h">
+      <UniqueIdentifier>{00bfbee5-af27-42bf-8cdb-ddfd8648f2d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilits">
+      <UniqueIdentifier>{4e46ba9d-9e53-4726-b39b-38e7eb5cb936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilits\Front">
+      <UniqueIdentifier>{a0166749-e031-4c7a-9624-23b0497ffb3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilits\Front\h">
+      <UniqueIdentifier>{116db4ff-fbcf-41e4-aa39-34395011df3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilits\Front\cpp">
+      <UniqueIdentifier>{6dabc651-0496-4c17-8f81-32c16c1cdcc6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="FreetypeUtils.h">
+      <Filter>Utilits\Front\h</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_CButton.h">
+      <Filter>Class GUI\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_CCheckBox.h">
+      <Filter>Class GUI\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_CEditbox.h">
+      <Filter>Class GUI\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_CProgressBar.h">
+      <Filter>Class GUI\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_CTrackBar.h">
+      <Filter>Class GUI\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="Cgui.h">
+      <Filter>Class GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\utilites\texture.h">
+      <Filter>Utilits</Filter>
+    </ClInclude>
+    <ClInclude Include="СFont.h">
+      <Filter>Utilits</Filter>
+    </ClInclude>
+    <ClInclude Include="IFont.h">
+      <Filter>Utilits\Front\h</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="FreetypeUtils.cpp">
+      <Filter>Utilits\Front\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_CButton.cpp">
+      <Filter>Class GUI\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_CCheckBox.cpp">
+      <Filter>Class GUI\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_CEditbox.cpp">
+      <Filter>Class GUI\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_CProgressBar.cpp">
+      <Filter>Class GUI\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_CTrackBar.cpp">
+      <Filter>Class GUI\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Cgui.cpp">
+      <Filter>Class GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="СFont.cpp">
+      <Filter>Utilits</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Source1.txt" />
+  </ItemGroup>
+</Project>
