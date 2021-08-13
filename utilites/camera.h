@@ -48,7 +48,7 @@ void camera_look(camera_t *pcamera)
 		GetCursorPos(&pcamera->mousexy);
 		pcamera->angleX += (pcamera->width / 2 - pcamera->mousexy.x) / 2.5f; //2 — чувствительность
 		pcamera->angleY += (pcamera->height / 2 - pcamera->mousexy.y) / 2.5f;
-		SetCursorPos(pcamera->width / 2, pcamera->height / 2);
+		SetCursorPos(pcamera->width >> 1, pcamera->height >> 1);
 	
 		if(pcamera->angleY < -89.0)
 			pcamera->angleY = -89.0;
