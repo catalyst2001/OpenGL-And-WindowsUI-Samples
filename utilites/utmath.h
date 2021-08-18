@@ -1,7 +1,9 @@
 #pragma once
 #include <math.h>
 #include <float.h> //FLT_EPSILON, FLT_PI
+#include "glmath.h"
 
+#ifdef GAVNO
 enum {
 	X, Y, Z, W
 };
@@ -104,6 +106,57 @@ public:
 	};
 };
 
+CVector3 cross(const CVector3 &u, const CVector3 &v)
+{
+	return CVector3(u.y * v.z - u.z * v.y, u.z * v.x - u.x * v.z, u.x * v.y - u.y * v.x);
+}
+
+float dot(const CVector3 &u, const CVector3 &v)
+{
+	return u.x * v.x + u.y * v.y + u.z * v.z;
+}
+
+float length(const CVector3 &u)
+{
+	return sqrt(u.x * u.x + u.y * u.y + u.z * u.z);
+}
+
+float length2(const CVector3 &u)
+{
+	return u.x * u.x + u.y * u.y + u.z * u.z;
+}
+#endif
+
+//CVector3 mix(const CVector3 &u, const CVector3 &v, float a)
+//{
+//	return u * (1.0f - a) + v * a;
+//}
+//
+//CVector3 normalize(const CVector3 &u)
+//{
+//	return u / sqrt(u.x * u.x + u.y * u.y + u.z * u.z);
+//}
+//
+//CVector3 reflect(const CVector3 &i, const CVector3 &n)
+//{
+//	return i - 2.0f * dot(n, i) * n;
+//}
+//
+//CVector3 refract(const CVector3 &i, const CVector3 &n, float eta)
+//{
+//	CVector3 r;
+//	float ndoti = dot(n, i), k = 1.0f - eta * eta * (1.0f - ndoti * ndoti);
+//	if (k >= 0.0f)
+//	{
+//		r = eta * i - n * (eta * ndoti + sqrt(k));
+//	}
+//	return r;
+//}
+//
+//CVector3 rotate(const CVector3 &u, float angle, const CVector3 &v)
+//{
+//	return *(CVector3*)&(rotate(angle, v) * vec4(u, 1.0f));
+//}
 
 //поверхность
 //3d plane at 4 points
@@ -111,10 +164,10 @@ class CRect3
 {
 public:
 	CRect3() {}
-	CRect3(CVector3 start, float width) { InitByStartPoint(start, width); }
-	CRect3(CVector3 start, CVector3 end) { InitByVectors(start, end); }
+	CRect3(vec3 start, float width) { InitByStartPoint(start, width); }
+	CRect3(vec3 start, vec3 end) { InitByVectors(start, end); }
 
-	void InitByStartPoint(CVector3 start, float width)
+	void InitByStartPoint(vec3 start, float width)
 	{
 		p1 = start;
 		p2.x = start.x + width;
@@ -128,7 +181,7 @@ public:
 		p4.z = start.z + width;
 	}
 
-	void InitByVectors(CVector3 &start, CVector3 &end) {
+	void InitByVectors(vec3 &start, vec3 &end) {
 		/*
 				 (2)-----------------(3)
 				   \                   \
@@ -153,17 +206,37 @@ public:
 	}
 	~CRect3() {}
 
-	CVector3 p1, p2, p3, p4;
+	vec3 p1, p2, p3, p4;
 };
 
 class CTriangle
 {
 public:
 	CTriangle() {}
-	CTriangle(CVector3 pp1, CVector3 pp2, CVector3 pp3) : p1(pp1), p2(pp2), p3(pp3) {};
+	CTriangle(vec3 pp1, vec3 pp2, vec3 pp3) : p1(pp1), p2(pp2), p3(pp3) {};
 	~CTriangle() {}
 
-	CVector3 p1, p2, p3;
+	vec3 p1, p2, p3;
+};
+
+class CPlane3
+{
+public:
+	CPlane3() {}
+	CPlane3(vec3 &origin, vec3 &normal) {
+		m_origin = origin;
+		m_normal = normal;
+	}
+	CPlane3(float originx, float originy, float originz, float normx, float normy, float normz) : m_origin(vec3(originx, originy, originz)), m_normal(vec3(normx, normy, normz)) {}
+	~CPlane3() {}
+
+	void SetOrigin(vec3 &origin) { m_origin = origin; }
+	void SetOrigin(float x, float y, float z) { m_origin = vec3(x, y, z); }
+	void SetNormal(vec3 &normal) { m_normal = normal; }
+	void SetNormal(float nx, float ny, float nz) { m_normal = vec3(nx, ny, nz); }
+
+	vec3 m_origin;
+	vec3 m_normal;
 };
 
 //ray
@@ -231,21 +304,22 @@ class CRay
 {
 public:
 	CRay() {}
-	CRay(CVector3 sstart, CVector3 ddir) : m_origin(sstart), m_direction(ddir) {}
-	CRay(float xorigin, float yorigin, float zorigin, float xdir, float ydir, float zdir) : m_origin(CVector3(xorigin, yorigin, zorigin)), m_direction(CVector3(xdir, ydir, zdir)) {}
+	CRay(vec3 sstart, vec3 ddir) : m_origin(sstart), m_direction(ddir) {}
+	CRay(float xorigin, float yorigin, float zorigin, float xdir, float ydir, float zdir) : m_origin(vec3(xorigin, yorigin, zorigin)), m_direction(vec3(xdir, ydir, zdir)) {}
 	~CRay() {}
 
-	void SetOrigin(CVector3 origin) { m_origin = origin; }
-	void SetOrigin(float x, float y, float z) { m_origin = CVector3(x, y, z); }
-	void SetDirection(CVector3 dir) { m_direction = dir; }
-	void SetDirection(float x, float y, float z) { m_direction = CVector3(x, y, z); }
+	void SetOrigin(vec3 origin) { m_origin = origin; }
+	void SetOrigin(float x, float y, float z) { m_origin = vec3(x, y, z); }
+	void SetDirection(vec3 dir) { m_direction = dir; }
+	void SetDirection(float x, float y, float z) { m_direction = vec3(x, y, z); }
+	void SetLength(float len) { m_length = len; }
 
-	float TriangleIntersection(CVector3 &v0, CVector3 &v1, CVector3 &v2) {
-		CVector3 e1 = v1 - v0;
-		CVector3 e2 = v2 - v0;
+	float TriangleIntersection(vec3 &v0, vec3 &v1, vec3 &v2) {
+		vec3 e1 = v1 - v0;
+		vec3 e2 = v2 - v0;
 		// ¬ычисление вектора нормали к плоскости
-		CVector3 pvec = m_direction.CrossProduct(e2);
-		float det = e1.DotProduct(pvec);
+		vec3 pvec = cross(m_direction, e2);
+		float det = dot(e1, pvec);
 
 		// Ћуч параллелен плоскости
 		if (det < 1e-8 && det > -1e-8) {
@@ -253,25 +327,37 @@ public:
 		}
 
 		float inv_det = 1 / det;
-		CVector3 tvec = m_origin - v0;
-		float u = tvec.DotProduct(pvec) * inv_det;
+		vec3 tvec = m_origin - v0;
+		float u = dot(tvec, pvec) * inv_det;
 		if (u < 0 || u > 1) {
 			return 0.f;
 		}
 
-		CVector3 qvec = tvec.CrossProduct(e1);
-		float v = m_direction.DotProduct(qvec) * inv_det;
+		vec3 qvec = cross(tvec, e1);
+		float v = dot(m_direction, qvec) * inv_det;
 		if (v < 0 || u + v > 1) {
 			return 0.f;
 		}
-		return e2.DotProduct(qvec) * inv_det;
+		return dot(e2, qvec) * inv_det;
 	}
 
-	int PlaneIntersection(CRect3 &plane) {
-		float denominator = 0;
-		//https://stackoverflow.com/questions/23975555/how-to-do-ray-plane-intersection
+	//https://stackoverflow.com/questions/23975555/how-to-do-ray-plane-intersection
+	int PlaneIntersection(CPlane3 &plane, vec3 &intersectionpoint, float IntersectionPointRoundFactor, float IntersectionPlaneD) {
+		float NdotR = -dot(plane.m_normal, m_direction);
+		if (NdotR != 0.0f) {
+			float Distance = (dot(plane.m_normal, m_origin) + IntersectionPlaneD) / NdotR;
+			if (Distance > 0.125f) {
+				intersectionpoint = m_origin + m_direction * Distance;
+				//intersectionpoint.x = round(intersectionpoint.x / IntersectionPointRoundFactor) * IntersectionPointRoundFactor;
+				//intersectionpoint.y = round(intersectionpoint.y / IntersectionPointRoundFactor) * IntersectionPointRoundFactor;
+				//intersectionpoint.z = round(intersectionpoint.z / IntersectionPointRoundFactor) * IntersectionPointRoundFactor;
+				return 1;
+			}
+		}
+		return 0;
 	}
 
-	CVector3 m_origin;
-	CVector3 m_direction;
+	float m_length;
+	vec3 m_origin;
+	vec3 m_direction;
 };

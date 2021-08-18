@@ -1,6 +1,7 @@
 ﻿#include "../../../utilites/glwnd.h"
 #include "../../../utilites/camera.h"
 #include "../../../utilites/utmath.h"
+#include "../../../utilites/glmath.h"
 
 INT Width, Height;
 camera_t camera;
@@ -14,9 +15,10 @@ camera_t camera;
 
 #define CAMERA_START 0.f, 10.f, 0.f, PLANE_WIDTH, 0.f, PLANE_WIDTH
 
-CRect3 plane;
+CRect3 vplane;
+CPlane3 plane(0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
 
-CTriangle triangle(CVector3(0.f, 0.f, 0.f), CVector3(0.f, 1.f, 0.f), CVector3(1.f, 1.f, 0.f));
+CTriangle triangle(vec3(0.f, 0.f, 0.f), vec3(0.f, 1.f, 0.f), vec3(1.f, 1.f, 0.f));
 
 void fn_draw()
 {
@@ -28,31 +30,36 @@ void fn_draw()
 	camera_look(&camera);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-
-	glVertexPointer(3, GL_FLOAT, 0, &plane);
+	glVertexPointer(3, GL_FLOAT, 0, &vplane);
 	glDrawArrays(GL_LINE_LOOP, 0, 4);
 
+	CRay ray;
+	ray.SetLength(100000.0f);
+	ray.SetOrigin(camera.startX, camera.startY, camera.startZ);
+	ray.SetDirection(camera.endX, camera.endY, camera.endZ);
 
-	//check triangle intersection
-	CRay ray(camera.startX, camera.startY, camera.startZ, camera.endX, camera.endY, camera.endZ);
+	vec3 intersecttion;
+	if (ray.PlaneIntersection(plane, intersecttion, 1.f, 100.f)) {
+		glColor3ub(0, 255, 0);
+	}
+	else
+		glColor3ub(255, 255, 255);
+	
+	
 	//float distance = ray.TriangleIntersection(triangle.p1, triangle.p2, triangle.p3);
-
-	ray.m_direction.x *= 100;
-	ray.m_direction.y *= 100;
-	ray.m_direction.z *= 100;
 
 	glVertexPointer(3, GL_FLOAT, 0, &ray);
 	glDrawArrays(GL_LINES, 0, 2);
 
+	//check triangle intersection
 
-	if (rayIntersectsTriangle((float *)&ray.m_origin, (float *)&ray.m_direction, (float *)&triangle.p1, (float *)&triangle.p2, (float *)&triangle.p3))
-		glColor3ub(255, 0, 0);
-	else glColor3ub(255, 255, 255);
-	//printf("ray distance: %f\n", distance);
-	printf("origin( %f %f %f)  dir( %f %f %f )\n", ray.m_origin.x, ray.m_origin.y, ray.m_origin.z, ray.m_direction.x, ray.m_direction.y, ray.m_direction.z);
-
-	glVertexPointer(3, GL_FLOAT, 0, &triangle);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//if (rayIntersectsTriangle((float *)&ray.m_origin, (float *)&ray.m_direction, (float *)&triangle.p1, (float *)&triangle.p2, (float *)&triangle.p3))
+	//	glColor3ub(255, 0, 0);
+	//else glColor3ub(255, 255, 255);
+	////printf("ray distance: %f\n", distance);
+	//printf("origin( %f %f %f)  dir( %f %f %f )\n", ray.m_origin.x, ray.m_origin.y, ray.m_origin.z, ray.m_direction.x, ray.m_direction.y, ray.m_direction.z);
+	//glVertexPointer(3, GL_FLOAT, 0, &triangle);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
@@ -111,7 +118,7 @@ void fn_windowcreate(HWND hWnd)
 	camera_update_viewport(&camera, Width, Height);
 	camera_init(&camera, CAMERA_START);
 	camera_set_active(&camera, true);
-	plane.InitByStartPoint({ 0.f, PLANE_Y, 0.f }, PLANE_WIDTH);
+	vplane.InitByStartPoint({ 0.f, PLANE_Y, 0.f }, PLANE_WIDTH);
 }
 
 void fn_windowclose(HWND hWnd)

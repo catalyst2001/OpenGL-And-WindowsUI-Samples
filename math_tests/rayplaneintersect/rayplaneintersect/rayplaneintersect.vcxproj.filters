@@ -2,5 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="rayplaneintersect.cpp" />
+    <ClCompile Include="..\..\..\utilites\glmath.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\utilites\glmath.h" />
   </ItemGroup>
 </Project>
