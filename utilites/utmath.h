@@ -343,7 +343,8 @@ public:
 
 	//https://stackoverflow.com/questions/23975555/how-to-do-ray-plane-intersection
 	int PlaneIntersection(CPlane3 &plane, vec3 &intersectionpoint, float IntersectionPointRoundFactor, float IntersectionPlaneD) {
-		float NdotR = -dot(plane.m_normal, m_direction);
+		float NdotR = -dot(plane.m_normal, m_direction * IntersectionPointRoundFactor);
+		//float NdotR = -dot(plane.m_normal, m_origin * IntersectionPointRoundFactor);
 		if (NdotR != 0.0f) {
 			float Distance = (dot(plane.m_normal, m_origin) + IntersectionPlaneD) / NdotR;
 			if (Distance > 0.125f) {
@@ -356,6 +357,60 @@ public:
 		}
 		return 0;
 	}
+
+
+	// Source Function Plane Intersection Test
+	//https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection
+	//where l0 is the origin of the ray and l is the ray direction.
+	//and the plane normal - n.
+	//t - distance
+	/*
+	bool intersectPlane(const Vec3f &n, const Vec3f &p0, const Vec3f &l0, const Vec3f &l, float &t)
+	{
+		// assuming vectors are all normalized
+		float denom = dotProduct(n, l);
+		if (denom > 1e-6) {
+			Vec3f p0l0 = p0 - l0;
+			t = dotProduct(p0l0, n) / denom;
+			return (t >= 0);
+		}
+
+		return false;
+	}
+	*/
+	//Вроде бы работает. Не уверен с получением точки пересечения
+	int PlaneIntersection2(CPlane3 &plane, vec3 &intersectionpoint)
+	{
+		// assuming vectors are all normalized
+		float denom = -dot(plane.m_normal, m_direction);
+		if (denom > 1e-6) {
+			vec3 p0l0 = plane.m_origin - m_origin;
+			float t = -dot(p0l0, plane.m_normal) / denom;
+			if (t >= 0) {
+				intersectionpoint = m_origin + m_direction * t;//тут хз
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	//https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection
+	/*
+	bool intersectDisk(const Vec3f &n, const Vec3f &p0, const float &radius, const Vec3f &l0, const Vec3 &l)
+	{
+		float t = 0;
+		if (intersectPlane(n, p0, l0, l, t)) {
+			Vec3f p = l0 + l * t;
+			Vec3f v = p - p0;
+			float d2 = dot(v, v);
+			return (sqrtf(d2) <= radius);
+			// or you can use the following optimisation (and precompute radius^2)
+			// return d2 <= radius2; // where radius2 = radius * radius
+		 }
+
+		 return false;
+	}
+	*/
 
 	float m_length;
 	vec3 m_origin;

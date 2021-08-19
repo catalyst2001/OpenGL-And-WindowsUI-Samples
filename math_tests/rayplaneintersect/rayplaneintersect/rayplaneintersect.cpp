@@ -20,6 +20,10 @@ CPlane3 plane(0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
 
 CTriangle triangle(vec3(0.f, 0.f, 0.f), vec3(0.f, 1.f, 0.f), vec3(1.f, 1.f, 0.f));
 
+CRay ray;
+
+GLUquadric *sphere;
+
 void fn_draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -31,25 +35,31 @@ void fn_draw()
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, &vplane);
-	glDrawArrays(GL_LINE_LOOP, 0, 4);
+	glDrawArrays(GL_QUADS, 0, 4);
 
-	CRay ray;
-	ray.SetLength(100000.0f);
 	ray.SetOrigin(camera.startX, camera.startY, camera.startZ);
 	ray.SetDirection(camera.endX, camera.endY, camera.endZ);
 
 	vec3 intersecttion;
-	if (ray.PlaneIntersection(plane, intersecttion, 1.f, 100.f)) {
+	//if (ray.PlaneIntersection(plane, intersecttion, 2.f, 100.f)) {
+	if (ray.PlaneIntersection2(plane, intersecttion)) {
+		glPushAttrib(GL_CURRENT_BIT);
+		printf("pos: %f %f %f\n", intersecttion.x, intersecttion.y, intersecttion.z);
 		glColor3ub(0, 255, 0);
+		glPushMatrix();
+		glTranslatef(intersecttion.x, intersecttion.y, intersecttion.z);
+		gluSphere(sphere, 0.1, 5, 5);
+		glPopMatrix();
+		glPopAttrib();
 	}
 	else
-		glColor3ub(255, 255, 255);
-	
+		glColor3ub(50, 50, 50);
 	
 	//float distance = ray.TriangleIntersection(triangle.p1, triangle.p2, triangle.p3);
-
-	glVertexPointer(3, GL_FLOAT, 0, &ray);
-	glDrawArrays(GL_LINES, 0, 2);
+	glBegin(GL_LINES);
+	glVertex3fv(&ray.m_origin);
+	glVertex3fv(&ray.m_direction);
+	glEnd();
 
 	//check triangle intersection
 
@@ -108,6 +118,14 @@ void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 			ShowCursor(!mouseshow);
 			mouseshow = !mouseshow;
 			break;
+		case VK_F2:
+			ray.m_origin.y += 1.0f;
+			ray.m_direction.y += 1.0f;
+			break;
+		case VK_F3:
+			ray.m_origin.y -= 1.0f;
+			ray.m_direction.y -= 1.0f;
+			break;
 		}
 	}
 }
@@ -119,6 +137,14 @@ void fn_windowcreate(HWND hWnd)
 	camera_init(&camera, CAMERA_START);
 	camera_set_active(&camera, true);
 	vplane.InitByStartPoint({ 0.f, PLANE_Y, 0.f }, PLANE_WIDTH);
+
+	ray.SetLength(100000.0f);
+	//ray.SetOrigin(10, -5, 10);
+	//ray.SetDirection(10, 0, 10);
+	ray.SetOrigin(10, 0, 10);
+	ray.SetDirection(10, -5, 10);
+
+	sphere = gluNewQuadric();
 }
 
 void fn_windowclose(HWND hWnd)
