@@ -80,15 +80,15 @@ void fn_draw()
 	glDrawArrays(GL_QUADS, 0, 4);
 
 	ray.SetOrigin(camera.startX, camera.startY, camera.startZ);
-	ray.SetDirection(camera.endX * 1000, camera.endY * 1000, camera.endZ * 1000);
+	ray.SetDirection(camera.dirX, camera.dirY, camera.dirZ);
+
+	printf("(%f %f %f) (%f %f %f)\n", camera.startX, camera.startY, camera.startZ, camera.dirX, camera.dirY, camera.dirZ);
 
 	vec3 intersecttion;
 	//if (ray.PlaneIntersection(plane, intersecttion, 2.f, 100.f)) {
-	if (ray.PlaneIntersection2(plane, intersecttion)) {
-		float IntersectionPointRoundFactor = 1.0;
-		intersecttion.x = round(intersecttion.x / IntersectionPointRoundFactor) * IntersectionPointRoundFactor;
-		intersecttion.y = round(intersecttion.y / IntersectionPointRoundFactor) * IntersectionPointRoundFactor;
-		intersecttion.z = round(intersecttion.z / IntersectionPointRoundFactor) * IntersectionPointRoundFactor;
+	if (ray.PlaneIntersection4(plane, intersecttion)) {
+		//float IntersectionPointRoundFactor = 1.0;
+		//round_vector(intersecttion, intersecttion, IntersectionPointRoundFactor);
 		glPushAttrib(GL_CURRENT_BIT);
 
 		printf("pos: %f %f %f\n", intersecttion.x, intersecttion.y, intersecttion.z);

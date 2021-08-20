@@ -434,12 +434,32 @@ public:
 			vec3 p0l0 = plane.m_origin - m_origin;
 			float t = -dot(p0l0, plane.m_normal) / denom;
 			if (t >= 0) {
-				//intersectionpoint = m_origin + m_direction * t;//правильно
-				intersectionpoint = ray_evaluate(*this, t);
+				intersectionpoint = m_origin + m_direction * t;//правильно
+				//intersectionpoint = ray_evaluate(*this, t);
 				return 1;
 			}
 		}
 		return 0;
+	}
+
+	int PlaneIntersection3(CPlane3 &plane, vec3 &intersectionpoint)
+	{
+		mat3x3 a(m_direction.y, 0.f, plane.m_normal.x, -m_direction.x, m_direction.z, plane.m_normal.y, 0.f, -m_direction.y, plane.m_normal.z);
+		vec3 b(
+			m_direction.y * m_origin.x - m_direction.x * m_origin.y,
+			m_direction.z * m_origin.y - m_direction.y * m_origin.z,
+			dot(plane.m_normal, plane.m_origin)
+		);
+		intersectionpoint = inverse(a) * b;
+		return 1;
+	}
+
+	//http://mathprofi.ru/zadachi_s_pryamoi_i_ploskostju.html
+	int PlaneIntersection4(CPlane3 &plane, vec3 &intersectionpoint)
+	{
+		float t = (dot(plane.m_normal, plane.m_origin) - dot(plane.m_normal, m_origin)) / dot(plane.m_normal, m_direction);
+		intersectionpoint = m_origin + m_direction * t;
+		return 1;
 	}
 
 	//https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection

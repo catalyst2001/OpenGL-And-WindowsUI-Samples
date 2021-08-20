@@ -13,21 +13,21 @@ struct camera_t {
 	float startX, startY, startZ;
 	double angleX;
 	double angleY;
-	float endX, endY, endZ;
+	float dirX, dirY, dirZ;
 
 	POINT mousexy;
 	int width, height;
 	bool active;
 };
 
-inline void camera_init(camera_t *pcamera, float stx, float sty, float stz, float endx, float endy, float endz)
+inline void camera_init(camera_t *pcamera, float stx, float sty, float stz, float dirx, float diry, float dirz)
 {
 	pcamera->startX = stx;
 	pcamera->startY = sty;
 	pcamera->startZ = stz;
-	pcamera->endX = endx;
-	pcamera->endY = endy;
-	pcamera->endZ = endz;
+	pcamera->dirX = dirx;
+	pcamera->dirY = diry;
+	pcamera->dirZ = dirz;
 }
 
 inline void camera_update_viewport(camera_t *pcamera, int _width, int _height)
@@ -63,34 +63,34 @@ void camera_look(camera_t *pcamera)
 		}
 		if (GetAsyncKeyState(0x57)) //w
 		{
-			pcamera->startX -= (float)sin(pcamera->angleX / 180.f * FLT_PI) * SPEED;
-			pcamera->startZ -= (float)cos(pcamera->angleX / 180.f * FLT_PI) * SPEED;
+			pcamera->startX -= (float)sinf(pcamera->angleX / 180.f * FLT_PI) * SPEED;
+			pcamera->startZ -= (float)cosf(pcamera->angleX / 180.f * FLT_PI) * SPEED;
 		}
 		if (GetAsyncKeyState(0x53))//s
 		{
-			pcamera->startX += (float)sin(pcamera->angleX / 180.f * FLT_PI) * SPEED;
-			pcamera->startZ += (float)cos(pcamera->angleX / 180.f * FLT_PI) * SPEED;
+			pcamera->startX += (float)sinf(pcamera->angleX / 180.f * FLT_PI) * SPEED;
+			pcamera->startZ += (float)cosf(pcamera->angleX / 180.f * FLT_PI) * SPEED;
 		}
 		if (GetAsyncKeyState(0x44)) //right
 		{
-			pcamera->startX += (float)sin((pcamera->angleX + 90) / 180.f * FLT_PI) * SPEED;
-			pcamera->startZ += (float)cos((pcamera->angleX + 90) / 180.f * FLT_PI) * SPEED;
+			pcamera->startX += (float)sinf((pcamera->angleX + 90) / 180.f * FLT_PI) * SPEED;
+			pcamera->startZ += (float)cosf((pcamera->angleX + 90) / 180.f * FLT_PI) * SPEED;
 		}
 		if (GetAsyncKeyState(0x41))//left
 		{
-			pcamera->startX += (float)sin((pcamera->angleX - 90) / 180.f * FLT_PI) * SPEED;
-			pcamera->startZ += (float)cos((pcamera->angleX - 90) / 180.f * FLT_PI) * SPEED;
+			pcamera->startX += (float)sinf((pcamera->angleX - 90) / 180.f * FLT_PI) * SPEED;
+			pcamera->startZ += (float)cosf((pcamera->angleX - 90) / 180.f * FLT_PI) * SPEED;
 		}
 	}
 	
-	pcamera->endX = pcamera->startX - sin(pcamera->angleX / 180.f * FLT_PI);
-	pcamera->endY = pcamera->startY + (tan(pcamera->angleY / 180.f * FLT_PI));
-	pcamera->endZ = pcamera->startZ - cos(pcamera->angleX / 180.f * FLT_PI);
-	//printf("Start: %f %f %f   End: %f %f %f\n", x, y, z, dir[X], dir[Y], dir[Z]);
+	pcamera->dirX = pcamera->startX - sinf(pcamera->angleX / 180.f * FLT_PI);
+	pcamera->dirY = pcamera->startY + (tanf(pcamera->angleY / 180.f * FLT_PI));
+	pcamera->dirZ = pcamera->startZ - cosf(pcamera->angleX / 180.f * FLT_PI);
+	//printf("Start: %f %f %f   dir: %f %f %f\n", x, y, z, dir[X], dir[Y], dir[Z]);
 
 	//glMatrixMode(GL_MODELVIEW);
 	//glLoadIdentity();
-	gluLookAt(pcamera->startX, pcamera->startY, pcamera->startZ, pcamera->endX, pcamera->endY, pcamera->endZ, 0.f, 1.f, 0.f);
+	gluLookAt(pcamera->startX, pcamera->startY, pcamera->startZ, pcamera->dirX, pcamera->dirY, pcamera->dirZ, 0.f, 1.f, 0.f);
 }
 
 #endif

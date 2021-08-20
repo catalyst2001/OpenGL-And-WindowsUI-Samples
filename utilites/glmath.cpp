@@ -111,6 +111,13 @@ vec3 rotate(const vec3 &u, float angle, const vec3 &v)
 	return *(vec3*)&(rotate(angle, v) * vec4(u, 1.0f));
 }
 
+void round_vector(vec3 &dest, const vec3 vec, float roundfactor)
+{
+	dest.x = round(vec.x / roundfactor) * roundfactor;
+	dest.y = round(vec.y / roundfactor) * roundfactor;
+	dest.z = round(vec.z / roundfactor) * roundfactor;
+}
+
 // ----------------------------------------------------------------------------------------------------------------------------
 
 mat2x2::mat2x2()
