@@ -2,6 +2,7 @@
 #include "../../../utilites/camera.h"
 #include "../../../utilites/utmath.h"
 #include "../../../utilites/glmath.h"
+//#include "../../../utilites/camera/Camera.h"
 
 INT Width, Height;
 camera_t camera;
@@ -24,6 +25,45 @@ CRay ray;
 
 GLUquadric *sphere;
 
+void DrawAxis()
+{
+	glBegin(GL_LINES);
+	glColor3ub(255, 0, 0);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(1.f, 0.f, 0.f);
+	glColor3ub(0, 255, 0);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 1.f, 0.f);
+	glColor3ub(0, 0, 255);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 1.f);
+	glEnd();
+}
+
+void Draw3DSGrid()
+{
+	// Turn the lines GREEN
+	glColor3ub(0, 255, 0);
+
+	// Draw a 1x1 grid along the X and Z axis'
+	for (float i = -100; i <= 100; i += 1)
+	{
+		// Start drawing some lines
+		glBegin(GL_LINES);
+
+		// Do the horizontal lines (along the X)
+		glVertex3f(-100, 0, i);
+		glVertex3f(100, 0, i);
+
+		// Do the vertical lines (along the Z)
+		glVertex3f(i, 0, -100);
+		glVertex3f(i, 0, 100);
+
+		// Stop drawing lines
+		glEnd();
+	}
+}
+
 void fn_draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -31,6 +71,8 @@ void fn_draw()
 
 	gluPerspective(45.0, Width / (double)Height, 0.1, 1000.0);
 
+	//camera.Update();
+	//camera.Look();
 	camera_look(&camera);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -38,12 +80,17 @@ void fn_draw()
 	glDrawArrays(GL_QUADS, 0, 4);
 
 	ray.SetOrigin(camera.startX, camera.startY, camera.startZ);
-	ray.SetDirection(camera.endX, camera.endY, camera.endZ);
+	ray.SetDirection(camera.endX * 1000, camera.endY * 1000, camera.endZ * 1000);
 
 	vec3 intersecttion;
 	//if (ray.PlaneIntersection(plane, intersecttion, 2.f, 100.f)) {
 	if (ray.PlaneIntersection2(plane, intersecttion)) {
+		float IntersectionPointRoundFactor = 1.0;
+		intersecttion.x = round(intersecttion.x / IntersectionPointRoundFactor) * IntersectionPointRoundFactor;
+		intersecttion.y = round(intersecttion.y / IntersectionPointRoundFactor) * IntersectionPointRoundFactor;
+		intersecttion.z = round(intersecttion.z / IntersectionPointRoundFactor) * IntersectionPointRoundFactor;
 		glPushAttrib(GL_CURRENT_BIT);
+
 		printf("pos: %f %f %f\n", intersecttion.x, intersecttion.y, intersecttion.z);
 		glColor3ub(0, 255, 0);
 		glPushMatrix();
@@ -56,10 +103,17 @@ void fn_draw()
 		glColor3ub(50, 50, 50);
 	
 	//float distance = ray.TriangleIntersection(triangle.p1, triangle.p2, triangle.p3);
+	glPushAttrib(GL_CURRENT_BIT);
+	DrawAxis();
+	Draw3DSGrid();
+
+	glColor3ub(255, 255, 255);
 	glBegin(GL_LINES);
 	glVertex3fv(&ray.m_origin);
 	glVertex3fv(&ray.m_direction);
+	//printf("m_origin(%f %f %f) m_direction(%f %f %f)\n", ray.m_origin.x, ray.m_origin.y, ray.m_origin.z, ray.m_direction.x, ray.m_direction.y, ray.m_direction.z);
 	glEnd();
+	glPopAttrib();
 
 	//check triangle intersection
 
@@ -93,6 +147,11 @@ void fn_window_resize(HWND hWnd, int width, int height)
 
 void fn_mousemove(HWND hWnd, int x, int y)
 {
+	RECT rect;
+	GetClientRect(hWnd, &rect);
+	Width = rect.right;
+	Height = rect.bottom;
+	camera_update_viewport(&camera, Width, Height);
 }
 
 void fn_mouseclick(HWND hWnd, int x, int y, int button, int state)
@@ -154,6 +213,8 @@ void fn_windowclose(HWND hWnd)
 
 int main()
 {
+	int window_posx = (GetSystemMetrics(SM_CXSCREEN) / 2) - (SCREEN_WIDTH / 2);
+	int window_posy = (GetSystemMetrics(SM_CYSCREEN) / 2) - (SCREEN_HEIGHT / 2);
 	create_window("ray plane intersect test", __FILE__ __TIME__,
 		24,					  //Colors bits
 		32,					  //Depth bits
@@ -165,9 +226,9 @@ int main()
 		fn_keydown,			  //Keydown function
 		fn_windowcreate,	  //Window create function
 		fn_windowclose,		  //Window close function
-		200,					 //Window position X
-		200,					 //Window position Y
-		SCREEN_WIDTH,				  //Window width
-		SCREEN_HEIGHT);				  //Window height
+		window_posx,		//Window position X
+		window_posy, //Window position Y
+		SCREEN_WIDTH, //Window width
+		SCREEN_HEIGHT); //Window height
 	return 0;
 }

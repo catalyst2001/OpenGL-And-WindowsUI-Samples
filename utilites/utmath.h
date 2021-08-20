@@ -300,6 +300,44 @@ int rayIntersectsTriangle(float *p, float *d, float *v0, float *v1, float *v2) {
 
 }
 
+class CAABB
+{
+	CAABB() {}
+	CAABB(vec3 vmin, vec3 vmax) : m_min(vmin), m_max(vmax) {}
+	CAABB(float x, float y, float z, float size) {
+		m_min = vec3(x, y, z);
+		m_max = vec3(x + size, y + size, z + size);
+	}
+	~CAABB() {}
+
+	void Draw() {
+		glBegin(GL_QUADS);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glEnd();
+
+		glBegin(GL_LINES);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glVertex3f(m_min.x, m_min.y, m_min.z);
+		glEnd();
+	}
+
+	vec3 m_min, m_max;
+};
+
 class CRay
 {
 public:
@@ -358,6 +396,15 @@ public:
 		return 0;
 	}
 
+	vec3 ray_evaluate(const CRay& ray, float t)
+	{
+		/* o + d * t */
+		vec3 result = ray.m_direction * t;
+		result += ray.m_origin;
+		//vec3_scale(&result, &ray->dir, t);
+		//vec3_add(&result, &result, &ray->origin);
+		return result;
+	}
 
 	// Source Function Plane Intersection Test
 	//https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection
@@ -387,7 +434,8 @@ public:
 			vec3 p0l0 = plane.m_origin - m_origin;
 			float t = -dot(p0l0, plane.m_normal) / denom;
 			if (t >= 0) {
-				intersectionpoint = m_origin + m_direction * t;//тут хз
+				//intersectionpoint = m_origin + m_direction * t;//правильно
+				intersectionpoint = ray_evaluate(*this, t);
 				return 1;
 			}
 		}

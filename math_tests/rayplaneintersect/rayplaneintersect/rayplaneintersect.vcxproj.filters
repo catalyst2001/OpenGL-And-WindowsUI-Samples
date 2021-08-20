@@ -3,8 +3,21 @@
   <ItemGroup>
     <ClCompile Include="rayplaneintersect.cpp" />
     <ClCompile Include="..\..\..\utilites\glmath.cpp" />
+    <ClCompile Include="..\..\..\utilites\camera\Camera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\utilites\glmath.h" />
+    <ClInclude Include="..\..\..\utilites\camera\Camera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="camera">
+      <UniqueIdentifier>{070dc14f-eb9a-4844-bdb6-1fe7083b52bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
