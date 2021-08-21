@@ -151,11 +151,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\utilites\camera\Camera.cpp" />
     <ClCompile Include="..\..\..\utilites\glmath.cpp" />
     <ClCompile Include="primitives.cpp" />
     <ClCompile Include="rayplaneintersect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\utilites\camera\Camera.h" />
     <ClInclude Include="..\..\..\utilites\glmath.h" />
     <ClInclude Include="primitives.h" />
   </ItemGroup>

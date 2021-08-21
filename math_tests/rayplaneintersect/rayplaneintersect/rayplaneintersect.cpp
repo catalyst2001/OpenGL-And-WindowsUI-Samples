@@ -1,11 +1,18 @@
-﻿#include "../../../utilites/glwnd.h"
+﻿#define OLD_CAMERA
+
+#include "../../../utilites/glwnd.h"
+#ifdef OLD_CAMERA
 #include "../../../utilites/camera.h"
+camera_t camera;
+#else
+#include "../../../utilites/camera/Camera.h"
+CCamera camera;
+#endif
 #include "../../../utilites/utmath.h"
 #include "../../../utilites/glmath.h"
-//#include "../../../utilites/camera/Camera.h"
 
+bool mouseshow = false;
 INT Width, Height;
-camera_t camera;
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 1024
@@ -71,22 +78,28 @@ void fn_draw()
 
 	gluPerspective(45.0, Width / (double)Height, 0.1, 1000.0);
 
-	//camera.Update();
-	//camera.Look();
-	camera_look(&camera);
-
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, &vplane);
 	glDrawArrays(GL_QUADS, 0, 4);
 
+#ifdef OLD_CAMERA
+	camera_look(&camera);
 	ray.SetOrigin(camera.startX, camera.startY, camera.startZ);
 	ray.SetDirection(camera.dirX, camera.dirY, camera.dirZ);
-
 	printf("(%f %f %f) (%f %f %f)\n", camera.startX, camera.startY, camera.startZ, camera.dirX, camera.dirY, camera.dirZ);
+#else
+	if (mouseshow)
+		camera.Update();
+
+	camera.Look();
+	ray.SetOrigin(camera.m_vPosition.x, camera.m_vPosition.y, camera.m_vPosition.z);
+	ray.SetDirection(camera.m_vView.x, camera.m_vView.y, camera.m_vView.z);
+	printf("(%f %f %f) (%f %f %f)\n", camera.m_vPosition.x, camera.m_vPosition.y, camera.m_vPosition.z, camera.m_vView.x, camera.m_vView.y, camera.m_vView.z);
+#endif
 
 	vec3 intersecttion;
 	//if (ray.PlaneIntersection(plane, intersecttion, 2.f, 100.f)) {
-	if (ray.PlaneIntersection4(plane, intersecttion)) {
+	if (ray.PlaneIntersection2(plane, intersecttion)) {
 		//float IntersectionPointRoundFactor = 1.0;
 		//round_vector(intersecttion, intersecttion, IntersectionPointRoundFactor);
 		glPushAttrib(GL_CURRENT_BIT);
@@ -106,7 +119,7 @@ void fn_draw()
 	glPushAttrib(GL_CURRENT_BIT);
 	DrawAxis();
 	Draw3DSGrid();
-
+	glLineWidth(2.0);
 	glColor3ub(255, 255, 255);
 	glBegin(GL_LINES);
 	glVertex3fv(&ray.m_origin);
@@ -142,7 +155,11 @@ void fn_window_resize(HWND hWnd, int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+#ifdef OLD_CAMERA
 	camera_update_viewport(&camera, width, height);
+#else
+	camera.UpdateScreenResoluiton(width, height);
+#endif
 }
 
 void fn_mousemove(HWND hWnd, int x, int y)
@@ -151,7 +168,6 @@ void fn_mousemove(HWND hWnd, int x, int y)
 	GetClientRect(hWnd, &rect);
 	Width = rect.right;
 	Height = rect.bottom;
-	camera_update_viewport(&camera, Width, Height);
 }
 
 void fn_mouseclick(HWND hWnd, int x, int y, int button, int state)
@@ -165,7 +181,6 @@ void fn_charinput(HWND hWnd, char symbol)
 //https://docs.microsoft.com/ru-ru/windows/win32/inputdev/wm-keydown
 void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 {
-	static bool mouseshow = false;
 	INT key = (INT)wparam;
 	if (state == KEY_DOWN) {
 		if (key == 27) //esc code
@@ -173,18 +188,40 @@ void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 
 		switch (key) {
 		case VK_F1:
+#ifdef OLD_CAMERA
 			camera_set_active(&camera, mouseshow);
+#endif
 			ShowCursor(!mouseshow);
 			mouseshow = !mouseshow;
 			break;
+
 		case VK_F2:
 			ray.m_origin.y += 1.0f;
 			ray.m_direction.y += 1.0f;
 			break;
+
 		case VK_F3:
 			ray.m_origin.y -= 1.0f;
 			ray.m_direction.y -= 1.0f;
 			break;
+
+		//ray direction control
+		case VK_LEFT:
+			//ray.m_direction.x += 
+			break;
+
+		case VK_RIGHT:
+			break;
+
+		case VK_UP:
+			ray.m_direction.y += 1.5f;
+			break;
+
+		case VK_DOWN:
+			ray.m_direction.y -= 1.5f;
+			break;
+
+
 		}
 	}
 }
@@ -192,9 +229,13 @@ void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 //Add this GL functions
 void fn_windowcreate(HWND hWnd)
 {
+#ifdef OLD_CAMERA
 	camera_update_viewport(&camera, Width, Height);
 	camera_init(&camera, CAMERA_START);
 	camera_set_active(&camera, true);
+#else
+	camera.PositionCamera(0, 0, 0, 0, 0, 1, 0, 1, 0);
+#endif
 	vplane.InitByStartPoint({ 0.f, PLANE_Y, 0.f }, PLANE_WIDTH);
 
 	ray.SetLength(100000.0f);
@@ -213,8 +254,8 @@ void fn_windowclose(HWND hWnd)
 
 int main()
 {
-	int window_posx = (GetSystemMetrics(SM_CXSCREEN) / 2) - (SCREEN_WIDTH / 2);
-	int window_posy = (GetSystemMetrics(SM_CYSCREEN) / 2) - (SCREEN_HEIGHT / 2);
+	//int window_posx = (GetSystemMetrics(SM_CXSCREEN) / 2) - (SCREEN_WIDTH / 2);
+	//int window_posy = (GetSystemMetrics(SM_CYSCREEN) / 2) - (SCREEN_HEIGHT / 2);
 	create_window("ray plane intersect test", __FILE__ __TIME__,
 		24,					  //Colors bits
 		32,					  //Depth bits
@@ -226,8 +267,8 @@ int main()
 		fn_keydown,			  //Keydown function
 		fn_windowcreate,	  //Window create function
 		fn_windowclose,		  //Window close function
-		window_posx,		//Window position X
-		window_posy, //Window position Y
+		0,		//Window position X
+		0, //Window position Y
 		SCREEN_WIDTH, //Window width
 		SCREEN_HEIGHT); //Window height
 	return 0;

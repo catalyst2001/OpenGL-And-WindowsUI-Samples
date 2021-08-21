@@ -1622,7 +1622,7 @@ int CObject::AddTriangle(int VertexIndexA, int VertexIndexB, int VertexIndexC, c
 
 		float ABdotAC = dot(AB, AC), NdotVSBVZ = dot(Normal, ViewSpaceBasisVectorZ);
 
-		if(abs(ABdotAC) < 1.0f && NdotVSBVZ > 0.0f)
+		if(fabs(ABdotAC) < 1.0f && NdotVSBVZ > 0.0f)
 		{
 			CIndexArrayElement *NewIndexArray = new CIndexArrayElement[(TrianglesCount + 1) * 3];
 

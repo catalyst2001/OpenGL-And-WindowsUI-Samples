@@ -85,8 +85,7 @@
 			fn_keydown,			  //Keydown function
 			fn_windowcreate,	  //Window create function
 			fn_windowclose,		  //Window close function
-			0,					  //Window position X
-			0,					  //Window position Y
+			0, 0,
 			800,				  //Window width
 			600);				  //Window height
 		return 0;
@@ -246,8 +245,7 @@ void create_window(const char *p_windowname,
 	KEYDOWNFN pKeydownFn = NULL,
 	WINDOWCREATE pWindowCreateFn = NULL,
 	WINDOWQUIT pWindowQuitFn = NULL,
-	int posx = 0,
-	int posy = 0,
+	int x = 0, int y = 0,
 	int width = 1280,
 	int height = 1024)
 {
@@ -279,7 +277,10 @@ void create_window(const char *p_windowname,
 	global_window_data.p_windowcreate = pWindowCreateFn;
 	global_window_data.p_windowquit = pWindowQuitFn;
 	global_window_data.p_ketdownfn = pKeydownFn;
-	global_window_data.h_window = CreateWindowExA(NULL, p_classname, p_windowname, /*WS_VISIBLE|WS_POPUP*/WS_OVERLAPPEDWINDOW, posx, posy, width, height, NULL, (HMENU)NULL, global_window_data.hModule, NULL);
+
+	int xpos = (GetSystemMetrics(SM_CXSCREEN) / 2) - (width / 2);
+	int ypos = (GetSystemMetrics(SM_CYSCREEN) / 2) - (height / 2);
+	global_window_data.h_window = CreateWindowExA(NULL, p_classname, p_windowname, /*WS_VISIBLE|WS_POPUP*/WS_OVERLAPPEDWINDOW, xpos, ypos, width, height, NULL, (HMENU)NULL, global_window_data.hModule, NULL);
 	if (!global_window_data.h_window) {
 		error("Error create window!\nGetLastError() = 0x%x", GetLastError());
 		exit(-2);

@@ -14,7 +14,7 @@
 
 
 // This is how fast our camera moves
-#define kSpeed	500.0f									
+#define kSpeed	0.1f									
 
 /////////////////////////////////////// CROSS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*
 /////

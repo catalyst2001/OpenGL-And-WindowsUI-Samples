@@ -9,10 +9,13 @@
 #include "glmath.h"
 #include "string.h"
 
-#include <gl/glew.h> // http://glew.sourceforge.net/
-#include <gl/wglew.h>
+#pragma comment(lib, "glew32.lib")
+#include "gl/glew.h" // http://glew.sourceforge.net/
+#include "gl/wglew.h"
 
-#include <FreeImage.h> // http://freeimage.sourceforge.net/
+
+#pragma comment(lib, "FreeImage.lib")
+#include "FreeImage.h" // http://freeimage.sourceforge.net/
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
