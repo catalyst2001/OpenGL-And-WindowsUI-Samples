@@ -23,10 +23,9 @@ INT Width, Height;
 
 #define CAMERA_START 0.f, 10.f, 0.f, PLANE_WIDTH, 0.f, PLANE_WIDTH
 
-CRect3 vplane;
 CPlane3 plane(0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
 
-CTriangle triangle(vec3(0.f, 0.f, 0.f), vec3(0.f, 1.f, 0.f), vec3(1.f, 1.f, 0.f));
+CTriangle triangle(vec3(0.f, 0.f, 0.f), vec3(0.f, 10.f, 0.f), vec3(10.f, 10.f, 0.f));
 
 CRay ray;
 
@@ -79,14 +78,14 @@ void fn_draw()
 	gluPerspective(45.0, Width / (double)Height, 0.1, 1000.0);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, &vplane);
-	glDrawArrays(GL_QUADS, 0, 4);
 
 #ifdef OLD_CAMERA
 	camera_look(&camera);
 	ray.SetOrigin(camera.startX, camera.startY, camera.startZ);
+
+	//vec3 end = vec3(camera.startX, camera.startY, camera.startZ) + vec3(camera.dirX, camera.dirY, camera.dirZ) * 1000.f;
 	ray.SetDirection(camera.dirX, camera.dirY, camera.dirZ);
-	printf("(%f %f %f) (%f %f %f)\n", camera.startX, camera.startY, camera.startZ, camera.dirX, camera.dirY, camera.dirZ);
+	//printf("(%f %f %f) (%f %f %f)\n", camera.startX, camera.startY, camera.startZ, /*end.x, end.y, end.z*/camera.dirX, camera.dirY, camera.dirZ);
 #else
 	if (mouseshow)
 		camera.Update();
@@ -98,13 +97,15 @@ void fn_draw()
 #endif
 
 	vec3 intersecttion;
-	//if (ray.PlaneIntersection(plane, intersecttion, 2.f, 100.f)) {
-	if (ray.PlaneIntersection2(plane, intersecttion)) {
+	//if (ray.PlaneIntersection2(plane, intersecttion)) {
+	ray.m_direction * 20.f;
+	ray.m_direction.y / 12.f;
+	if (ray.PlaneIntersection5(plane.m_origin, plane.m_normal, ray.m_origin, ray.m_direction, intersecttion)) {
 		//float IntersectionPointRoundFactor = 1.0;
 		//round_vector(intersecttion, intersecttion, IntersectionPointRoundFactor);
 		glPushAttrib(GL_CURRENT_BIT);
 
-		printf("pos: %f %f %f\n", intersecttion.x, intersecttion.y, intersecttion.z);
+		//printf("pos: %f %f %f\n", intersecttion.x, intersecttion.y, intersecttion.z);
 		glColor3ub(0, 255, 0);
 		glPushMatrix();
 		glTranslatef(intersecttion.x, intersecttion.y, intersecttion.z);
@@ -114,6 +115,22 @@ void fn_draw()
 	}
 	else
 		glColor3ub(50, 50, 50);
+
+	//glVertexPointer(3, GL_FLOAT, 0, &triangle);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	//if (ray.TriangleIntersection(triangle.p1, triangle.p2, triangle.p3, intersecttion)) {
+	//	printf("Triangle intersection point ( %f %f %f )\n", intersecttion.x, intersecttion.y, intersecttion.z);
+	//	glPushAttrib(GL_CURRENT_BIT);
+
+	//	//printf("pos: %f %f %f\n", intersecttion.x, intersecttion.y, intersecttion.z);
+	//	glColor3ub(255, 0, 0);
+	//	glPushMatrix();
+	//	glTranslatef(intersecttion.x, intersecttion.y, intersecttion.z);
+	//	gluSphere(sphere, 0.5, 5, 5);
+	//	glPopMatrix();
+	//	glPopAttrib();
+	//}
 	
 	//float distance = ray.TriangleIntersection(triangle.p1, triangle.p2, triangle.p3);
 	glPushAttrib(GL_CURRENT_BIT);
@@ -122,7 +139,8 @@ void fn_draw()
 	glLineWidth(2.0);
 	glColor3ub(255, 255, 255);
 	glBegin(GL_LINES);
-	glVertex3fv(&ray.m_origin);
+
+	glVertex3fv(&vec3(ray.m_origin + 1.f));
 	glVertex3fv(&ray.m_direction);
 	//printf("m_origin(%f %f %f) m_direction(%f %f %f)\n", ray.m_origin.x, ray.m_origin.y, ray.m_origin.z, ray.m_direction.x, ray.m_direction.y, ray.m_direction.z);
 	glEnd();
@@ -236,7 +254,6 @@ void fn_windowcreate(HWND hWnd)
 #else
 	camera.PositionCamera(0, 0, 0, 0, 0, 1, 0, 1, 0);
 #endif
-	vplane.InitByStartPoint({ 0.f, PLANE_Y, 0.f }, PLANE_WIDTH);
 
 	ray.SetLength(100000.0f);
 	//ray.SetOrigin(10, -5, 10);

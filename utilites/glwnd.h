@@ -170,8 +170,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_SIZE:
 	{
-		if (global_window_data.p_resizefn)
+		if (global_window_data.p_resizefn) {
 			global_window_data.p_resizefn(hWnd, LOWORD(lParam), HIWORD(lParam));
+			printf("W: %d  H: %d\n", LOWORD(lParam), HIWORD(lParam));
+		}
 		break;
 	}
 

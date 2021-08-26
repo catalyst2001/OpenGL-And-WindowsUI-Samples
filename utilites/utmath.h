@@ -261,7 +261,7 @@ enum rayintersecttypes {
 	(a)[1] = (b)[1] - (c)[1];	\
 	(a)[2] = (b)[2] - (c)[2];
 
-int rayIntersectsTriangle(float *p, float *d, float *v0, float *v1, float *v2) {
+static int rayIntersectsTriangle(float *p, float *d, float *v0, float *v1, float *v2) {
 
 	float e1[3], e2[3], h[3], s[3], q[3];
 	float a, f, u, v;
@@ -352,7 +352,7 @@ public:
 	void SetDirection(float x, float y, float z) { m_direction = vec3(x, y, z); }
 	void SetLength(float len) { m_length = len; }
 
-	float TriangleIntersection(vec3 &v0, vec3 &v1, vec3 &v2) {
+	int TriangleIntersection(vec3 &v0, vec3 &v1, vec3 &v2, vec3 &intersection) {
 		vec3 e1 = v1 - v0;
 		vec3 e2 = v2 - v0;
 		// Вычисление вектора нормали к плоскости
@@ -361,22 +361,25 @@ public:
 
 		// Луч параллелен плоскости
 		if (det < 1e-8 && det > -1e-8) {
-			return 0.f;
+			return 0;
 		}
 
 		float inv_det = 1 / det;
 		vec3 tvec = m_origin - v0;
 		float u = dot(tvec, pvec) * inv_det;
 		if (u < 0 || u > 1) {
-			return 0.f;
+			return 0;
 		}
 
 		vec3 qvec = cross(tvec, e1);
 		float v = dot(m_direction, qvec) * inv_det;
 		if (v < 0 || u + v > 1) {
-			return 0.f;
+			return 0;
 		}
-		return dot(e2, qvec) * inv_det;
+		
+		float t = dot(e2, qvec) * inv_det;
+		intersection = m_origin + m_direction * t;
+		return 1;
 	}
 
 	//https://stackoverflow.com/questions/23975555/how-to-do-ray-plane-intersection
@@ -396,6 +399,7 @@ public:
 		return 0;
 	}
 
+	//intersectionpoint = m_origin + m_direction * t
 	vec3 ray_evaluate(const CRay& ray, float t)
 	{
 		/* o + d * t */
@@ -425,7 +429,6 @@ public:
 		return false;
 	}
 	*/
-	//Вроде бы работает. Не уверен с получением точки пересечения
 	int PlaneIntersection2(CPlane3 &plane, vec3 &intersectionpoint)
 	{
 		// assuming vectors are all normalized
@@ -455,10 +458,48 @@ public:
 	}
 
 	//http://mathprofi.ru/zadachi_s_pryamoi_i_ploskostju.html
+	//PlaneIntersection4 == PlaneIntersection5
 	int PlaneIntersection4(CPlane3 &plane, vec3 &intersectionpoint)
 	{
 		float t = (dot(plane.m_normal, plane.m_origin) - dot(plane.m_normal, m_origin)) / dot(plane.m_normal, m_direction);
 		intersectionpoint = m_origin + m_direction * t;
+		return 1;
+	}
+
+	int PlaneIntersection5(vec3 planeP, vec3 planeN, vec3 rayP, vec3 rayD, vec3 &intersect)
+	{
+		float d = dot(planeP, -planeN);
+		float t = -(d + rayP.z * planeN.z + rayP.y * planeN.y + rayP.x * planeN.x) / (rayD.z * planeN.z + rayD.y * planeN.y + rayD.x * planeN.x);
+		if (t > 0.f) {
+			//printf("d = %f\n", d);
+			intersect = rayP + t * rayD;
+			return 1;
+		}
+		return 0;
+	}
+
+	// p,v - ray
+	// n,d - plane
+	int PlaneIntersection6(vec3 p, vec3 v, vec3 n, float d, vec3 &intersect) {
+		float denom = dot(n, v);
+		// Prevent divide by zero:
+		if (fabs(denom) <= 1e-4f)
+			return 0;
+
+		// If you want to ensure the ray reflects off only
+		// the "top" half of the plane, use this instead:
+		if (-denom <= 1e-4f)
+			return 0;
+
+		float t = -(dot(n, p) + d) / dot(n, v);
+
+		// Use pointy end of the ray.
+		// It is technically correct to compare t < 0,
+		// but that may be undesirable in a raytracer.
+		if (t <= 1e-4)
+			return 0;
+
+		intersect = p + t * v;
 		return 1;
 	}
 
@@ -480,7 +521,7 @@ public:
 	}
 	*/
 
-	float m_length;
 	vec3 m_origin;
 	vec3 m_direction;
+	float m_length;
 };
