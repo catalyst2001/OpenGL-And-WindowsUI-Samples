@@ -1,13 +1,14 @@
 #pragma once
 // ----------------------------------------------------------------------------------------------------------------------------
 //
-// Version 2.04
+// Version 3.00
 //
 // ----------------------------------------------------------------------------------------------------------------------------
 
 #define _USE_MATH_DEFINES
-
+#include <float.h>
 #include <math.h>
+#include <assert.h>
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
@@ -113,6 +114,51 @@ vec3 reflect(const vec3 &i, const vec3 &n);
 vec3 refract(const vec3 &i, const vec3 &n, float eta);
 vec3 rotate(const vec3 &u, float angle, const vec3 &v);
 
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+static vec3 Add(vec3 a, vec3 b) //Ya implementado como ejemplo.
+{
+	vec3 ret;
+	ret.x = a.x + b.x;
+	ret.y = a.y + b.y;
+	ret.z = a.z + b.z;
+	return ret;
+}
+
+static vec3 Substract(vec3 a, vec3 b) {
+	vec3 ret;
+	ret.x = a.x - b.x;
+	ret.y = a.y - b.y;
+	ret.z = a.z - b.z;
+	return ret;
+}
+
+static vec3 Multiply(vec3 a, vec3 b) {
+	vec3 ret;
+	ret.x = a.x * b.x;
+	ret.y = a.y * b.y;
+	ret.z = a.z * b.z;
+	return ret;
+}
+
+static vec3 MultiplyWithScalar(float scalar, vec3 a) {
+	vec3 ret;
+	ret.x = a.x * scalar;
+	ret.y = a.y * scalar;
+	ret.z = a.z * scalar;
+	return ret;
+}
+
+static double Magnitude(vec3 a) {
+	return sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+}
+
+static vec3 Normalize(vec3 a) {
+	if (a.x == 0 && a.y == 0 && a.z == 0) return { 0, 0, 0 };
+	return MultiplyWithScalar(1 / Magnitude(a), a);
+}
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 // ----------------------------------------------------------------------------------------------------------------------------
 
 void round_vector(vec3 &dest, const vec3 vec, float roundfactor);
@@ -166,9 +212,6 @@ typedef vec4 quat;
 #define ABS(x) (x < 0 ? -(x) : (x))
 #define MIN(x,y) (x < y ? x : y)
 #define MAX(x,y) (x > y ? x : y)
-#define TRUE  1
-#define FALSE 0
-#define ESC 27
 #define PI 3.141592653589793238462643
 #define DTOR 0.0174532925 // degrees to radians
 #define RTOD 57.2957795 // radians to degrees
@@ -176,10 +219,19 @@ typedef vec4 quat;
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //TODO: 27.08.2021   ADDED NEW QUATS FUNCTIONS IN THIS MATH LIBRARY. TEST IT!!!!!!!!!!!!!!!!
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-static quat &quat_from_axis_angle(float angle, vec3 axis) {
-	quat ret;
+static quat Multiply(quat a, quat b) {
+	return {
+		a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,	//x
+		a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,	//y
+		a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w,	//z
+		a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z	//w
+	};
+}
+
+static quat quat_from_axis_angle(float angle, vec3 axis) {
 	double theta = angle * DTOR;
-	vec3 scaled = normalize(axis) * -sin(theta / 2);
+	quat ret;
+	vec3 scaled = MultiplyWithScalar(-sin(theta / 2), Normalize(axis));
 	ret.x = scaled.x;
 	ret.y = scaled.y;
 	ret.z = scaled.z;
@@ -187,9 +239,9 @@ static quat &quat_from_axis_angle(float angle, vec3 axis) {
 	return ret;
 }
 
-static quat &quat_from_to_vectors(vec3 from, vec3 to) {
-	vec3 uFrom = normalize(from);
-	vec3 uTo = normalize(to);
+static quat quat_from_to_vectors(vec3 from, vec3 to) {
+	vec3 uFrom = Normalize(from);
+	vec3 uTo = Normalize(to);
 	return quat_from_axis_angle(
 		acos(dot(uFrom, uTo)), // Angle form dot product.
 		cross(uFrom, uTo)  // Axis to rotate around.
@@ -201,7 +253,7 @@ static quat quat_conjugate(quat a) {
 }
 
 static vec3 vec_rotate_with_quat(vec3 a, quat q) {
-	quat result = q * quat(a.x, a.y, a.z, 0.f) * quat_conjugate(q);
+	quat result = Multiply(q, Multiply(quat(a.x, a.y, a.z, 0.f), quat_conjugate(q)));
 	return vec3(result.x, result.y, result.z);
 }
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

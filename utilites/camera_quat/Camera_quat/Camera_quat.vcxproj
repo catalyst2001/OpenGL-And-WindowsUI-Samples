@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="camera1.cpp" />
+    <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math3d.cpp" />
@@ -136,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="CCamera.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="include_camera.h" />
     <ClInclude Include="math3d.h" />

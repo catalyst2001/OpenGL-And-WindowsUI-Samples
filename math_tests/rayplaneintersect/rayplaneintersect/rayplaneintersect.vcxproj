@@ -151,15 +151,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\utilites\camera\Camera.cpp" />
-    <ClCompile Include="..\..\..\utilites\glmath.cpp" />
+    <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="glmath.cpp" />
     <ClCompile Include="primitives.cpp" />
     <ClCompile Include="rayplaneintersect.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\utilites\camera\Camera.h" />
-    <ClInclude Include="..\..\..\utilites\glmath.h" />
+    <ClInclude Include="CCamera.h" />
+    <ClInclude Include="glmath.h" />
     <ClInclude Include="primitives.h" />
+    <ClInclude Include="utmath.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

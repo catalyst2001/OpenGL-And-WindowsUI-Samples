@@ -1,17 +1,24 @@
-﻿#define OLD_CAMERA
+﻿//#define OLD_CAMERA
+//#include "../../../utilites/glwnd.h"
 
-#include "../../../utilites/glwnd.h"
+#define GLUT_BUILDING_LIB
+#include "glut.h"
+#pragma comment(lib, "glut32.lib")
+#pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "glu32.lib")
+
+#include "utmath.h"
+#include "glmath.h"
+
 #ifdef OLD_CAMERA
 #include "../../../utilites/camera.h"
 camera_t camera;
 #else
-#include "../../../utilites/camera/Camera.h"
-CCamera camera;
+#include "CCamera.h"
+CCamera camera(0.f, 0.f, 0.f, -25.f, 25.f, 0.f, 45.f, vec4(0.f, 0.f, 0.f, 0.f));
 #endif
-#include "../../../utilites/utmath.h"
-#include "../../../utilites/glmath.h"
 
-bool mouseshow = false;
+bool mouseshow = true;
 INT Width, Height;
 
 #define SCREEN_WIDTH 1280
@@ -91,15 +98,14 @@ void fn_draw()
 		camera.Update();
 
 	camera.Look();
-	ray.SetOrigin(camera.m_vPosition.x, camera.m_vPosition.y, camera.m_vPosition.z);
-	ray.SetDirection(camera.m_vView.x, camera.m_vView.y, camera.m_vView.z);
-	printf("(%f %f %f) (%f %f %f)\n", camera.m_vPosition.x, camera.m_vPosition.y, camera.m_vPosition.z, camera.m_vView.x, camera.m_vView.y, camera.m_vView.z);
+	ray.SetOrigin(camera.m_vecOrigin.x, camera.m_vecOrigin.y, camera.m_vecOrigin.z);
+	ray.SetDirection(camera.m_vecDirection.x, camera.m_vecDirection.y, camera.m_vecDirection.z);
+	//printf("(%f %f %f) (%f %f %f)\n", camera.m_vecOrigin.x, camera.m_vecOrigin.y, camera.m_vecOrigin.z, camera.m_vecDirection.x, camera.m_vecDirection.y, camera.m_vecDirection.z);
+	//printf("p %f   y %f   r %f\n", camera.GetPitch(), camera.GetYaw(), camera.GetRoll());
 #endif
 
 	vec3 intersecttion;
 	//if (ray.PlaneIntersection2(plane, intersecttion)) {
-	ray.m_direction * 20.f;
-	ray.m_direction.y / 12.f;
 	if (ray.PlaneIntersection5(plane.m_origin, plane.m_normal, ray.m_origin, ray.m_direction, intersecttion)) {
 		//float IntersectionPointRoundFactor = 1.0;
 		//round_vector(intersecttion, intersecttion, IntersectionPointRoundFactor);
@@ -136,14 +142,14 @@ void fn_draw()
 	glPushAttrib(GL_CURRENT_BIT);
 	DrawAxis();
 	Draw3DSGrid();
-	glLineWidth(2.0);
-	glColor3ub(255, 255, 255);
-	glBegin(GL_LINES);
+	//glLineWidth(2.0);
+	//glColor3ub(255, 255, 255);
+	//glBegin(GL_LINES);
 
-	glVertex3fv(&vec3(ray.m_origin + 1.f));
-	glVertex3fv(&ray.m_direction);
-	//printf("m_origin(%f %f %f) m_direction(%f %f %f)\n", ray.m_origin.x, ray.m_origin.y, ray.m_origin.z, ray.m_direction.x, ray.m_direction.y, ray.m_direction.z);
-	glEnd();
+	//glVertex3fv(&vec3(ray.m_origin + 1.f));
+	//glVertex3fv(&ray.m_direction);
+	////printf("m_origin(%f %f %f) m_direction(%f %f %f)\n", ray.m_origin.x, ray.m_origin.y, ray.m_origin.z, ray.m_direction.x, ray.m_direction.y, ray.m_direction.z);
+	//glEnd();
 	glPopAttrib();
 
 	//check triangle intersection
@@ -157,9 +163,11 @@ void fn_draw()
 	//glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glutSwapBuffers();
 }
 
-void fn_window_resize(HWND hWnd, int width, int height)
+void fn_window_resize(int width, int height)
 {
 	if (!height)
 		height = 1;
@@ -176,16 +184,12 @@ void fn_window_resize(HWND hWnd, int width, int height)
 #ifdef OLD_CAMERA
 	camera_update_viewport(&camera, width, height);
 #else
-	camera.UpdateScreenResoluiton(width, height);
+	camera.UpdateViewport(width, height);
 #endif
 }
 
-void fn_mousemove(HWND hWnd, int x, int y)
+void fn_mousemove(int x, int y)
 {
-	RECT rect;
-	GetClientRect(hWnd, &rect);
-	Width = rect.right;
-	Height = rect.bottom;
 }
 
 void fn_mouseclick(HWND hWnd, int x, int y, int button, int state)
@@ -197,62 +201,70 @@ void fn_charinput(HWND hWnd, char symbol)
 }
 
 //https://docs.microsoft.com/ru-ru/windows/win32/inputdev/wm-keydown
-void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
+void HandleKeyboard(unsigned char key, int x, int y)
 {
-	INT key = (INT)wparam;
-	if (state == KEY_DOWN) {
-		if (key == 27) //esc code
-			exit(0); //close program
+	switch (key) {
+	case 27:
+		exit(0);
+		break;
 
-		switch (key) {
-		case VK_F1:
+	case 'P':
+	case 'p':
 #ifdef OLD_CAMERA
-			camera_set_active(&camera, mouseshow);
+		camera_set_active(&camera, mouseshow);
 #endif
-			ShowCursor(!mouseshow);
-			mouseshow = !mouseshow;
-			break;
+		ShowCursor(!mouseshow);
+		mouseshow = !mouseshow;
+		break;
 
-		case VK_F2:
-			ray.m_origin.y += 1.0f;
-			ray.m_direction.y += 1.0f;
-			break;
+	case 'A':
+	case 'a':
+		camera.MoveStrafe(0.1f);
+		break;
 
-		case VK_F3:
-			ray.m_origin.y -= 1.0f;
-			ray.m_direction.y -= 1.0f;
-			break;
+	case 'D':
+	case 'd':
+		camera.MoveStrafe(-0.1f);
+		break;
 
-		//ray direction control
-		case VK_LEFT:
-			//ray.m_direction.x += 
-			break;
+	case 'W':
+	case 'w':
+		camera.MoveForward(0.1f);
+		break;
 
-		case VK_RIGHT:
-			break;
-
-		case VK_UP:
-			ray.m_direction.y += 1.5f;
-			break;
-
-		case VK_DOWN:
-			ray.m_direction.y -= 1.5f;
-			break;
-
-
-		}
+	case 'S':
+	case 's':
+		camera.MoveForward(-0.1f);
+		break;
 	}
 }
 
-//Add this GL functions
-void fn_windowcreate(HWND hWnd)
+void HandleIdle(void)
 {
+	glutPostRedisplay();
+}
+
+int main(int argc, char **argv)
+{
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+
+	glutCreateWindow("New camera test");
+	//glutFullScreen();
+	glutDisplayFunc(fn_draw);
+	glutReshapeFunc(fn_window_resize);
+	glutReshapeWindow(1920, 1080);
+	glutIdleFunc(HandleIdle);
+	glutKeyboardFunc(HandleKeyboard);
+	glutMotionFunc(fn_mousemove);
+	glutPassiveMotionFunc(fn_mousemove);
+
 #ifdef OLD_CAMERA
 	camera_update_viewport(&camera, Width, Height);
 	camera_init(&camera, CAMERA_START);
 	camera_set_active(&camera, true);
 #else
-	camera.PositionCamera(0, 0, 0, 0, 0, 1, 0, 1, 0);
+	//camera.PositionCamera(0, 0, 0, 0, 0, 1, 0, 1, 0);
 #endif
 
 	ray.SetLength(100000.0f);
@@ -262,31 +274,7 @@ void fn_windowcreate(HWND hWnd)
 	ray.SetDirection(10, -5, 10);
 
 	sphere = gluNewQuadric();
-}
 
-void fn_windowclose(HWND hWnd)
-{
-	exit(0);
-}
-
-int main()
-{
-	//int window_posx = (GetSystemMetrics(SM_CXSCREEN) / 2) - (SCREEN_WIDTH / 2);
-	//int window_posy = (GetSystemMetrics(SM_CYSCREEN) / 2) - (SCREEN_HEIGHT / 2);
-	create_window("ray plane intersect test", __FILE__ __TIME__,
-		24,					  //Colors bits
-		32,					  //Depth bits
-		fn_draw,			  //Draw function
-		fn_window_resize,	  //Window resize function
-		fn_mousemove,		  //Mouse move function
-		fn_mouseclick,		  //Mouse click function
-		fn_charinput,		  //Char input function
-		fn_keydown,			  //Keydown function
-		fn_windowcreate,	  //Window create function
-		fn_windowclose,		  //Window close function
-		0,		//Window position X
-		0, //Window position Y
-		SCREEN_WIDTH, //Window width
-		SCREEN_HEIGHT); //Window height
+	glutMainLoop();
 	return 0;
 }
