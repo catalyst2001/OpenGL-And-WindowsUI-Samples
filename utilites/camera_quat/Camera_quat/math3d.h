@@ -12,12 +12,12 @@
 #define RTOD            57.2957795      // radians to degrees
 
 typedef struct {
-    double x,y,z;
+	double x,y,z;
 } VECTOR3D;
 
 
 typedef struct {
-    double r,g,b;
+	double r,g,b;
 } COLOUR;
 
 typedef struct {
@@ -32,7 +32,7 @@ typedef struct {
 } MATRIX4;
 
 typedef struct {
-    double s;
+	double s;
     VECTOR3D v;
 } QUATERNION;
 

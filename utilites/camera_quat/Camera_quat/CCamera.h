@@ -7,7 +7,6 @@
 
 /**
 * Quaternion Camera Class
-* Edited by: Kirill Deryabin, Roman Tynin
 * Created: 27.08.2021
 * Modified: 27.08.2021
 * 

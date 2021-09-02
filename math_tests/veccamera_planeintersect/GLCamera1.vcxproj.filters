@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="bitmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GL_ARB_multitexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mathlib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WGL_ARB_multisample.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utilites\glmath.cpp">
+      <Filter>Source Files\math_plane</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bitmap.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WGL_ARB_multisample.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GL_ARB_multitexture.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_font.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mathlib.h">
+      <Filter>Include Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utilites\utmath.h">
+      <Filter>Source Files\math_plane</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utilites\glmath.h">
+      <Filter>Source Files\math_plane</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="floor_color_map.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </None>
+    <None Include="floor_light_map.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Include Files">
+      <UniqueIdentifier>{d2cbaa57-e8f6-4629-9a19-f9b0cb0d921b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{e3ce9478-0799-48ec-8ba1-a9861682e2e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{ef3232cd-bcce-4ede-b21d-b3b0c3b5cdd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Textures">
+      <UniqueIdentifier>{f5cc44ac-3255-467c-a39e-5a7989c802db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math_plane">
+      <UniqueIdentifier>{30e63b8e-04fc-479a-91a9-351b3cba286c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

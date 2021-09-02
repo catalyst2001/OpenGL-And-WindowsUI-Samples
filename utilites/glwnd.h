@@ -65,6 +65,14 @@
 	//Add this GL functions
 	void fn_windowcreate(HWND hWnd)
 	{
+		RECT rct;
+		GetClientRect(hWnd, &rct);
+		glViewport(0, 0, (GLsizei)rct.right, (GLsizei)rct.bottom);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(45.0, rct.right / (double)rct.bottom, 0.1, 1000.0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 	}
 
 	void fn_windowclose(HWND hWnd)

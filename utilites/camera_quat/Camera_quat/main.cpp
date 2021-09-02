@@ -109,11 +109,11 @@ void Display(void)
     glLoadIdentity();
     UpdateCameraState();
     VECTOR3D target = Add(camera.position, camera.direction);
-    //gluLookAt(camera.position.x,camera.position.y,camera.position.z, target.x , target.y, target.z, camera.up.x,camera.up.y,camera.up.z); //QUITAR
+    gluLookAt(camera.position.x,camera.position.y,camera.position.z, target.x , target.y, target.z, camera.up.x,camera.up.y,camera.up.z); //QUITAR
     
 
-    MATRIX4 lookAtMatrix = lookAt(camera.position, target, camera.up);
-    glLoadMatrixf(lookAtMatrix.m);
+    //MATRIX4 lookAtMatrix = lookAt(camera.position, target, camera.up);
+    //glLoadMatrixf(lookAtMatrix.m);
 
     glViewport(0,0,camera.screenwidth,camera.screenheight);
     
@@ -327,9 +327,12 @@ void DrawScene() {
     auto start = std::chrono::high_resolution_clock::now().time_since_epoch();
     currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(start).count();
 
+	printf("( %f %f %f )  ( %f %f %f )\n", camera.position.x, camera.position.y, camera.position.z, camera.direction.x, camera.direction.y, camera.direction.z);
+
 	CRay ray;
 	ray.SetOrigin(camera.position.x, camera.position.y, camera.position.z);
 	ray.SetDirection(camera.direction.x, camera.direction.y, camera.direction.z);
+
 	vec3 intersect;
 	if (ray.PlaneIntersection5(plane.m_origin, plane.m_normal, ray.m_origin, ray.m_direction, intersect)) {
 

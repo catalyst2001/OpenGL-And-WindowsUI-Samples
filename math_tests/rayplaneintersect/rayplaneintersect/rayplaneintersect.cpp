@@ -1,5 +1,6 @@
 ﻿//#define OLD_CAMERA
 //#include "../../../utilites/glwnd.h"
+#include <stdio.h>
 
 #define GLUT_BUILDING_LIB
 #include "glut.h"
@@ -10,12 +11,14 @@
 #include "utmath.h"
 #include "glmath.h"
 
+//#define OLD_CAMERA
+
 #ifdef OLD_CAMERA
 #include "../../../utilites/camera.h"
 camera_t camera;
 #else
 #include "CCamera.h"
-CCamera camera(0.f, 0.f, 0.f, -25.f, 25.f, 0.f, 45.f, vec4(0.f, 0.f, 0.f, 0.f));
+CCamera2 camera;
 #endif
 
 bool mouseshow = true;
@@ -58,19 +61,21 @@ void Draw3DSGrid()
 	// Turn the lines GREEN
 	glColor3ub(0, 255, 0);
 
+	int size = 500;
+
 	// Draw a 1x1 grid along the X and Z axis'
-	for (float i = -100; i <= 100; i += 1)
+	for (float i = -size; i <= size; i++)
 	{
 		// Start drawing some lines
 		glBegin(GL_LINES);
 
 		// Do the horizontal lines (along the X)
-		glVertex3f(-100, 0, i);
-		glVertex3f(100, 0, i);
+		glVertex3f(-size, 0, i);
+		glVertex3f(size, 0, i);
 
 		// Do the vertical lines (along the Z)
-		glVertex3f(i, 0, -100);
-		glVertex3f(i, 0, 100);
+		glVertex3f(i, 0, -size);
+		glVertex3f(i, 0, size);
 
 		// Stop drawing lines
 		glEnd();
@@ -82,17 +87,21 @@ void fn_draw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	gluPerspective(45.0, Width / (double)Height, 0.1, 1000.0);
+	//gluPerspective(45.0, Width / (double)Height, 0.1, 1000.0);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 #ifdef OLD_CAMERA
 	camera_look(&camera);
-	ray.SetOrigin(camera.startX, camera.startY, camera.startZ);
 
-	//vec3 end = vec3(camera.startX, camera.startY, camera.startZ) + vec3(camera.dirX, camera.dirY, camera.dirZ) * 1000.f;
-	ray.SetDirection(camera.dirX, camera.dirY, camera.dirZ);
-	//printf("(%f %f %f) (%f %f %f)\n", camera.startX, camera.startY, camera.startZ, /*end.x, end.y, end.z*/camera.dirX, camera.dirY, camera.dirZ);
+	vec3 normorigin = vec3(camera.startX, camera.startY, camera.startZ);
+	normorigin = normalize(normorigin);
+	ray.SetOrigin(normorigin);
+
+	vec3 normdir = vec3(camera.dirX, camera.dirY, camera.dirZ);
+	normdir = normalize(normdir);
+	ray.SetDirection(normdir);
+	printf("(%f %f %f) (%f %f %f)\n", camera.startX, camera.startY, camera.startZ, /*end.x, end.y, end.z*/camera.dirX, camera.dirY, camera.dirZ);
 #else
 	if (mouseshow)
 		camera.Update();
@@ -217,6 +226,7 @@ void HandleKeyboard(unsigned char key, int x, int y)
 		mouseshow = !mouseshow;
 		break;
 
+#ifndef OLD_CAMERA
 	case 'A':
 	case 'a':
 		camera.MoveStrafe(0.1f);
@@ -235,6 +245,7 @@ void HandleKeyboard(unsigned char key, int x, int y)
 	case 'S':
 	case 's':
 		camera.MoveForward(-0.1f);
+#endif
 		break;
 	}
 }
@@ -274,6 +285,9 @@ int main(int argc, char **argv)
 	ray.SetDirection(10, -5, 10);
 
 	sphere = gluNewQuadric();
+#ifndef OLD_CAMERA
+	camera.Init();
+#endif
 
 	glutMainLoop();
 	return 0;

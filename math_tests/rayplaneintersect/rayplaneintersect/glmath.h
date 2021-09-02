@@ -208,7 +208,14 @@ public:
 // ----------------------------------------------------------------------------------------------------------------------------
 // Quaternion functions
 // ----------------------------------------------------------------------------------------------------------------------------
+
+enum {
+	X = 0, Y, Z, W
+};
+
 typedef vec4 quat;
+typedef float quat_t[4];
+
 #define ABS(x) (x < 0 ? -(x) : (x))
 #define MIN(x,y) (x < y ? x : y)
 #define MAX(x,y) (x > y ? x : y)
@@ -226,6 +233,14 @@ static quat Multiply(quat a, quat b) {
 		a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w,	//z
 		a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z	//w
 	};
+}
+
+static void Quat_multQuat(const quat_t qa, const quat_t qb, quat_t out)
+{
+	out[W] = (qa[W] * qb[W]) - (qa[X] * qb[X]) - (qa[Y] * qb[Y]) - (qa[Z] * qb[Z]);
+	out[X] = (qa[X] * qb[W]) + (qa[W] * qb[X]) + (qa[Y] * qb[Z]) - (qa[Z] * qb[Y]);
+	out[Y] = (qa[Y] * qb[W]) + (qa[W] * qb[Y]) + (qa[Z] * qb[X]) - (qa[X] * qb[Z]);
+	out[Z] = (qa[Z] * qb[W]) + (qa[W] * qb[Z]) + (qa[X] * qb[Y]) - (qa[Y] * qb[X]);
 }
 
 static quat quat_from_axis_angle(float angle, vec3 axis) {
