@@ -158,6 +158,30 @@ float length2(const CVector3 &u)
 //	return *(CVector3*)&(rotate(angle, v) * vec4(u, 1.0f));
 //}
 
+void Draw3DSGrid()
+{
+	// Turn the lines GREEN
+	glColor3ub(0, 255, 0);
+	int size = 500;
+	// Draw a 1x1 grid along the X and Z axis'
+	for (float i = -size; i <= size; i++)
+	{
+		// Start drawing some lines
+		glBegin(GL_LINES);
+
+		// Do the horizontal lines (along the X)
+		glVertex3f(-size, 0, i);
+		glVertex3f(size, 0, i);
+
+		// Do the vertical lines (along the Z)
+		glVertex3f(i, 0, -size);
+		glVertex3f(i, 0, size);
+
+		// Stop drawing lines
+		glEnd();
+	}
+}
+
 //поверхность
 //3d plane at 4 points
 class CRect3

@@ -130,8 +130,8 @@ typedef void(*WINDOWQUIT)(HWND wnd);
 
 #define LBUTTON 0 //left mouse button
 #define RBUTTON 1 //right mouse button
-#define KEY_DOWN 0 //button dwown
-#define KEY_UP 1 //button up
+#define KEY_DOWN 1 //button dwown
+#define KEY_UP 0 //button up
 typedef void(*MOUSECLICKFN)(HWND wnd, INT x, INT y, INT button, INT state);
 
 typedef void(*MENUCALLBACK)(HWND wnd, HMENU hMenu, INT id);

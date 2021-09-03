@@ -1,24 +1,25 @@
 #pragma once
 // ----------------------------------------------------------------------------------------------------------------------------
-//
-// Version 2.04
-//
+// Updated: 03.09.2021
+// Version 4.00
+// 
+// Changelog:
+// -03.09.2021 - added basic vectors functions, quaternions class
+// 
+// 
 // ----------------------------------------------------------------------------------------------------------------------------
-
 #define _USE_MATH_DEFINES
-
 #include <math.h>
+#include <assert.h>
+
+#define PI 3.141592653589793238462643
+#define DTOR            0.0174532925    
+#define RTOD            57.2957795   
 
 // ----------------------------------------------------------------------------------------------------------------------------
-
 class vec2
 {
 public:
-	union{
-		struct{float x, y;};
-		struct{float s, t;};
-		struct{float r, g;};
-	};
 	vec2() : x(0.0f), y(0.0f){}
 	~vec2(){}
 	vec2(float num) : x(num), y(num){}
@@ -47,10 +48,15 @@ public:
 	friend vec2 operator / (const vec2 &u, float num){return vec2(u.x / num, u.y / num);}
 	friend vec2 operator / (float num, const vec2 &u){return vec2(num / u.x, num / u.y);}
 	friend vec2 operator / (const vec2 &u, const vec2 &v){return vec2(u.x / v.x, u.y / v.y);}
+
+	union {
+		struct { float x, y; };
+		struct { float s, t; };
+		struct { float r, g; };
+	};
 };
 
 // ----------------------------------------------------------------------------------------------------------------------------
-
 float dot(const vec2 &u, const vec2 &v);
 float length(const vec2 &u);
 float length2(const vec2 &u);
@@ -59,17 +65,11 @@ vec2 normalize(const vec2 &u);
 vec2 reflect(const vec2 &i, const vec2 &n);
 vec2 refract(const vec2 &i, const vec2 &n, float eta);
 vec2 rotate(const vec2 &u, float angle);
-
 // ----------------------------------------------------------------------------------------------------------------------------
 
 class vec3
 {
 public:
-	union{
-		struct{float x, y, z;};
-		struct{float s, t, p;};
-		struct{float r, g, b;};
-	};
 	vec3() : x(0.0f), y(0.0f), z(0.0f){}
 	~vec3(){}
 	vec3(float num) : x(num), y(num), z(num){}
@@ -99,34 +99,36 @@ public:
 	friend vec3 operator / (const vec3 &u, float num){return vec3(u.x / num, u.y / num, u.z / num);}
 	friend vec3 operator / (float num, const vec3 &u){return vec3(num / u.x, num / u.y, num / u.z);}
 	friend vec3 operator / (const vec3 &u, const vec3 &v){return vec3(u.x / v.x, u.y / v.y, u.z / v.z);}
+
+	union {
+		struct { float x, y, z; };
+		struct { float s, t, p; };
+		struct { float r, g, b; };
+	};
 };
 
 // ----------------------------------------------------------------------------------------------------------------------------
+vec3 add(vec3 a, vec3 b);
+vec3 sub(vec3 a, vec3 b);
+vec3 mul(vec3 a, vec3 b);
+vec3 mulsc(vec3 a, float scalar);
 
 vec3 cross(const vec3 &u, const vec3 &v);
 float dot(const vec3 &u, const vec3 &v);
 float length(const vec3 &u);
-float length2(const vec3 &u);
+float length_squared(const vec3 &u);
 vec3 mix(const vec3 &u, const vec3 &v, float a);
 vec3 normalize(const vec3 &u);
 vec3 reflect(const vec3 &i, const vec3 &n);
 vec3 refract(const vec3 &i, const vec3 &n, float eta);
 vec3 rotate(const vec3 &u, float angle, const vec3 &v);
 
-// ----------------------------------------------------------------------------------------------------------------------------
-
 void round_vector(vec3 &dest, const vec3 vec, float roundfactor);
-
 // ----------------------------------------------------------------------------------------------------------------------------
 
 class vec4
 {
 public:
-	union{
-		struct{float x, y, z, w;};
-		struct{float s, t, p, q;};
-		struct{float r, g, b, a;};
-	};
 	vec4() : x(0.0f), y(0.0f), z(0.0f), w(0.0f){}
 	~vec4(){}
 	vec4(float num) : x(num), y(num), z(num), w(num){}
@@ -157,7 +159,40 @@ public:
 	friend vec4 operator / (const vec4 &u, float num){return vec4(u.x / num, u.y / num, u.z / num, u.w / num);}
 	friend vec4 operator / (float num, const vec4 &u){return vec4(num / u.x, num / u.y, num / u.z, num / u.w);}
 	friend vec4 operator / (const vec4 &u, const vec4 &v){return vec4(u.x / v.x, u.y / v.y, u.z / v.z, u.w / v.w);}
+
+	union {
+		struct { float x, y, z, w; };
+		struct { float s, t, p, q; };
+		struct { float r, g, b, a; };
+	};
 };
+
+class quat
+{
+public:
+	quat() : x(0.f), y(0.f), z(0.f), w(0.f) {}
+	quat(float xx, float yy, float zz, float ww) : x(xx), y(yy), z(zz), w(ww) {}
+	quat(vec3 vec, float ww) : x(vec.x), y(vec.y), z(vec.z), w(ww) {}
+	~quat() {}
+
+	bool operator==(quat q) { return x == q.x && y == q.y && z == q.z && w == q.w; }
+	bool operator!=(quat q) { return x != q.x && y != q.y && z != q.z && w != q.w; }
+	vec3 vec() { return vec3(x, y, z); }
+
+	float x, y, z, w;
+};
+
+quat computew(quat q);
+float length_squared(quat q);
+float length(quat q);
+float dot(quat qa, quat qb);
+quat normalize(quat q);
+quat mul(quat qa, quat qb);
+quat mul(quat qa, vec3 vb);
+quat slerp(quat &qa, quat &qb, float t);
+quat conjugate(quat &q);
+vec3 rotate_with_quat(vec3 a, quat q);
+quat quat_from_angle_axis(float angle, vec3 axis);
 
 // ----------------------------------------------------------------------------------------------------------------------------
 

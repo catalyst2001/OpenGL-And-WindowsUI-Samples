@@ -152,15 +152,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\utilites\glmath.cpp" />
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="marching_cubes3.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />
+    <ClCompile Include="voxel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utilites\glmath.h" />
     <ClInclude Include="..\..\utilites\utmath.h" />
+    <ClInclude Include="camera.h" />
     <ClInclude Include="marching_cubes3.h" />
     <ClInclude Include="SimplexNoise.h" />
+    <ClInclude Include="voxel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

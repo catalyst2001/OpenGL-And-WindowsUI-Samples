@@ -5,30 +5,30 @@
 #include <string.h>
 #include <stdint.h>
 #include "../../utilites/glwnd.h"
-#include "../../utilites/camera.h"
 #include "../../utilites/glmath.h"
 #include "../../utilites/utmath.h"
+
+#include "camera.h"
 
 #include "marching_cubes3.h"
 #include "SimplexNoise.h"
 
 INT Width, Height;
 
-camera_t camera;
 bool b_active_camera = true;
+
 
 struct Triangle {
 	vec3 p1, p2, p3;
 };
 
+CCamera cam(45.f, vec3(5.f, 5.f, 5.f));
 marching_cubes3 mc3;
 
 void fn_draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
-
-	camera_look(&camera);
 
 	//glBegin(GL_POINTS);
 	//for (int x = -10; x < 10; x++)
@@ -39,21 +39,32 @@ void fn_draw()
 	//в треугольнике 3 вертекса
 	//узнаем количество треугольников, поделив количество вертексов на 3
 
-	CRay ray;
-	ray.SetOrigin(camera.startX, camera.startY, camera.startZ);
-	ray.SetDirection(camera.dirX, camera.dirY, camera.dirZ);
-	for (int i = 0; i < mc3.index_index / 3; i++) {
-		Triangle *tri = &((Triangle *)mc3.vertices)[i];
+	if(b_active_camera)
+		cam.UpdateCameraState();
 
-		vec3 intersection;
-		if (ray.TriangleIntersection(tri->p1, tri->p2, tri->p3, intersection)) {
-			glBegin(GL_TRIANGLES);
-			glVertex3f(tri->p1.x, tri->p1.y, tri->p1.z);
-			glVertex3f(tri->p2.x, tri->p2.y, tri->p2.z);
-			glVertex3f(tri->p3.x, tri->p3.y, tri->p3.z);
-			glEnd();
-		}
-	}
+	vec3 dir = cam.m_vecOrigin + cam.m_vecDirection;
+	gluLookAt(cam.m_vecOrigin.x, cam.m_vecOrigin.y, cam.m_vecOrigin.z, dir.x, dir.y, dir.z, cam.m_vecUp.x, cam.m_vecUp.y, cam.m_vecUp.z);
+	printf("pitch %f   yaw %f    roll %f\n", cam.GetPitch(), cam.GetYaw(), cam.GetRoll());
+
+	//printf("( %f %f %f ) ( %f %f %f ) ( %f %f %f )\n", cam.m_vecOrigin.x, cam.m_vecOrigin.y, cam.m_vecOrigin.z, dir.x, dir.y, dir.z, cam.m_vecUp.x, cam.m_vecUp.y, cam.m_vecUp.z);
+
+	//Draw3DSGrid();
+
+	//CRay ray;
+	//ray.SetOrigin(cam.position);
+	//ray.SetDirection(cam.direction);
+	//for (int i = 0; i < mc3.index_index / 3; i++) {
+	//	Triangle *tri = &((Triangle *)mc3.vertices)[i];
+
+	//	vec3 intersection;
+	//	if (ray.TriangleIntersection(tri->p1, tri->p2, tri->p3, intersection)) {
+	//		glBegin(GL_TRIANGLES);
+	//		glVertex3f(tri->p1.x, tri->p1.y, tri->p1.z);
+	//		glVertex3f(tri->p2.x, tri->p2.y, tri->p2.z);
+	//		glVertex3f(tri->p3.x, tri->p3.y, tri->p3.z);
+	//		glEnd();
+	//	}
+	//}
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, mc3.vertices);
@@ -75,7 +86,8 @@ void fn_window_resize(HWND hWnd, int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	camera_update_viewport(&camera, width, height);
+	cam.m_iScreenWidth = width;
+	cam.m_iScreenHeight = height;
 }
 
 void fn_mousemove(HWND hWnd, int x, int y)
@@ -100,7 +112,6 @@ void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 
 		if (key == VK_F1) {
 			b_active_camera = !b_active_camera;
-			camera_set_active(&camera, b_active_camera);
 			ShowCursor(!b_active_camera);
 		}
 
@@ -109,6 +120,36 @@ void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 			b_wire = !b_wire;
 			glPolygonMode(GL_FRONT_AND_BACK, b_wire ? GL_LINE : GL_FILL);
 		}
+	}
+
+	switch (key) {
+	case 'w':
+	case 'W':
+		cam.m_vecMovement.z = state ? 1 : 0;
+		break;
+	case 'a':
+	case 'A':
+		cam.m_vecMovement.x = state ? 1 : 0;
+		break;
+	case 's':
+	case 'S':
+		cam.m_vecMovement.z = state ? -1 : 0;
+		break;
+	case 'd':
+	case 'D':
+		cam.m_vecMovement.x = state ? -1 : 0;
+		break;
+	case ' ':
+		cam.m_vecMovement.y = state ? 1 : 0;
+		break;
+	case 'm':
+	case 'M':
+		cam.m_vecMovement.y = state ? -1 : 0;
+		break;
+	case 'z':
+	case 'Z':
+		cam.m_vecMovement.y = state ? 1 : 0;
+		break;
 	}
 }
 
@@ -126,8 +167,6 @@ void fn_windowcreate(HWND hWnd)
 
 	glEnable(GL_DEPTH_TEST);
 
-	camera_init(&camera, 0.f, 0.f, 0.f, 1.f, 1.f, 1.f);
-	camera_set_active(&camera, b_active_camera);
 	ShowCursor(!b_active_camera);
 
 	mc3.Start(); //generate map

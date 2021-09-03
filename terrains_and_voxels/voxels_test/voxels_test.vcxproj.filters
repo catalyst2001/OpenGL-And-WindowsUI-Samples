@@ -5,11 +5,24 @@
     <ClCompile Include="marching_cubes3.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="..\..\utilites\glmath.cpp" />
+    <ClCompile Include="voxel.cpp" />
+    <ClCompile Include="camera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="marching_cubes3.h" />
     <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="..\..\utilites\glmath.h" />
     <ClInclude Include="..\..\utilites\utmath.h" />
+    <ClInclude Include="voxel.h" />
+    <ClInclude Include="camera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="camera">
+      <UniqueIdentifier>{7ad3d192-93a0-4bbb-92e4-efff299d26f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

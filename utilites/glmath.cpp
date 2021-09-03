@@ -57,6 +57,42 @@ vec2 rotate(const vec2 &u, float angle)
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
+vec3 add(vec3 a, vec3 b)
+{
+	vec3 res;
+	res.x = a.x + b.x;
+	res.y = a.y + b.y;
+	res.z = a.z + b.z;
+	return res;
+}
+
+vec3 sub(vec3 a, vec3 b)
+{
+	vec3 res;
+	res.x = a.x - b.x;
+	res.y = a.y - b.y;
+	res.z = a.z - b.z;
+	return res;
+}
+
+vec3 mul(vec3 a, vec3 b)
+{
+	vec3 res;
+	res.x = a.x * b.x;
+	res.y = a.y * b.y;
+	res.z = a.z * b.z;
+	return res;
+}
+
+vec3 mulsc(vec3 a, float scalar)
+{
+	vec3 res;
+	res.x = a.x * scalar;
+	res.y = a.y * scalar;
+	res.z = a.z * scalar;
+	return res;
+}
+
 vec3 cross(const vec3 &u, const vec3 &v)
 {
 	return vec3(u.y * v.z - u.z * v.y, u.z * v.x - u.x * v.z, u.x * v.y - u.y * v.x);
@@ -72,7 +108,7 @@ float length(const vec3 &u)
 	return sqrt(u.x * u.x + u.y * u.y + u.z * u.z);
 }
 
-float length2(const vec3 &u)
+float length_squared(const vec3 &u)
 {
 	return u.x * u.x + u.y * u.y + u.z * u.z;
 }
@@ -84,7 +120,11 @@ vec3 mix(const vec3 &u, const vec3 &v, float a)
 
 vec3 normalize(const vec3 &u)
 {
-	return u / sqrt(u.x * u.x + u.y * u.y + u.z * u.z);
+	float t = sqrt(u.x * u.x + u.y * u.y + u.z * u.z);
+	if (t <= 0.f)
+		return { 0.f, 0.f, 0.f };
+
+	return u / t;
 }
 
 vec3 reflect(const vec3 &i, const vec3 &n)
@@ -182,15 +222,168 @@ float* mat2x2::operator & ()
 	return (float*)this;
 }
 
+quat computew(quat q)
+{
+
+	return quat();
+}
+
+float length_squared(quat q)
+{
+	return (q.x * q.x) + (q.y * q.y) + (q.z * q.z) + (q.w * q.w);
+}
+
+float length(quat q)
+{
+	return sqrt((q.x * q.x) + (q.y * q.y) + (q.z * q.z) + (q.w * q.w));
+}
+
+float dot(quat qa, quat qb)
+{
+	return ((qa.x * qb.x) + (qa.y * qb.y) + (qa.z * qb.z) + (qa.w * qb.w));
+}
+
+quat normalize(quat q)
+{
+	quat res;
+	float mag = length(q); //compute magnitude of the quaternion
+	if (mag > 0.0f) // check for bogus length, to protect against divide by zer
+	{
+		float oneOverMag = 1.0f / mag; //normalize it
+		res.x *= oneOverMag;
+		res.y *= oneOverMag;
+		res.z *= oneOverMag;
+		res.w *= oneOverMag;
+		return res;
+	}
+	return res;
+}
+
+// out[W] = (qa[W] * qb[W]) - (qa[X] * qb[X]) - (qa[Y] * qb[Y]) - (qa[Z] * qb[Z])
+// out[X] = (qa[X] * qb[W]) + (qa[W] * qb[X]) + (qa[Y] * qb[Z]) - (qa[Z] * qb[Y])
+// out[Y] = (qa[Y] * qb[W]) + (qa[W] * qb[Y]) + (qa[Z] * qb[X]) - (qa[X] * qb[Z])
+// out[Z] = (qa[Z] * qb[W]) + (qa[W] * qb[Z]) + (qa[X] * qb[Y]) - (qa[Y] * qb[X])
+quat mul(quat qa, quat qb)
+{
+	quat res;
+	res.w = (qa.w * qb.w) - (qa.x * qb.x) - (qa.y * qb.y) - (qa.z * qb.z);
+	res.x = (qa.x * qb.w) + (qa.w * qb.x) + (qa.y * qb.z) - (qa.z * qb.y);
+	res.y = (qa.y * qb.w) + (qa.w * qb.y) + (qa.z * qb.x) - (qa.x * qb.y);
+	res.z = (qa.z * qb.w) + (qa.w * qb.z) + (qa.x * qb.y) - (qa.y * qb.x);
+	return res;
+}
+
+// out[W] = -(q[X] * v[X]) - (q[Y] * v[Y]) - (q[Z] * v[Z])
+// out[X] = (q[W] * v[X]) + (q[Y] * v[Z]) - (q[Z] * v[Y])
+// out[Y] = (q[W] * v[Y]) + (q[Z] * v[X]) - (q[X] * v[Z])
+// out[Z] = (q[W] * v[Z]) + (q[X] * v[Y]) - (q[Y] * v[X])
+quat mul(quat qa, vec3 vb)
+{
+	quat res;
+	res.w = -(qa.x * vb.x) - (qa.y * vb.y) - (qa.z * vb.z);
+	res.x = (qa.w * vb.x) + (qa.y * vb.z) - (qa.z * vb.y);
+	res.y = (qa.w * vb.y) + (qa.z * vb.x) - (qa.x * vb.z);
+	res.z = (qa.w * vb.z) + (qa.x * vb.y) - (qa.y * vb.x);
+	return res;
+}
+
+quat slerp(quat &qa, quat &qb, float t)
+{
+	quat res;
+	/* Check for out-of range parameter and return edge points if so */
+	if (t <= 0.0)
+		return qa;
+
+	if (t >= 1.0)
+		return qb;
+
+	/* Compute "cosine of angle between quaternions" using dot product */
+	float cosOmega = dot(qa, qb);
+
+	/* If negative dot, use -q1.	Two quaternions q and -q
+		 represent the same rotation, but may produce
+		 different slerp.	We chose q or -q to rotate using
+		 the acute angle. */
+	float q1w = qb.w;
+	float q1x = qb.x;
+	float q1y = qb.y;
+	float q1z = qb.z;
+	if (cosOmega < 0.0f) {
+		q1w = -q1w;
+		q1x = -q1x;
+		q1y = -q1y;
+		q1z = -q1z;
+		cosOmega = -cosOmega;
+	}
+
+	/* We should have two unit quaternions, so dot should be <= 1.0 */
+	assert(cosOmega < 1.1f);
+
+	/* Compute interpolation fraction, checking for quaternions
+		 almost exactly the same */
+	float k0, k1;
+	if (cosOmega > 0.9999f)
+	{
+		/* Very close - just use linear interpolation,
+		which will protect againt a divide by zero */
+
+		k0 = 1.0f - t;
+		k1 = t;
+	}
+	else
+	{
+		/* Compute the sin of the angle using the
+		trig identity sin^2(omega) + cos^2(omega) = 1 */
+		float sinOmega = sqrt(1.0f - (cosOmega * cosOmega));
+
+		/* Compute the angle from its sin and cosine */
+		float omega = atan2(sinOmega, cosOmega);
+
+		/* Compute inverse of denominator, so we only have
+		to divide once */
+		float oneOverSinOmega = 1.0f / sinOmega;
+
+		/* Compute interpolation parameters */
+		k0 = sin((1.0f - t) * omega) * oneOverSinOmega;
+		k1 = sin(t * omega) * oneOverSinOmega;
+	}
+
+	/* Interpolate and return new quaternion */
+	res.w = (k0 * qa.w) + (k1 * q1w);
+	res.x = (k0 * qa.x) + (k1 * q1x);
+	res.y = (k0 * qa.y) + (k1 * q1y);
+	res.z = (k0 * qa.z) + (k1 * q1z);
+	return res;
+}
+
+quat conjugate(quat &q)
+{
+	quat res;
+	res.w = q.w;
+	res.x = -q.x;
+	res.y = -q.y;
+	res.z = -q.z;
+	return res;
+}
+
+vec3 rotate_with_quat(vec3 a, quat q)
+{
+	return mul(q, mul(quat(a, 0.f), conjugate(q))).vec();
+}
+
+quat quat_from_angle_axis(float angle, vec3 axis)
+{
+	float theta = angle * DTOR;
+	return quat(normalize(axis) * -sin(theta / 2.f), cos(theta / 2));
+}
+
 mat2x2 operator * (const mat2x2 &Matrix1, const mat2x2 &Matrix2)
 {
 	mat2x2 Matrix3;
-
 	Matrix3.M[0] = Matrix1.M[0] * Matrix2.M[0] + Matrix1.M[2] * Matrix2.M[1];
 	Matrix3.M[1] = Matrix1.M[1] * Matrix2.M[0] + Matrix1.M[3] * Matrix2.M[1];
 	Matrix3.M[2] = Matrix1.M[0] * Matrix2.M[2] + Matrix1.M[2] * Matrix2.M[3];
 	Matrix3.M[3] = Matrix1.M[1] * Matrix2.M[2] + Matrix1.M[3] * Matrix2.M[3];
-
 	return Matrix3;
 }
 

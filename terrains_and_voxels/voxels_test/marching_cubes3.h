@@ -304,17 +304,6 @@ static int TriangleTable[256][16] = {
 class marching_cubes3
 {
 public:
-	float terrainSurface = 0.5f;
-	int width = 99;
-	int height = 50;
-	float terrainMap[100][100][100];
-	//float *terrainMap;
-
-	unsigned int verts_size, verts_index;
-	unsigned int index_size, index_index;
-	vec3 *vertices;
-	int *triangles;
-
 	void Start() {
 		//terrainMap = new float[width + 1, height + 1, width + 1];
 		//terrainMap = (float *)malloc(sizeof(float) * ((width + 1) * (height + 1) * (width + 1)));
@@ -375,8 +364,8 @@ public:
 					//float thisHeight = (float)height * PerlinNoise((float)x / 16.f * 1.5f + 0.001f, (float)z / 16.f * 1.5f + 0.001f);
 					//float thisHeight = (float)height * noise.noise((float)x / 16.f * 1.5f + 0.001f, (float)z / 16.f * 1.5f + 0.001f);
 					float thisHeight = noise.noise((float)x / 16.f, (float)y / 16.f, (float)z / 16.f);
-					// Set the value of this point in the terrainMap.
 
+					// Set the value of this point in the terrainMap.
 					if (thisHeight <= 0.f)
 						thisHeight = 1.f;
 
@@ -465,5 +454,15 @@ public:
 		index_index = 0;
 		verts_index = 0;
 	}
+
+	float terrainSurface = 0.5f;
+	int width = 99;
+	int height = 50;
+	//float *terrainMap;
+	unsigned int verts_size, verts_index;
+	unsigned int index_size, index_index;
+	vec3 *vertices;
+	int *triangles;
+	float terrainMap[100][100][100];
 };
 
