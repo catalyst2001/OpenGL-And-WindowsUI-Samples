@@ -11,7 +11,14 @@
 #include "camera.h"
 
 #include "marching_cubes3.h"
+
+//#define USE_INTERP
+#include "marching_cubes4.h"
 #include "SimplexNoise.h"
+
+#include "voxel.h"
+#include "marchingcubes.h"
+#include <vector>
 
 INT Width, Height;
 
@@ -23,7 +30,13 @@ struct Triangle {
 };
 
 CCamera cam(45.f, vec3(5.f, 5.f, 5.f));
-marching_cubes3 mc3;
+//marching_cubes3 mc3;
+marching_cubes4 mc4;
+
+chunk chnk;
+//ChunkMeshRenderer chunk_renderer;
+
+
 
 void fn_draw()
 {
@@ -38,37 +51,67 @@ void fn_draw()
 
 	//в треугольнике 3 вертекса
 	//узнаем количество треугольников, поделив количество вертексов на 3
-
 	if(b_active_camera)
 		cam.UpdateCameraState();
 
 	vec3 dir = cam.m_vecOrigin + cam.m_vecDirection;
 	gluLookAt(cam.m_vecOrigin.x, cam.m_vecOrigin.y, cam.m_vecOrigin.z, dir.x, dir.y, dir.z, cam.m_vecUp.x, cam.m_vecUp.y, cam.m_vecUp.z);
-	printf("pitch %f   yaw %f    roll %f\n", cam.GetPitch(), cam.GetYaw(), cam.GetRoll());
+	//printf("pitch %f   yaw %f    roll %f\n", cam.GetPitch(), cam.GetYaw(), cam.GetRoll());
 
 	//printf("( %f %f %f ) ( %f %f %f ) ( %f %f %f )\n", cam.m_vecOrigin.x, cam.m_vecOrigin.y, cam.m_vecOrigin.z, dir.x, dir.y, dir.z, cam.m_vecUp.x, cam.m_vecUp.y, cam.m_vecUp.z);
 
 	//Draw3DSGrid();
 
-	//CRay ray;
-	//ray.SetOrigin(cam.position);
-	//ray.SetDirection(cam.direction);
+	CRay ray;
+	ray.SetOrigin(cam.m_vecOrigin);
+	ray.SetDirection(cam.m_vecDirection);
 	//for (int i = 0; i < mc3.index_index / 3; i++) {
 	//	Triangle *tri = &((Triangle *)mc3.vertices)[i];
 
 	//	vec3 intersection;
 	//	if (ray.TriangleIntersection(tri->p1, tri->p2, tri->p3, intersection)) {
+	//		glPushAttrib(GL_CURRENT_BIT);
+	//		glColor3ub(0, 255, 0);
 	//		glBegin(GL_TRIANGLES);
 	//		glVertex3f(tri->p1.x, tri->p1.y, tri->p1.z);
 	//		glVertex3f(tri->p2.x, tri->p2.y, tri->p2.z);
 	//		glVertex3f(tri->p3.x, tri->p3.y, tri->p3.z);
 	//		glEnd();
+	//		glPopAttrib();
 	//	}
 	//}
 
+	glPushAttrib(GL_CURRENT_BIT);
+	glBegin(GL_POINTS);
+	glVertex3f(0, 0, 0);
+	for (int x = 0; x < chnk.chunk_width; x++) {
+		for (int z = 0; z < chnk.chunk_width; z++) {
+			for (int y = 0; y < chnk.chunk_height; y++) {
+				char flag = chnk.voxels[COORD2OFFSET(&chnk, x, y, z)].flags;
+				if (flag & VOXEL_FLAG_AIR)
+					glColor3ub(20, 20, 20);
+				else if(flag & VOXEL_FLAG_SOLID)
+					glColor3ub(0, 100, 0);
+				else if (flag & VOXEL_FLAG_LIQUID)
+					glColor3ub(0, 0, 255);
+
+				glVertex3f(x, y, z);
+			}
+		}
+	}
+	glEnd();
+
+
+
+	////glBegin(GL_LINES);
+	////glEnd();
+
+	//glPopAttrib();
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, mc3.vertices);
-	glDrawElements(GL_TRIANGLES, mc3.index_index, GL_UNSIGNED_INT, mc3.triangles);
+	mc4.Draw();
+
+	//glVertexPointer(3, GL_FLOAT, 0, chunk_renderer.m_Verts.data());
+	//glDrawElements(GL_TRIANGLES, chunk_renderer.m_Verts.size(), GL_UNSIGNED_INT, chunk_renderer.m_Indices.data());
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
@@ -125,30 +168,30 @@ void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 	switch (key) {
 	case 'w':
 	case 'W':
-		cam.m_vecMovement.z = state ? 1 : 0;
+		cam.m_vecMovement.z = state ? 0.1f : 0.f;
 		break;
 	case 'a':
 	case 'A':
-		cam.m_vecMovement.x = state ? 1 : 0;
+		cam.m_vecMovement.x = state ? 0.1f : 0.f;
 		break;
 	case 's':
 	case 'S':
-		cam.m_vecMovement.z = state ? -1 : 0;
+		cam.m_vecMovement.z = state ? -0.1f : 0.f;
 		break;
 	case 'd':
 	case 'D':
-		cam.m_vecMovement.x = state ? -1 : 0;
+		cam.m_vecMovement.x = state ? -0.1f : 0.f;
 		break;
 	case ' ':
-		cam.m_vecMovement.y = state ? 1 : 0;
+		cam.m_vecMovement.y = state ? 0.1f : 0.f;
 		break;
 	case 'm':
 	case 'M':
-		cam.m_vecMovement.y = state ? -1 : 0;
+		cam.m_vecMovement.y = state ? -0.1f : 0.f;
 		break;
 	case 'z':
 	case 'Z':
-		cam.m_vecMovement.y = state ? 1 : 0;
+		cam.m_vecMovement.y = state ? 0.1f : 0.f;
 		break;
 	}
 }
@@ -169,8 +212,40 @@ void fn_windowcreate(HWND hWnd)
 
 	ShowCursor(!b_active_camera);
 
-	mc3.Start(); //generate map
+	for(float y = -20.f; y < 20.f; y++)
+		for(float x = -20.f; x < 20.f; x++)
+			for(float z = -20.f; z < 20.f; z++)
+				mc4.MarchCube(vec3(x, y, z));
 
+	//mc3.Start(); //generate map
+	//chunk_renderer.Init();
+
+	glPointSize(2);
+	if (chunk_alloc_voxels(&chnk, 16, 64) != CHUNK_OK) {
+		printf("Error allocate memory");
+		assert(0);
+	}
+	chnk.pos = vec3(0.f, 0.f, 0.f);
+	memset(chnk.voxels, VOXEL_FLAG_AIR, sizeof(voxel) * chnk.chunk_width * chnk.chunk_height * chnk.chunk_width);
+
+#pragma region FILL_VOXELS
+	chnk.voxels[COORD2OFFSET(&chnk, 15, 15, 15)].flags = VOXEL_FLAG_SOLID;
+	for (int x = 0; x < 4; x++)
+		for (int y = 0; y < 4; y++)
+			for (int z = 0; z < 4; z++) {
+				int offset = COORD2OFFSET(&chnk, x, y, z);
+				//printf("%d %d %d = %d\n", x, y, z, offset);
+				chnk.voxels[offset].flags = VOXEL_FLAG_SOLID;
+			}
+
+	for (int x = 8; x < 16; x++)
+		for (int y = 8; y < 16; y++)
+			for (int z = 8; z < 16; z++)
+				chnk.voxels[COORD2OFFSET(&chnk, x, y, z)].flags = VOXEL_FLAG_LIQUID;
+	//chunk_renderer.BuildMesh(chnk, 0.5f);
+#pragma endregion
+
+#pragma region vertsprint
 	//сохраняю все вертексы в файл текстовый (для теста сделал)
 	//FILE *fp = fopen("vertlog.txt", "wt");
 	//if (fp) {
@@ -197,6 +272,7 @@ void fn_windowcreate(HWND hWnd)
 	//	fprintf(fp, "}\n\n");
 	//	fclose(fp);
 	//}
+#pragma endregion
 }
 
 void fn_windowclose(HWND hWnd)

@@ -1,21 +1,14 @@
 #pragma once
-/**
-* This class the generate 3d mesh
-* Marching cubes
-*/
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-
-#include "SimplexNoise.h"
 #include "../../utilites/glmath.h"
+//#include "mem.h"
+#include "voxel.h"
+#include <vector>
+using namespace std;
 
-struct Vector3Int {
-	int x, y, z;
-};
+typedef float cube_t[8];
+struct vec3i { int x, y, z; };
 
-static Vector3Int CornerTable[8] = {
+static vec3i cornertable[8] = {
 	{ 0, 0, 0 },
 	{ 1, 0, 0 },
 	{ 1, 1, 0 },
@@ -26,7 +19,7 @@ static Vector3Int CornerTable[8] = {
 	{ 0, 1, 1 }
 };
 
-static vec3 EdgeTable[12][2] = {
+static vec3 edgestable[12][2] = {
 
 	{ {0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f} },
 	{ {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0.0f} },
@@ -42,7 +35,7 @@ static vec3 EdgeTable[12][2] = {
 	{ {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f} }
 };
 
-static int TriangleTable[256][16] = {
+static int tritable[256][16] = {
 	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 	{0, 8, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 	{0, 1, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -301,168 +294,74 @@ static int TriangleTable[256][16] = {
 	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
 };
 
-class marching_cubes3
+//fSample1 finds the distance of (fX, fY, fZ) from three moving points
+//float fSample1(float fX, float fY, float fZ)
+//{
+//	float fResult = 0.0;
+//	float fDx, fDy, fDz;
+//	fDx = fX - sSourcePoint[0].fX;
+//	fDy = fY - sSourcePoint[0].fY;
+//	fDz = fZ - sSourcePoint[0].fZ;
+//	fResult += 0.5 / (fDx*fDx + fDy * fDy + fDz * fDz);
+//
+//	fDx = fX - sSourcePoint[1].fX;
+//	fDy = fY - sSourcePoint[1].fY;
+//	fDz = fZ - sSourcePoint[1].fZ;
+//	fResult += 1.0 / (fDx*fDx + fDy * fDy + fDz * fDz);
+//
+//	fDx = fX - sSourcePoint[2].fX;
+//	fDy = fY - sSourcePoint[2].fY;
+//	fDz = fZ - sSourcePoint[2].fZ;
+//	fResult += 1.5 / (fDx*fDx + fDy * fDy + fDz * fDz);
+//	return fResult;
+//}
+
+class ChunkMeshRenderer
 {
 public:
-	void Start() {
-		//terrainMap = new float[width + 1, height + 1, width + 1];
-		//terrainMap = (float *)malloc(sizeof(float) * ((width + 1) * (height + 1) * (width + 1)));
+	ChunkMeshRenderer() {}
+	~ChunkMeshRenderer() {}
 
-		index_size = verts_size = 1;
-		vertices = (vec3 *)malloc(verts_size * sizeof(vec3));
-		triangles = (int *)malloc(index_size * sizeof(int));
-		assert(vertices);
-		assert(triangles);
-
-		PopulateTerrainMap();
-		CreateMeshData();
+	bool Init() {
+		//return m_Verts.Alloc() && m_Indices.Alloc() && m_UVs.Alloc();
+		return true;
 	}
 
-	void CreateMeshData() {
+	void BuildMesh(chunk &_chunk, float surf) {
+		float scale = 2.0 / 10.0f;
+		for (int x = /*((int)_chunk.pos.x)*/0; x < /*((int)_chunk.pos.x) + */_chunk.chunk_width; x++) {
+			for (int y = /*((int)_chunk.pos.y)*/0; y < /*((int)_chunk.pos.y) + */_chunk.chunk_height; y++) {
+				for (int z = /*((int)_chunk.pos.z)*/0; z < /*((int)_chunk.pos.z) + */_chunk.chunk_width; z++) {
+					if(!voxel_is_air(&_chunk.voxels[COORD2OFFSET(&_chunk, x, y, z)])) {
+						cube_t cube;
+						for (int corner = 0; corner < 8; corner++)
+							cube[corner] = (x + cornertable[corner].x) * scale + (y + cornertable[corner].y) * scale + (z + cornertable[corner].z) * scale;
 
-		//ClearMeshData();
-
-		// Loop through each "cube" in our terrain.
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				for (int z = 0; z < width; z++) {
-
-					// Create an array of floats representing each corner of a cube and get the value from our terrainMap.
-					float cube[8];
-					for (int i = 0; i < 8; i++) {
-						//Vector3Int corner = new Vector3Int(x, y, z) + CornerTable[i];
-						Vector3Int corner;
-						corner.x = x + CornerTable[i].x;
-						corner.y = y + CornerTable[i].y;
-						corner.z = z + CornerTable[i].z;
-
-						cube[i] = terrainMap[corner.x][corner.y][corner.z];
-						//cube[i] = terrainMap[corner.x + corner.y + corner.z];
-						//printf("terrainMap[corner.x + corner.y + corner.z] = %d\n", cube[i]);
+						march_cube(x, y, z, surf, cube);
 					}
-
-					//printf("%d %d %d - %f %f %f %f %f %f %f %f\n", x, y, z, cube[0], cube[1], cube[2], cube[3], cube[4], cube[5], cube[6], cube[7]);
-
-					// Pass the value into our MarchCube function.
-					MarchCube({ (float)x, (float)y, (float)z }, cube);
-				}
-			}
-		}
-		//BuildMesh();
-	}
-
-	void PopulateTerrainMap() {
-
-		SimplexNoise noise(1.f, 1.f, 2.f, 0.5f);
-		// The data points for terrain are stored at the corners of our "cubes", so the terrainMap needs to be 1 larger
-		// than the width/height of our mesh.
-		for (int x = 0; x < width + 1; x++) {
-			for (int z = 0; z < width + 1; z++) {
-				for (int y = 0; y < height + 1; y++) {
-
-					// Get a terrain height using regular old Perlin noise.
-					//float thisHeight = (float)height * PerlinNoise((float)x / 16.f * 1.5f + 0.001f, (float)z / 16.f * 1.5f + 0.001f);
-					float thisHeight = (float)height * noise.noise((float)x / 16.f * 1.5f + 0.001f, (float)z / 16.f * 1.5f + 0.001f) / 4.f;
-					//float thisHeight = noise.noise((float)x + 16.f, (float)y * 2.f, (float)z + 16.f);
-
-					// Set the value of this point in the terrainMap.
-					if (thisHeight <= 0.f)
-						thisHeight = 1.f;
-
-					terrainMap[x][y][z] = (float)(y - thisHeight);
-					//printf("terrainMap[%d][%d][%d] = %f\n", x, y, z, terrainMap[x][y][z]);
-					//terrainMap[x + y + z] = point;
 				}
 			}
 		}
 	}
 
-	void MarchCube(vec3 position, float cube[]) {
+	//void ClearMesh() {
+	//	m_UVs.Clear();
+	//	m_Verts.Clear();
+	//	m_Indices.Clear();
+	//}
 
-		// Get the configuration index of this cube.
-		int configIndex = GetCubeConfiguration(cube);
+	//void FreeMesh() {
+	//	m_UVs.Free();
+	//	m_Verts.Free();
+	//	m_Indices.Free();
+	//}
 
-		// If the configuration of this cube is 0 or 255 (completely inside the terrain or completely outside of it) we don't need to do anything.
-		if (configIndex == 0 || configIndex == 255) {
-			//printf("configIndex == 0 || configIndex == 255  CURRENT: %d!\n", configIndex);
-			return;
-		}
+	void march_cube(float x, float y, float z, float surface, cube_t cube);
 
-		// Loop through the triangles. There are never more than 5 triangles to a cube and only three vertices to a triangle.
-		int edgeIndex = 0;
-		for (int i = 0; i < 5; i++) {
-			for (int p = 0; p < 3; p++) {
-
-				// Get the current indice. We increment triangleIndex through each loop.
-				int indice = TriangleTable[configIndex][edgeIndex];
-
-				// If the current edgeIndex is -1, there are no more indices and we can exit the function.
-				if (indice == -1)
-					return;
-
-				// Get the vertices for the start and end of this edge.
-				// endVec1 = vPos + EdgeTable[indice][0]
-				// endVec2 = vPos + EdgeTable[indice][1]
-				vec3 vert1 = position + EdgeTable[indice][0];
-				vec3 vert2 = position + EdgeTable[indice][1];
-
-				// Get the midpoint of this edge.
-				// vertPosition = (vert1 + vert2) / 2.f;
-				vec3 vertPosition = (vert1 + vert2) / 2.f;
-
-				// Add to our vertices and triangles list and incremement the edgeIndex.
-
-				//============================>
-				//add verts
-				if ((verts_index + 1) == verts_size) {
-					verts_size += 2000000;
-					vertices = (vec3 *)realloc(vertices, sizeof(vec3) * verts_size);
-					assert(vertices);
-				}
-				vertices[verts_index] = vertPosition;
-				verts_index++;
-
-				//add triangles
-				if ((index_index + 1) == index_size) {
-					index_size += 2000000;
-					triangles = (int *)realloc(triangles, sizeof(int) * index_size);
-					assert(triangles);
-				}
-				triangles[index_index] = verts_index - 1;
-				index_index++;
-				// <=====================
-
-				edgeIndex++;
-			}
-		}
-	}
-
-	int GetCubeConfiguration(float cube[]) {
-		// Starting with a configuration of zero, loop through each point in the cube and check if it is below the terrain surface.
-		int configurationIndex = 0;
-		for (int i = 0; i < 8; i++) {
-
-			// If it is, use bit-magic to the set the corresponding bit to 1. So if only the 3rd point in the cube was below
-			// the surface, the bit would look like 00100000, which represents the integer value 32.
-			if (cube[i] > terrainSurface)
-				configurationIndex |= (1 << i);
-		}
-		return configurationIndex;
-	}
-
-	void ClearMeshData() {
-		index_index = 0;
-		verts_index = 0;
-	}
-
-	float terrainSurface = 0.5f;
-	int width = 99;
-	int height = 50;
-	//float *terrainMap;
-	unsigned int verts_size, verts_index;
-	unsigned int index_size, index_index;
-	vec3 *vertices;
-	int *triangles;
-	float terrainMap[100][100][100];
+	//vector<vec2> m_UVs;
+	vector<vec3> m_Verts;
+	vector<int> m_Indices;
 };
 
+int get_cube_config(cube_t cube, float surface);
+//void build_cube(cube_t cube, int x, int y, int z, int h);

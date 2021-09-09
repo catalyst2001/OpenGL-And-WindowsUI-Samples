@@ -2,30 +2,54 @@
 
 int chunk_alloc_voxels(chunk *pchunk, int width, int height)
 {
-	//ограничиваю диапазон координат внутри чанка до 250 (с запасом в 5 байт)
-	//так как трехмерные вектора у нас сжаты до 1 байта, нельзя превышать диапазон от 0 до 255, иначе произойдет переполнение и данные будут искажены
-	//проверяем, не меньше ли единицы и не больше 250 ширина и высота чанка
-	if (width < 1 || width > 250 || height < 1 || height > 250)
-		return CHUNK_ERROR_BAD_PARAMETER; //если мы выходим за пределы, функция завершается ошибкой CHUNK_ERROR_BAD_PARAMETER
+	//limit coordinates in chunk to 250, since the maximum number can be 255
+	//compression is used and float is limited to 1 byte
+	//if (width < 1 || width > 250 || height < 1 || height > 250)
+	//	return CHUNK_ERROR_BAD_PARAMETER;
 
-	//расчитываем требуемый объем памяти для пространства чанка
-	//делаем это по формуле:  (WIDTH * HEIGHT * WIDTH) * VOXEL_STRUCT_SIZE
-	int requiried_memory = voxel_compute_memory(width, height);
-	pchunk->voxels = (voxel ***)malloc(requiried_memory);
-
-	//проверяем, смогла ли система удволетворить наш запрос памяти
-	//или же послала нас куда подальше
+	//compute of the required memory for one chunk using the formula: (chunk_width * chunk_height * chunk_width) * voxel_struct_size
+	pchunk->voxels = (voxel *)malloc(CHUNK_SIZE(width, height));
 	if (!pchunk->voxels)
-		return CHUNK_ALLOC_FAILURE; //если все таки послала, то завершаем функцию с ошибкой CHUNK_ALLOC_FAILURE
+		return CHUNK_ALLOC_FAILURE;
 
-	//voxel *temp_ptr = ((voxel *)pchunk->voxels + );
-
-	//for (int x = 0; x < width; x++) {
-	//	for (int z = 0; z < width; z++) {
-	//		for (int y = 0; y < height; y++) {
-	//			pchunk->voxels + x
-	//		}
-	//	}
-	//}
+	pchunk->chunk_width = width;
+	pchunk->chunk_height = height;
 	return CHUNK_OK;
 }
+
+voxel *chunk_find_voxel(chunk *pchunk, float x, float y, float z)
+{
+	//check chunk coordinates bounds
+	if (x < pchunk->pos.x || y < pchunk->pos.y || z < pchunk->pos.z)
+		return NULL;
+
+	if(x > pchunk->pos.x + (float)pchunk->chunk_width || y > pchunk->pos.y + (float)pchunk->chunk_height || z > pchunk->pos.z + (float)pchunk->chunk_width)
+		return NULL;
+
+	int ix = lround(x);
+	int iy = lround(y);
+	int iz = lround(z);
+	return &pchunk->voxels[COORD2OFFSET(pchunk, ix, iy, iz)];
+}
+
+int chunk_voxel_layer(voxel *pcurrentvox, chunk *pchunk)
+{
+	
+	return 0;
+}
+
+bool voxel_in_air(voxel *pvox, chunk *pchunk)
+{
+	//main voxel is air
+	if (voxel_is_air(pvox))
+		return false;
+
+	voxel *p_computed_voxel = NULL;
+	if ((p_computed_voxel = CHUNK_PREV_VOXEL(pvox)) < pchunk->voxels) {
+		//is first voxel
+	}
+
+	//return voxel_is_air() && voxel_is_air(CHUNK_NEXT_VOXEL(pvox)) && voxel_is_air(CHUNK_LEFT_VOXEL(pvox, pchunk)) && voxel_is_air(CHUNK_RIGHT_VOXEL(pvox, pchunk)) && voxel_is_air(CHUNK_BOTTOM_VOXEL(pvox, pchunk)) && voxel_is_air(CHUNK_TOP_VOXEL(pvox, pchunk));
+	return true;
+}
+

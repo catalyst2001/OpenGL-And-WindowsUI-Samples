@@ -1,48 +1,60 @@
-#pragma once
-/**
-* This class the generate 3d mesh
-* Marching cubes
-*/
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+//https://gist.github.com/ttammear/a3cdc214023f8c92b1f0bf27e7cc08d1
+// Very simplistic implementation of marching cubes.
+// You can use the code for whatever you want to.
 
-#include "SimplexNoise.h"
+// Possible low hanging fruit for (quite massive) performance gains:
+//      1. Precompute all samples and store them in a 3D array
+//          use integer version of cornerOffset and combine that with indices from 3 for loops
+//          which gives you the indices to the precomputed values
+//          (currently each 'cube' samples 8 values, but the values could be reused up to 7 times)
+//      2. There are (x+1)*(y+1)*(z+1)*3 possible positions for the vertices, where x, y, z indicate the size of marched volume.
+//          You can create a int[x+1][y+1][z+1][3] array to store the indices. If you generate a vertex store its index in the array.
+//          Every time before generating a vertex check if the array already contains a valid index, if it does reuse the index instead of creating a new vertex.
+//          The last index to the array indicates edge direction (0 - x, 1 - y, 2 - z), you could store that information in edgeVertexOffset 
+//          (Assumes 1. point and dividing the volume into chunks)
+//          (For an alternative with less memory overhead you can look into how vertex reuse is implemented in TransVoxel algorithm)
+
+#pragma once
+#include <vector>
 #include "../../utilites/glmath.h"
 
-struct Vector3Int {
-	int x, y, z;
+#include <Windows.h>
+#include <gl/GL.h>
+
+
+// offsets from the minimal corner to other corners
+static vec3 cornerOffsets[8] =
+{
+	{ 0.0f, 0.0f, 0.0f },
+	{ 1.0f, 0.0f, 0.0f },
+	{ 1.0f, 1.0f, 0.0f },
+	{ 0.0f, 1.0f, 0.0f },
+	{ 0.0f, 0.0f, 1.0f },
+	{ 1.0f, 0.0f, 1.0f },
+	{ 1.0f, 1.0f, 1.0f },
+	{ 0.0f, 1.0f, 1.0f }
 };
 
-static Vector3Int CornerTable[8] = {
-	{ 0, 0, 0 },
-	{ 1, 0, 0 },
-	{ 1, 1, 0 },
-	{ 0, 1, 0 },
-	{ 0, 0, 1 },
-	{ 1, 0, 1 },
-	{ 1, 1, 1 },
-	{ 0, 1, 1 }
+// offsets from the minimal corner to 2 ends of the edges
+static vec3 edgeVertexOffsets[12][2] =
+{
+	{ { 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+	{ { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } },
+	{ { 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } },
+	{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+	{ { 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 1.0f } },
+	{ { 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f } },
+	{ { 0.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f } },
+	{ { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 1.0f } },
+	{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+	{ { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 1.0f } },
+	{ { 1.0f, 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f } },
+	{ { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f, 1.0f } }
 };
 
-static vec3 EdgeTable[12][2] = {
-
-	{ {0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f} },
-	{ {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0.0f} },
-	{ {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f} },
-	{ {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f} },
-	{ {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 1.0f} },
-	{ {1.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f} },
-	{ {0.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f} },
-	{ {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 1.0f} },
-	{ {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f} },
-	{ {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 1.0f} },
-	{ {1.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 1.0f} },
-	{ {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f} }
-};
-
-static int TriangleTable[256][16] = {
+// list of triangles/vertices for every possible case
+// up to 15 vertices per case and -1 indicates end of sequence
+static int triangleTable[][16] = {
 	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 	{0, 8, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 	{0, 1, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -301,168 +313,98 @@ static int TriangleTable[256][16] = {
 	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
 };
 
-class marching_cubes3
+#define SPHERE
+
+#define RADIUS 10.0f
+
+class marching_cubes4
 {
 public:
-	void Start() {
-		//terrainMap = new float[width + 1, height + 1, width + 1];
-		//terrainMap = (float *)malloc(sizeof(float) * ((width + 1) * (height + 1) * (width + 1)));
+	marching_cubes4() {}
+	~marching_cubes4() {}
 
-		index_size = verts_size = 1;
-		vertices = (vec3 *)malloc(verts_size * sizeof(vec3));
-		triangles = (int *)malloc(index_size * sizeof(int));
-		assert(vertices);
-		assert(triangles);
+#ifdef SPHERE
+	// scalar value at given point
+	// replace with sampling from voxel data or whetever you'd like to
+	float SampleValue(vec3 pos)
+	{
+		//return Vector3.Distance(vec3(0.f, 0.f, 0.f), pos) - RADIUS;
+		vec3 nv = vec3(0.f, 0.f, 0.f);
+		float diffX = pos.x - nv.x;
+		float diffY = pos.y - nv.y;
+		float diffZ = pos.z - nv.z;
+		return sqrt((diffY * diffY) + (diffX * diffX) + (diffZ * diffZ)) - RADIUS;
+	}
+#else
+	float SampleValue(vec3 pos)
+	{
+		return sqrt((pos.x * pos.x) + (pos.y * pos.y) + (pos.z * pos.z)) + 1;
+	}
+#endif
 
-		PopulateTerrainMap();
-		CreateMeshData();
+	void Clear()
+	{
+		m_verts.clear();
+		m_indices.clear();
 	}
 
-	void CreateMeshData() {
-
-		//ClearMeshData();
-
-		// Loop through each "cube" in our terrain.
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				for (int z = 0; z < width; z++) {
-
-					// Create an array of floats representing each corner of a cube and get the value from our terrainMap.
-					float cube[8];
-					for (int i = 0; i < 8; i++) {
-						//Vector3Int corner = new Vector3Int(x, y, z) + CornerTable[i];
-						Vector3Int corner;
-						corner.x = x + CornerTable[i].x;
-						corner.y = y + CornerTable[i].y;
-						corner.z = z + CornerTable[i].z;
-
-						cube[i] = terrainMap[corner.x][corner.y][corner.z];
-						//cube[i] = terrainMap[corner.x + corner.y + corner.z];
-						//printf("terrainMap[corner.x + corner.y + corner.z] = %d\n", cube[i]);
-					}
-
-					//printf("%d %d %d - %f %f %f %f %f %f %f %f\n", x, y, z, cube[0], cube[1], cube[2], cube[3], cube[4], cube[5], cube[6], cube[7]);
-
-					// Pass the value into our MarchCube function.
-					MarchCube({ (float)x, (float)y, (float)z }, cube);
-				}
-			}
+	void MarchCube(vec3 minCornerPos)
+	{
+		// construct case index from 8 corner samples
+		int caseIndex = 0;
+		for (int i = 0; i < 8; i++) {
+			float sample = SampleValue(minCornerPos + cornerOffsets[i]);
+			if (sample >= 0.0f)
+				caseIndex |= 1 << i;
 		}
-		//BuildMesh();
-	}
 
-	void PopulateTerrainMap() {
-
-		SimplexNoise noise(1.f, 1.f, 2.f, 0.5f);
-		// The data points for terrain are stored at the corners of our "cubes", so the terrainMap needs to be 1 larger
-		// than the width/height of our mesh.
-		for (int x = 0; x < width + 1; x++) {
-			for (int z = 0; z < width + 1; z++) {
-				for (int y = 0; y < height + 1; y++) {
-
-					// Get a terrain height using regular old Perlin noise.
-					//float thisHeight = (float)height * PerlinNoise((float)x / 16.f * 1.5f + 0.001f, (float)z / 16.f * 1.5f + 0.001f);
-					float thisHeight = (float)height * noise.noise((float)x / 16.f * 1.5f + 0.001f, (float)z / 16.f * 1.5f + 0.001f) / 4.f;
-					//float thisHeight = noise.noise((float)x + 16.f, (float)y * 2.f, (float)z + 16.f);
-
-					// Set the value of this point in the terrainMap.
-					if (thisHeight <= 0.f)
-						thisHeight = 1.f;
-
-					terrainMap[x][y][z] = (float)(y - thisHeight);
-					//printf("terrainMap[%d][%d][%d] = %f\n", x, y, z, terrainMap[x][y][z]);
-					//terrainMap[x + y + z] = point;
-				}
-			}
-		}
-	}
-
-	void MarchCube(vec3 position, float cube[]) {
-
-		// Get the configuration index of this cube.
-		int configIndex = GetCubeConfiguration(cube);
-
-		// If the configuration of this cube is 0 or 255 (completely inside the terrain or completely outside of it) we don't need to do anything.
-		if (configIndex == 0 || configIndex == 255) {
-			//printf("configIndex == 0 || configIndex == 255  CURRENT: %d!\n", configIndex);
+		// early out if entirely inside or outside the volume
+		if (caseIndex == 0 || caseIndex == 255)
 			return;
-		}
 
-		// Loop through the triangles. There are never more than 5 triangles to a cube and only three vertices to a triangle.
-		int edgeIndex = 0;
+		int caseVert = 0;
 		for (int i = 0; i < 5; i++) {
-			for (int p = 0; p < 3; p++) {
-
-				// Get the current indice. We increment triangleIndex through each loop.
-				int indice = TriangleTable[configIndex][edgeIndex];
-
-				// If the current edgeIndex is -1, there are no more indices and we can exit the function.
-				if (indice == -1)
+			for (int tri = 0; tri < 3; tri++) {
+				// get edge index
+				int edgeCase = triangleTable[caseIndex][caseVert];
+				if (edgeCase == -1)
 					return;
 
-				// Get the vertices for the start and end of this edge.
-				// endVec1 = vPos + EdgeTable[indice][0]
-				// endVec2 = vPos + EdgeTable[indice][1]
-				vec3 vert1 = position + EdgeTable[indice][0];
-				vec3 vert2 = position + EdgeTable[indice][1];
+				vec3 vert1 = minCornerPos + edgeVertexOffsets[edgeCase][0]; // beginning of the edge
+				vec3 vert2 = minCornerPos + edgeVertexOffsets[edgeCase][1]; // end of the edge
+#ifndef USE_INTERP
+				vec3 vertPos = (vert1 + vert2) / 2.0f; // non interpolated version - in the middle of the edge
+				m_verts.push_back(vertPos);
+#else
+				// interpolate along the edge
+				float s1 = SampleValue(minCornerPos + edgeVertexOffsets[edgeCase][0]);
+				float s2 = SampleValue(minCornerPos + edgeVertexOffsets[edgeCase][1]);
+				float dif = s1 - s2;
+				if (dif == 0.0f)
+					dif = 0.5f;
+				else
+					dif = s1 / dif;
 
-				// Get the midpoint of this edge.
-				// vertPosition = (vert1 + vert2) / 2.f;
-				vec3 vertPosition = (vert1 + vert2) / 2.f;
-
-				// Add to our vertices and triangles list and incremement the edgeIndex.
-
-				//============================>
-				//add verts
-				if ((verts_index + 1) == verts_size) {
-					verts_size += 2000000;
-					vertices = (vec3 *)realloc(vertices, sizeof(vec3) * verts_size);
-					assert(vertices);
-				}
-				vertices[verts_index] = vertPosition;
-				verts_index++;
-
-				//add triangles
-				if ((index_index + 1) == index_size) {
-					index_size += 2000000;
-					triangles = (int *)realloc(triangles, sizeof(int) * index_size);
-					assert(triangles);
-				}
-				triangles[index_index] = verts_index - 1;
-				index_index++;
-				// <=====================
-
-				edgeIndex++;
+				// Lerp
+				vec3 vertPosInterpolated = vert1 + ((vert2 - vert1) * dif);
+				m_verts.push_back(vertPosInterpolated);
+#endif
+				m_indices.push_back(m_verts.size() - 1);
+				caseVert++;
 			}
 		}
 	}
 
-	int GetCubeConfiguration(float cube[]) {
-		// Starting with a configuration of zero, loop through each point in the cube and check if it is below the terrain surface.
-		int configurationIndex = 0;
-		for (int i = 0; i < 8; i++) {
-
-			// If it is, use bit-magic to the set the corresponding bit to 1. So if only the 3rd point in the cube was below
-			// the surface, the bit would look like 00100000, which represents the integer value 32.
-			if (cube[i] > terrainSurface)
-				configurationIndex |= (1 << i);
-		}
-		return configurationIndex;
+	void Draw() {
+		glPushAttrib(GL_CURRENT_BIT);
+		glColor3ub(0, 100, 0);
+		glVertexPointer(3, GL_FLOAT, 0, m_verts.data());
+		glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, m_indices.data());
+		glPopAttrib();
 	}
 
-	void ClearMeshData() {
-		index_index = 0;
-		verts_index = 0;
-	}
-
-	float terrainSurface = 0.5f;
-	int width = 99;
-	int height = 50;
-	//float *terrainMap;
-	unsigned int verts_size, verts_index;
-	unsigned int index_size, index_index;
-	vec3 *vertices;
-	int *triangles;
-	float terrainMap[100][100][100];
+private:
+	std::vector<vec3> m_verts;
+	std::vector<int> m_indices;
 };
 

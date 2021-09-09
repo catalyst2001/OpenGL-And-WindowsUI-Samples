@@ -68,7 +68,7 @@ public:
 		updateEulerOrientation();
 		m_vecDirection = getForward();
 		m_vecUp = getUp();
-		m_vecMovement = normalize(m_vecMovement);
+		//m_vecMovement = normalize(m_vecMovement);
 		m_vecOrigin = add(m_vecOrigin, m_vecMovement.z * m_vecDirection); // updateForwardMovement
 		m_vecOrigin = add(m_vecOrigin, m_vecMovement.y * m_vecUp); // updateUpMovement
 		vec3 sideVector = normalize(cross(m_vecUp, m_vecDirection)); // updateSideMovement
