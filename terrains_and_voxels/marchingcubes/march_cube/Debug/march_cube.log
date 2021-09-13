@@ -1,0 +1,7 @@
+﻿  main.cpp
+e:\github\specialforkikker228\utilites\utmath.h(167): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\github\specialforkikker228\utilites\utmath.h(173): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+e:\github\specialforkikker228\utilites\utmath.h(174): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+e:\github\specialforkikker228\utilites\utmath.h(177): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+e:\github\specialforkikker228\utilites\utmath.h(178): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+  march_cube.vcxproj -> E:\GITHUB\SpecialForKikker228\terrains_and_voxels\marchingcubes\march_cube\Debug\march_cube.exe

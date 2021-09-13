@@ -16,6 +16,10 @@
 #define DTOR            0.0174532925    
 #define RTOD            57.2957795   
 
+#define __mmin(a, b) (a < b) ? a : b
+#define __mmax(a, b) (a > b) ? a : b
+#define __mabs(f) (f < 0.f) ? -f : f
+
 // ----------------------------------------------------------------------------------------------------------------------------
 class vec2
 {
@@ -67,6 +71,13 @@ vec2 refract(const vec2 &i, const vec2 &n, float eta);
 vec2 rotate(const vec2 &u, float angle);
 // ----------------------------------------------------------------------------------------------------------------------------
 
+struct vec3int
+{
+	int x, y, z;
+};
+
+// ----------------------------------------------------------------------------------------------------------------------------
+
 class vec3
 {
 public:
@@ -100,6 +111,14 @@ public:
 	friend vec3 operator / (float num, const vec3 &u){return vec3(num / u.x, num / u.y, num / u.z);}
 	friend vec3 operator / (const vec3 &u, const vec3 &v){return vec3(u.x / v.x, u.y / v.y, u.z / v.z);}
 
+	inline bool operator == (vec3 &v) { return x == v.x && y == v.y && z == v.z; }
+	inline bool operator < (vec3 &v) { return x < v.x && y < v.y && z < v.z; }
+	inline bool operator <= (vec3 &v) { return x <= v.x && y <= v.y && z <= v.z; }
+	inline bool operator > (vec3 &v) { return x > v.x && y > v.y && z > v.z; }
+	inline bool operator >= (vec3 &v) { return x >= v.x && y >= v.y && z >= v.z; }
+	inline void operator ()(float _x, float _y, float _z) { x = _x; y = _y; z = _z; }
+	inline void operator ()(vec3 v) { x = v.x; y = v.y; z = v.z; }
+
 	union {
 		struct { float x, y, z; };
 		struct { float s, t, p; };
@@ -122,6 +141,11 @@ vec3 normalize(const vec3 &u);
 vec3 reflect(const vec3 &i, const vec3 &n);
 vec3 refract(const vec3 &i, const vec3 &n, float eta);
 vec3 rotate(const vec3 &u, float angle, const vec3 &v);
+
+float distance(vec3 &a, vec3 &b);
+
+vec3 Min(const vec3 &a, const vec3 &b);
+vec3 Max(const vec3 &a, const vec3 &b);
 
 void round_vector(vec3 &dest, const vec3 vec, float roundfactor);
 // ----------------------------------------------------------------------------------------------------------------------------

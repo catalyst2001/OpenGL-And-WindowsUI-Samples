@@ -18,17 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="marching_cubes_cory_bloyd.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GL\glut.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{A71E8F20-5901-4125-A7F3-098D471413DD}</ProjectGuid>
+    <ProjectGuid>{C9629001-258A-4023-98A6-8AD70A0041D3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>marchingcubestest</RootNamespace>
+    <RootNamespace>marchcube</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -156,6 +150,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\utilites\glmath.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\utilites\glmath.h" />
+    <ClInclude Include="..\..\..\utilites\glwnd.h" />
+    <ClInclude Include="..\..\..\utilites\scene_rotation.h" />
+    <ClInclude Include="tritable.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

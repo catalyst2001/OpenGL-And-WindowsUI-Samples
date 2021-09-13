@@ -10,10 +10,6 @@
 
 #include "camera.h"
 
-#include "marching_cubes3.h"
-
-//#define USE_INTERP
-#include "marching_cubes4.h"
 #include "SimplexNoise.h"
 
 #include "voxel.h"
@@ -23,15 +19,24 @@
 INT Width, Height;
 
 bool b_active_camera = true;
-
+bool b_draw_voxels = true;
 
 struct Triangle {
 	vec3 p1, p2, p3;
 };
 
 CCamera cam(45.f, vec3(5.f, 5.f, 5.f));
-//marching_cubes3 mc3;
+
+//#define MC3
+
+#ifdef MC3
+#include "marching_cubes3.h"
+marching_cubes3 mc3;
+#else
+//#define USE_INTERP
+#include "marching_cubes4.h"
 marching_cubes4 mc4;
+#endif
 
 chunk chnk;
 //ChunkMeshRenderer chunk_renderer;
@@ -81,37 +86,37 @@ void fn_draw()
 	//	}
 	//}
 
-	glPushAttrib(GL_CURRENT_BIT);
-	glBegin(GL_POINTS);
-	glVertex3f(0, 0, 0);
-	for (int x = 0; x < chnk.chunk_width; x++) {
-		for (int z = 0; z < chnk.chunk_width; z++) {
-			for (int y = 0; y < chnk.chunk_height; y++) {
-				char flag = chnk.voxels[COORD2OFFSET(&chnk, x, y, z)].flags;
-				if (flag & VOXEL_FLAG_AIR)
-					glColor3ub(20, 20, 20);
-				else if(flag & VOXEL_FLAG_SOLID)
-					glColor3ub(0, 100, 0);
-				else if (flag & VOXEL_FLAG_LIQUID)
-					glColor3ub(0, 0, 255);
+	if (b_draw_voxels) {
+		glPushAttrib(GL_CURRENT_BIT);
+		glBegin(GL_POINTS);
+		glVertex3f(0, 0, 0);
+		for (int x = 0; x < chnk.chunk_width; x++) {
+			for (int z = 0; z < chnk.chunk_width; z++) {
+				for (int y = 0; y < chnk.chunk_height; y++) {
+					char flag = chnk.voxels[COORD2OFFSET(&chnk, x, y, z)].flags;
+					if (flag & VOXEL_FLAG_AIR)
+						glColor3ub(20, 20, 20);
+					else if (flag & VOXEL_FLAG_SOLID)
+						glColor3ub(0, 100, 0);
+					else if (flag & VOXEL_FLAG_LIQUID)
+						glColor3ub(0, 0, 255);
 
-				glVertex3f(x, y, z);
+					glVertex3f(x, y, z);
+				}
 			}
 		}
+		glEnd();
+		glPopAttrib();
 	}
-	glEnd();
 
 
-
-	////glBegin(GL_LINES);
-	////glEnd();
-
-	//glPopAttrib();
 	glEnableClientState(GL_VERTEX_ARRAY);
+#ifdef MC3
+	glVertexPointer(3, GL_FLOAT, 0, mc3.vertices);
+	glDrawElements(GL_TRIANGLES, mc3.index_index, GL_UNSIGNED_INT, mc3.triangles);
+#else
 	mc4.Draw();
-
-	//glVertexPointer(3, GL_FLOAT, 0, chunk_renderer.m_Verts.data());
-	//glDrawElements(GL_TRIANGLES, chunk_renderer.m_Verts.size(), GL_UNSIGNED_INT, chunk_renderer.m_Indices.data());
+#endif
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
@@ -145,23 +150,49 @@ void fn_charinput(HWND hWnd, char symbol)
 {
 }
 
+void RebuildMesh()
+{
+	mc4.Clear();
+	for (int y = 0; y < chnk.chunk_height; y++)
+		for (int x = 0; x < chnk.chunk_width; x++)
+			for (int z = 0; z < chnk.chunk_width; z++) {
+				if(chnk.voxels[COORD2OFFSET(&chnk, x, y, z)].flags & VOXEL_FLAG_SOLID)
+					mc4.MarchCube(vec3(x, y, z)/*, 1.f*/);
+				//else
+				//	mc4.MarchCube(vec3(x, y, z)/*, -1.f*/);
+			}
+					
+}
+
 //https://docs.microsoft.com/ru-ru/windows/win32/inputdev/wm-keydown
 void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 {
+	static bool b_wire = false;
 	INT key = (INT)wparam;
 	if (state == KEY_DOWN) {
-		if (key == 27) //esc code
+		switch (key) {
+		case 27:
 			exit(0); //close program
+			break;
 
-		if (key == VK_F1) {
+		case VK_F1:
 			b_active_camera = !b_active_camera;
 			ShowCursor(!b_active_camera);
-		}
+			break;
 
-		if (key == VK_F2) {
-			static bool b_wire = false;
+		case VK_F2:
 			b_wire = !b_wire;
 			glPolygonMode(GL_FRONT_AND_BACK, b_wire ? GL_LINE : GL_FILL);
+			break;
+
+		case VK_F3:
+			b_draw_voxels = !b_draw_voxels;
+			break;
+
+		//rebuild mesh
+		case VK_F4:
+			RebuildMesh();
+			break;
 		}
 	}
 
@@ -211,37 +242,39 @@ void fn_windowcreate(HWND hWnd)
 	glEnable(GL_DEPTH_TEST);
 
 	ShowCursor(!b_active_camera);
-
-	for(float y = -20.f; y < 20.f; y++)
-		for(float x = -20.f; x < 20.f; x++)
-			for(float z = -20.f; z < 20.f; z++)
-				mc4.MarchCube(vec3(x, y, z));
-
-	//mc3.Start(); //generate map
 	//chunk_renderer.Init();
 
 	glPointSize(2);
-	if (chunk_alloc_voxels(&chnk, 16, 64) != CHUNK_OK) {
+	if (chunk_alloc_voxels(&chnk, 16, 100) != CHUNK_OK) {
 		printf("Error allocate memory");
 		assert(0);
 	}
 	chnk.pos = vec3(0.f, 0.f, 0.f);
-	memset(chnk.voxels, VOXEL_FLAG_AIR, sizeof(voxel) * chnk.chunk_width * chnk.chunk_height * chnk.chunk_width);
+	memset(chnk.voxels, VOXEL_FLAG_SOLID, CHUNK_SIZE(chnk.chunk_width, chnk.chunk_height));
 
 #pragma region FILL_VOXELS
-	chnk.voxels[COORD2OFFSET(&chnk, 15, 15, 15)].flags = VOXEL_FLAG_SOLID;
-	for (int x = 0; x < 4; x++)
-		for (int y = 0; y < 4; y++)
-			for (int z = 0; z < 4; z++) {
-				int offset = COORD2OFFSET(&chnk, x, y, z);
-				//printf("%d %d %d = %d\n", x, y, z, offset);
-				chnk.voxels[offset].flags = VOXEL_FLAG_SOLID;
-			}
+	//for (int x = 0; x < 4; x++)
+	//	for (int y = 0; y < 4; y++)
+	//		for (int z = 0; z < 4; z++) {
+	//			int offset = COORD2OFFSET(&chnk, x, y, z);
+	//			//printf("%d %d %d = %d\n", x, y, z, offset);
+	//			chnk.voxels[offset].flags = VOXEL_FLAG_SOLID;
+	//		}
 
-	for (int x = 8; x < 16; x++)
-		for (int y = 8; y < 16; y++)
-			for (int z = 8; z < 16; z++)
-				chnk.voxels[COORD2OFFSET(&chnk, x, y, z)].flags = VOXEL_FLAG_LIQUID;
+	for (int x = chnk.chunk_width / 2; x < chnk.chunk_width; x++)
+		for (int y = chnk.chunk_height / 2; y < chnk.chunk_height; y++)
+			for (int z = chnk.chunk_width / 2; z < chnk.chunk_width; z++)
+				chnk.voxels[COORD2OFFSET(&chnk, x, y, z)].flags = VOXEL_FLAG_AIR;
+
+#ifdef MC3
+	mc3.Start(); //generate map
+#else
+	mc4.vecMin(0.f, 0.f, 0.f);
+	mc4.vecMax(chnk.chunk_width, chnk.chunk_height, chnk.chunk_width);
+	RebuildMesh();
+
+
+#endif
 	//chunk_renderer.BuildMesh(chnk, 0.5f);
 #pragma endregion
 

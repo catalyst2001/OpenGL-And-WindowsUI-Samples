@@ -151,6 +151,32 @@ vec3 rotate(const vec3 &u, float angle, const vec3 &v)
 	return *(vec3*)&(rotate(angle, v) * vec4(u, 1.0f));
 }
 
+float distance(vec3 &a, vec3 &b)
+{
+	float diffX = a.x - b.x;
+	float diffY = a.y - b.y;
+	float diffZ = a.z - b.z;
+	return sqrt((diffY * diffY) + (diffX * diffX) + (diffZ * diffZ));
+}
+
+vec3 Min(const vec3 &a, const vec3 &b)
+{
+	vec3 res;
+	res.x = __mmin(a.x, b.x);
+	res.y = __mmin(a.y, b.y);
+	res.z = __mmin(a.z, b.z);
+	return res;
+}
+
+vec3 Max(const vec3 &a, const vec3 &b)
+{
+	vec3 res;
+	res.x = __mmax(a.x, b.x);
+	res.y = __mmax(a.y, b.y);
+	res.z = __mmax(a.z, b.z);
+	return res;
+}
+
 void round_vector(vec3 &dest, const vec3 vec, float roundfactor)
 {
 	dest.x = round(vec.x / roundfactor) * roundfactor;

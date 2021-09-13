@@ -17,10 +17,12 @@
 #pragma once
 #include <vector>
 #include "../../utilites/glmath.h"
+#include  "voxel.h"
 
 #include <Windows.h>
 #include <gl/GL.h>
 
+extern chunk chnk;
 
 // offsets from the minimal corner to other corners
 static vec3 cornerOffsets[8] =
@@ -348,13 +350,24 @@ public:
 		m_indices.clear();
 	}
 
-	void MarchCube(vec3 minCornerPos)
+	void MarchCube(vec3 minCornerPos/*, float sample*/)
 	{
 		// construct case index from 8 corner samples
 		int caseIndex = 0;
 		for (int i = 0; i < 8; i++) {
-			float sample = SampleValue(minCornerPos + cornerOffsets[i]);
-			if (sample >= 0.0f)
+			//float sample = SampleValue(minCornerPos + cornerOffsets[i]);
+
+			vec3 res = minCornerPos + cornerOffsets[i];
+			//sample = SampleValue(res);
+			//printf("res = ( %f %f %f ) vecMin = ( %f %f %f ) vecMax = ( %f %f %f )\n", res.x, res.y, res.z, vecMin.x, vecMin.y, vecMin.z, vecMax.x, vecMax.y, vecMax.z);
+			//while (true);
+
+			//if (sample >= 0.0f)
+			if (res.z >= chnk.pos.z + chnk.chunk_width || res.x >= chnk.pos.x + chnk.chunk_width)
+				continue;
+
+			voxel *pvox = chunk_find_voxel(&chnk, res.x, res.y, res.z);
+			if (/*res > vecMin && */res.y < vecMax.y && pvox->flags & VOXEL_FLAG_SOLID)
 				caseIndex |= 1 << i;
 		}
 
@@ -403,6 +416,7 @@ public:
 		glPopAttrib();
 	}
 
+	vec3 vecMin, vecMax;
 private:
 	std::vector<vec3> m_verts;
 	std::vector<int> m_indices;

@@ -57,8 +57,11 @@
 	{
 		INT key = (INT)wparam;
 		if (state == KEY_DOWN) {
-			if (key == 27) //esc code
+			switch (key) {
+			case 27:
 				exit(0); //close program
+				break;
+			}
 		}
 	}
 

@@ -455,7 +455,7 @@ public:
 		verts_index = 0;
 	}
 
-	float terrainSurface = 0.5f;
+	float terrainSurface = 3.5f;
 	int width = 99;
 	int height = 50;
 	//float *terrainMap;

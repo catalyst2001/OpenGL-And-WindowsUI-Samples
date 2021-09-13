@@ -1,0 +1,15 @@
+﻿  main.cpp
+e:\github\specialforkikker228\utilites\utmath.h(167): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+e:\github\specialforkikker228\utilites\utmath.h(173): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+e:\github\specialforkikker228\utilites\utmath.h(174): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+e:\github\specialforkikker228\utilites\utmath.h(177): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+e:\github\specialforkikker228\utilites\utmath.h(178): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+e:\github\specialforkikker228\utilites\utmath.h(216): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+e:\github\specialforkikker228\utilites\utmath.h(217): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+e:\github\specialforkikker228\terrains_and_voxels\voxels_test\marchingcubes.h(331): warning C4305: инициализация: усечение из "double" в "float"
+e:\github\specialforkikker228\terrains_and_voxels\voxels_test\marchingcubes.h(340): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+e:\github\specialforkikker228\terrains_and_voxels\voxels_test\main.cpp(104): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+e:\github\specialforkikker228\terrains_and_voxels\voxels_test\main.cpp(160): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  marching_cubes4.cpp
+  Создание кода...
+  voxels_test.vcxproj -> E:\GITHUB\SpecialForKikker228\terrains_and_voxels\voxels_test\Debug\voxels_test.exe
