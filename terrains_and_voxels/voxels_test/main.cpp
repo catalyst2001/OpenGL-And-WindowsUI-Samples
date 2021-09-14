@@ -19,7 +19,7 @@
 INT Width, Height;
 
 bool b_active_camera = true;
-bool b_draw_voxels = true;
+bool b_draw_voxels = false;
 
 struct Triangle {
 	vec3 p1, p2, p3;
@@ -40,7 +40,7 @@ marching_cubes4 mc4;
 
 chunk chnk;
 //ChunkMeshRenderer chunk_renderer;
-
+vec3 cubepos;
 
 
 void fn_draw()
@@ -86,10 +86,10 @@ void fn_draw()
 	//	}
 	//}
 
+	glBegin(GL_POINTS);
+	glPushAttrib(GL_CURRENT_BIT);
+	glVertex3f(0, 0, 0);
 	if (b_draw_voxels) {
-		glPushAttrib(GL_CURRENT_BIT);
-		glBegin(GL_POINTS);
-		glVertex3f(0, 0, 0);
 		for (int x = 0; x < chnk.chunk_width; x++) {
 			for (int z = 0; z < chnk.chunk_width; z++) {
 				for (int y = 0; y < chnk.chunk_height; y++) {
@@ -105,16 +105,17 @@ void fn_draw()
 				}
 			}
 		}
-		glEnd();
-		glPopAttrib();
 	}
-
+	glEnd();
+	glPopAttrib();
+	
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 #ifdef MC3
 	glVertexPointer(3, GL_FLOAT, 0, mc3.vertices);
 	glDrawElements(GL_TRIANGLES, mc3.index_index, GL_UNSIGNED_INT, mc3.triangles);
 #else
+	mc4.DrawCubeCorners(cubepos);
 	mc4.Draw();
 #endif
 	glDisableClientState(GL_VERTEX_ARRAY);
@@ -154,12 +155,9 @@ void RebuildMesh()
 {
 	mc4.Clear();
 	for (int y = 0; y < chnk.chunk_height; y++)
-		for (int x = 0; x < chnk.chunk_width; x++)
-			for (int z = 0; z < chnk.chunk_width; z++) {
-				if(chnk.voxels[COORD2OFFSET(&chnk, x, y, z)].flags & VOXEL_FLAG_SOLID)
-					mc4.MarchCube(vec3(x, y, z)/*, 1.f*/);
-				//else
-				//	mc4.MarchCube(vec3(x, y, z)/*, -1.f*/);
+		for (int x = 0; x < chnk.chunk_width - 1; x++)
+			for (int z = 0; z < chnk.chunk_width - 1; z++) {
+					mc4.MarchCube(vec3(x, y, z));
 			}
 					
 }
@@ -167,7 +165,7 @@ void RebuildMesh()
 //https://docs.microsoft.com/ru-ru/windows/win32/inputdev/wm-keydown
 void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 {
-	static bool b_wire = false;
+	static bool b_wire = true;
 	INT key = (INT)wparam;
 	if (state == KEY_DOWN) {
 		switch (key) {
@@ -192,6 +190,31 @@ void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 		//rebuild mesh
 		case VK_F4:
 			RebuildMesh();
+			break;
+
+		//cube pos
+		case VK_LEFT:
+			cubepos.z--;
+			break;
+
+		case VK_RIGHT:
+			cubepos.z++;
+			break;
+
+		case VK_UP:
+			cubepos.x++;
+			break;
+
+		case VK_DOWN:
+			cubepos.x--;
+			break;
+
+		case VK_F10:
+			cubepos.y++;
+			break;
+
+		case VK_F11:
+			cubepos.y--;
 			break;
 		}
 	}
@@ -261,10 +284,18 @@ void fn_windowcreate(HWND hWnd)
 	//			chnk.voxels[offset].flags = VOXEL_FLAG_SOLID;
 	//		}
 
-	for (int x = chnk.chunk_width / 2; x < chnk.chunk_width; x++)
-		for (int y = chnk.chunk_height / 2; y < chnk.chunk_height; y++)
-			for (int z = chnk.chunk_width / 2; z < chnk.chunk_width; z++)
+	for (int y = chnk.chunk_height / 2; y < chnk.chunk_height; y++)
+		for (int x = chnk.chunk_width / 2; x < chnk.chunk_width - 5; x++)
+			for (int z = chnk.chunk_width / 2; z < chnk.chunk_width - 5; z++)
 				chnk.voxels[COORD2OFFSET(&chnk, x, y, z)].flags = VOXEL_FLAG_AIR;
+
+	//for (int y = chnk.chunk_height / 2; y < (chnk.chunk_height / 2) + 2; y++)
+	//	for (int x = chnk.chunk_width / 2; x > 0; x--)
+	//			chnk.voxels[COORD2OFFSET(&chnk, x, y, chnk.chunk_width / 2)].flags = VOXEL_FLAG_AIR;
+
+		for (int x = 0 / 2; x < chnk.chunk_width - 5; x++)
+			for (int z = 0 / 2; z < chnk.chunk_width - 5; z++)
+				chnk.voxels[COORD2OFFSET(&chnk, x, 2, z)].flags = VOXEL_FLAG_AIR;
 
 #ifdef MC3
 	mc3.Start(); //generate map
@@ -273,6 +304,7 @@ void fn_windowcreate(HWND hWnd)
 	mc4.vecMax(chnk.chunk_width, chnk.chunk_height, chnk.chunk_width);
 	RebuildMesh();
 
+	cubepos(0.f, 0.f, 0.f);
 
 #endif
 	//chunk_renderer.BuildMesh(chnk, 0.5f);

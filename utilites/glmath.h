@@ -71,9 +71,18 @@ vec2 refract(const vec2 &i, const vec2 &n, float eta);
 vec2 rotate(const vec2 &u, float angle);
 // ----------------------------------------------------------------------------------------------------------------------------
 
-struct vec3int
+class vec3;
+class vec3int
 {
-	int x, y, z;
+public:
+	vec3int() : x(0), y(0), z(0) {}
+	vec3int(int xx, int yy, int zz) : x(xx), y(yy), z(zz) {}
+	vec3int(vec3 vecf) : x(vecf.x), y(vecf.y), z(vecf.z) {}
+	~vec3int() {}
+	union {
+		struct { int x, y, z; };
+		struct { int i, j, k; };
+	};
 };
 
 // ----------------------------------------------------------------------------------------------------------------------------

@@ -350,6 +350,21 @@ public:
 		m_indices.clear();
 	}
 
+	void DrawCubeCorners(vec3 pos)
+	{
+		vec3 corners[8];
+		for (int i = 0; i < 8; i++)
+			corners[i] = pos + cornerOffsets[i];
+
+		glPointSize(3.f);
+		glPushAttrib(GL_CURRENT_BIT);
+		glColor3ub(0, 255, 0);
+		glVertexPointer(3, GL_FLOAT, 0, &corners);
+		glDrawArrays(GL_POINTS, 0, 8);
+		glPopAttrib();
+		glPointSize(2.f);
+	}
+
 	void MarchCube(vec3 minCornerPos/*, float sample*/)
 	{
 		// construct case index from 8 corner samples
@@ -367,7 +382,7 @@ public:
 				continue;
 
 			voxel *pvox = chunk_find_voxel(&chnk, res.x, res.y, res.z);
-			if (/*res > vecMin && */res.y < vecMax.y && pvox->flags & VOXEL_FLAG_SOLID)
+			if (res.y < vecMax.y && pvox && pvox->flags & VOXEL_FLAG_SOLID)
 				caseIndex |= 1 << i;
 		}
 
@@ -390,8 +405,8 @@ public:
 				m_verts.push_back(vertPos);
 #else
 				// interpolate along the edge
-				float s1 = SampleValue(minCornerPos + edgeVertexOffsets[edgeCase][0]);
-				float s2 = SampleValue(minCornerPos + edgeVertexOffsets[edgeCase][1]);
+				float s1 = /*SampleValue(*/length(minCornerPos + edgeVertexOffsets[edgeCase][0]);
+				float s2 = /*SampleValue(*/length(minCornerPos + edgeVertexOffsets[edgeCase][1]);
 				float dif = s1 - s2;
 				if (dif == 0.0f)
 					dif = 0.5f;
