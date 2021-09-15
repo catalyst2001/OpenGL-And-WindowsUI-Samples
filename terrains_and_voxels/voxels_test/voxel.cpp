@@ -338,22 +338,23 @@ bool voxel_in_air(voxel *pvox, chunk *pchunk)
 	return true;
 }
 
-inline int CChunk::GetChunkWidth()
+//-------------------------------------------------------------------------------------------------------------------------
+int CChunk::GetChunkWidth()
 {
 	return m_nWidth;
 }
 
-inline int CChunk::GetChunkHeight()
+int CChunk::GetChunkHeight()
 {
 	return m_nHeight;
 }
 
-inline CVoxel *CChunk::GetVoxels()
+CVoxel *CChunk::GetVoxels()
 {
 	return m_pVoxels;
 }
 
-inline int CChunk::GetNumberVoxels()
+int CChunk::GetNumberVoxels()
 {
 	return m_nWidth * m_nHeight * m_nWidth;
 }
@@ -375,6 +376,11 @@ inline bool CChunk::HasIdle()
 	return m_bIdle;
 }
 
+inline void CChunk::MarkIdle(bool idle)
+{
+	m_bIdle = idle;
+}
+
 void CChunk::ClearMesh()
 {
 	m_vertices.clear();
@@ -390,6 +396,10 @@ void CChunk::MarchCube(vec3 min_corner_pos)
 		if (res.z >= m_ChunkPos.z + m_nWidth || res.x >= m_ChunkPos.x + m_nWidth)
 			continue;
 
+		//в координате угла куба, ищем соседний воксель и проверяем, есть ли он и является ли он твердым
+		//если воксель есть и он твердый, этот угол будет считаться в конфигурации куба
+		//также проверяем, не вышли ли мы за предел чанка по высоте
+		//границы по x и z не проверяем, потому что нет смысла рисовать сетку на гранях чанка
 		CVoxel *pvox = FindVoxel(res.x, res.y, res.z);
 		if (res.y < m_vecMax.y && pvox && pvox->IsSolid())
 			caseIndex |= 1 << i;
@@ -434,15 +444,40 @@ void CChunk::MarchCube(vec3 min_corner_pos)
 
 void CChunk::DrawMesh()
 {
-	glPushAttrib(GL_CURRENT_BIT);
-	glColor3ub(0, 100, 0);
 	glVertexPointer(3, GL_FLOAT, 0, m_vertices.data());
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, m_indices.data());
+#ifdef DEBUG_DRAW
+	glPushAttrib(GL_CURRENT_BIT);
+	glColor3ub(0, 100, 0);
+	//draw debug chunk bounds
+	if (m_nDDBounds) {
+		DrawBBox(m_ChunkPos, m_vecMax);
+	}
+
+	//draw debug voxels
+	if (m_nDDVoxels) {
+		glVertexPointer(3, GL_FLOAT, 0, m_vertices.data());
+		glDrawArrays(GL_POINTS, 0, (m_nWidth * m_nHeight * m_nWidth));
+	}
+
+	//draw debug voxels cubes
+	if (m_nDDCubes) {
+		//TODO: m_nDDCubes not implemented
+	}
 	glPopAttrib();
+#endif
 }
 
 void CChunk::BuildMesh()
 {
+	//цикл пробежки по всему чанку
+	//высота остается той же, а вот ширина на один меньше
+	//потому, что если мы будем считать крайние воксели, мы выйдем за пределы чанка по углам марширующего куба
+	//следовательно появится не нужная нам сетка на границе чанка, потому что левые углы куба будут лежать в чанке, а остальные 4 правых угла получат NULL вместо соседа, 
+	//потому что соседних вокселей за пределами чанка не может быть, и по координатам вы выйдем за пределы массива вокселей
+
+	//TODO: нужно решить проблему с m_nWidth - 1. Выше описал для чего это было сделано, но я не могу сказать что это самый оптимальный вариант,
+	//потому что мы всегда имеем на границе количество m_nWidth * m_nHeight вокселей, которые не используются. Можем сэкономить памяти
 	for (int y = 0; y < m_nHeight; y++)
 		for (int z = 0; z < m_nWidth - 1; z++)
 			for (int x = 0; x < m_nWidth - 1; x++)
@@ -455,12 +490,38 @@ void CChunk::RebuildMesh()
 	BuildMesh();
 }
 
+#ifdef DEBUG_DRAW
+void CChunk::DebugDraw_ChunkBounds(bool b)
+{
+	m_nDDBounds = b;
+}
+
+void CChunk::DebugDraw_ChunkVoxels(bool b)
+{
+	m_nDDVoxels = b;
+}
+
+void CChunk::DebugDraw_ChunkCubes(bool b)
+{
+	m_nDDCubes = b;
+}
+
+#endif
+
 CChunk::CChunk(vec3int pos, int width, int height)
+{
+	Init(pos, width, height);
+}
+
+int CChunk::Init(vec3int pos, int width, int height, int flags)
 {
 	m_nWidth = width;
 	m_nHeight = height;
 	m_ChunkPos = pos;
-	AllocVoxels(m_nWidth, m_nHeight);
+	m_vecMax.x = pos.x + m_nWidth;
+	m_vecMax.y = pos.y + m_nHeight;
+	m_vecMax.z = pos.z + m_nWidth;
+	return AllocVoxels(m_nWidth, m_nHeight, flags);
 }
 
 int CChunk::AllocVoxels(int width, int height, int flags)
@@ -470,7 +531,7 @@ int CChunk::AllocVoxels(int width, int height, int flags)
 	if (!m_pVoxels)
 		return 0;
 	
-	if (flags)
+	//if (flags)
 		memset(m_pVoxels, flags, size_in_bytes);
 
 	return 1;
@@ -485,20 +546,61 @@ int CChunk::FreeVoxels()
 	return 0;
 }
 
-inline void CChunk::SetChunkPosition(vec3int pos)
+void CChunk::SetChunkPosition(vec3int pos)
 {
 	m_ChunkPos = pos;
 }
 
-inline void CChunk::SetChunkPosition(int x, int y, int z)
+void CChunk::SetChunkPosition(int x, int y, int z)
 {
 	m_ChunkPos.x = x;
 	m_ChunkPos.y = y;
 	m_ChunkPos.z = z;
 }
 
-inline void CChunk::SetChunkSize(int width, int height)
+void CChunk::SetChunkSize(int width, int height)
 {
 	m_nWidth = width;
 	m_nHeight = height;
+}
+
+inline int CChunk::GetLayerArea()
+{
+	return m_nWidth * m_nHeight;
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------
+inline voxel_cell_t CVoxel::GetFlags()
+{
+	return m_Flags;
+}
+
+void CVoxel::SetFlag(voxel_cell_t flag)
+{
+	m_Flags = flag;
+}
+
+inline bool CVoxel::IsEmpty()
+{
+	return (m_Flags & VOXEL_FLAG_AIR);
+}
+
+inline bool CVoxel::IsSolid()
+{
+	return (m_Flags & VOXEL_FLAG_SOLID);
+}
+
+inline bool CVoxel::IsLiquid()
+{
+	return (m_Flags & VOXEL_FLAG_LIQUID);
+}
+
+inline bool CVoxel::InChunkCorner(CChunk *pchunk, int x, int z)
+{
+	return (!(x % pchunk->GetChunkWidth()) || x % pchunk->GetChunkWidth() == (pchunk->GetChunkWidth() - 1) && !(z % pchunk->GetChunkWidth()) || z % pchunk->GetChunkWidth() == (pchunk->GetChunkWidth() - 1));
+}
+
+inline bool CVoxel::InChunkEdge(CChunk * pchunk, int x, int z)
+{
+	return (!(x % pchunk->GetChunkWidth() || !(z % pchunk->GetChunkWidth() || x % pchunk->GetChunkWidth() == (pchunk->GetChunkWidth() - 1) || z % pchunk->GetChunkWidth() == (pchunk->GetChunkWidth() - 1))));
 }

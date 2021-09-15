@@ -31,4 +31,7 @@
       <UniqueIdentifier>{7ad3d192-93a0-4bbb-92e4-efff299d26f4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="old_main.txt" />
+  </ItemGroup>
 </Project>

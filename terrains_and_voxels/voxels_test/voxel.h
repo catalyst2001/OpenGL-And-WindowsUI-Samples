@@ -3,6 +3,7 @@
 #include <gl/GL.h>
 #include <malloc.h>
 #include "../../utilites/glmath.h"
+#include "../../utilites/utmath.h" //draw bbox
 
 #include <vector> //for renderer vertex buffer, indices buffer
 
@@ -94,12 +95,13 @@ public:
 	CVoxel() {}
 	~CVoxel() {}
 
-	inline voxel_cell_t GetFlags() { return m_Flags; }
-	inline bool IsEmpty() { return (m_Flags & VOXEL_FLAG_AIR); }
-	inline bool IsSolid() { return (m_Flags & VOXEL_FLAG_SOLID); }
-	inline bool IsLiquid() { return (m_Flags & VOXEL_FLAG_LIQUID); }
-	inline bool InChunkCorner(CChunk *pchunk, int x, int z) { return (!(x % pchunk->GetChunkWidth()) || x % pchunk->GetChunkWidth() == (pchunk->GetChunkWidth() - 1) && !(z % pchunk->GetChunkWidth()) || z % pchunk->GetChunkWidth() == (pchunk->GetChunkWidth() - 1)); }
-	inline bool InChunkEdge(CChunk *pchunk, int x, int z) { return (!(x % pchunk->GetChunkWidth() || !(z % pchunk->GetChunkWidth() || x % pchunk->GetChunkWidth() == (pchunk->GetChunkWidth() - 1) || z % pchunk->GetChunkWidth() == (pchunk->GetChunkWidth() - 1)))); }
+	inline voxel_cell_t GetFlags();
+	void SetFlag(voxel_cell_t flag);
+	inline bool IsEmpty();
+	inline bool IsSolid();
+	inline bool IsLiquid();
+	inline bool InChunkCorner(CChunk *pchunk, int x, int z);
+	inline bool InChunkEdge(CChunk *pchunk, int x, int z);
 private:
 	voxel_cell_t m_Flags;
 };
@@ -113,40 +115,53 @@ public:
 	CChunk(vec3int pos, int width, int height);
 	~CChunk() {}
 
+	int Init(vec3int pos, int width, int height, int flags = VOXEL_FLAG_AIR);
 	int AllocVoxels(int width, int height, int flags = VOXEL_FLAG_AIR);
 	int FreeVoxels();
 
-	inline void SetChunkPosition(vec3int pos);
-	inline void SetChunkPosition(int x, int y, int z);
-	inline void SetChunkSize(int width, int height);
-	inline int GetLayerArea() { return m_nWidth * m_nHeight; }
-	inline int GetChunkWidth();
-	inline int GetChunkHeight();
-	inline CVoxel *GetVoxels();
-	inline int GetNumberVoxels();
+	void SetChunkPosition(vec3int pos);
+	void SetChunkPosition(int x, int y, int z);
+	void SetChunkSize(int width, int height);
+	inline int GetLayerArea();
+	int GetChunkWidth();
+	int GetChunkHeight();
+	int GetNumberVoxels();
+	CVoxel *GetVoxels();
 	CVoxel *FindVoxel(int x, int y, int z);
 
 	/**
 	* For world manager
 	*/
 	inline bool HasIdle();
-	inline void MarkIdle();
+	inline void MarkIdle(bool idle);
 
 	/**
 	* Unsafe functions!
 	*/
-	inline CVoxel *PrevVoxel(CVoxel *pvox)		{ return ((CVoxel *)pvox + 1); }
-	inline CVoxel *NextVoxel(CVoxel *pvox)		{ return ((CVoxel *)pvox - 1); }
-	inline CVoxel *LeftVoxel(CVoxel *pvox)		{ return ((CVoxel *)pvox - m_nWidth); }
-	inline CVoxel *RightVoxel(CVoxel *pvox)		{ return ((CVoxel *)pvox + m_nWidth); }
-	inline CVoxel *BottomVoxel(CVoxel *pvox)	{ return ((CVoxel *)pvox - GetLayerArea()); }
-	inline CVoxel *TopVoxel(CVoxel *pvox)		{ return ((CVoxel *)pvox + GetLayerArea()); }
+	//inline CVoxel *PrevVoxel(CVoxel *pvox)		{ return ((CVoxel *)pvox + 1); }
+	//inline CVoxel *NextVoxel(CVoxel *pvox)		{ return ((CVoxel *)pvox - 1); }
+	//inline CVoxel *LeftVoxel(CVoxel *pvox)		{ return ((CVoxel *)pvox - m_nWidth); }
+	//inline CVoxel *RightVoxel(CVoxel *pvox)		{ return ((CVoxel *)pvox + m_nWidth); }
+	//inline CVoxel *BottomVoxel(CVoxel *pvox)	{ return ((CVoxel *)pvox - GetLayerArea()); }
+	//inline CVoxel *TopVoxel(CVoxel *pvox)		{ return ((CVoxel *)pvox + GetLayerArea()); }
 	//int GetVoxelTerrace(CVoxel *pvox); //TODO: Implement this later
+
 	void MarchCube(vec3 min_corner_pos);
 	void DrawMesh(); //draw
 	void ClearMesh();
 	void BuildMesh();
 	void RebuildMesh(); //rebuild mesh from voxels
+
+#ifdef DEBUG_DRAW
+	void DebugDraw_ChunkBounds(bool b);
+	void DebugDraw_ChunkVoxels(bool b);
+	void DebugDraw_ChunkCubes(bool b);
+
+	bool m_nDDBounds;
+	bool m_nDDVoxels;
+	bool m_nDDCubes;
+#endif
+
 private:
 	bool m_bIdle;
 	vec3int m_ChunkPos;

@@ -71,22 +71,6 @@ vec2 refract(const vec2 &i, const vec2 &n, float eta);
 vec2 rotate(const vec2 &u, float angle);
 // ----------------------------------------------------------------------------------------------------------------------------
 
-class vec3;
-class vec3int
-{
-public:
-	vec3int() : x(0), y(0), z(0) {}
-	vec3int(int xx, int yy, int zz) : x(xx), y(yy), z(zz) {}
-	vec3int(vec3 vecf) : x(vecf.x), y(vecf.y), z(vecf.z) {}
-	~vec3int() {}
-	union {
-		struct { int x, y, z; };
-		struct { int i, j, k; };
-	};
-};
-
-// ----------------------------------------------------------------------------------------------------------------------------
-
 class vec3
 {
 public:
@@ -157,6 +141,20 @@ vec3 Min(const vec3 &a, const vec3 &b);
 vec3 Max(const vec3 &a, const vec3 &b);
 
 void round_vector(vec3 &dest, const vec3 vec, float roundfactor);
+// ----------------------------------------------------------------------------------------------------------------------------
+
+class vec3int
+{
+public:
+	vec3int() : x(0), y(0), z(0) {}
+	vec3int(int xx, int yy, int zz) : x(xx), y(yy), z(zz) {}
+	vec3int(vec3 vecf) : x(vecf.x), y(vecf.y), z(vecf.z) {}
+	~vec3int() {}
+	union {
+		struct { int x, y, z; };
+		struct { int i, j, k; };
+	};
+};
 // ----------------------------------------------------------------------------------------------------------------------------
 
 class vec4

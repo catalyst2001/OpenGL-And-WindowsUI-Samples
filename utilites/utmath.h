@@ -158,7 +158,7 @@ float length2(const CVector3 &u)
 //	return *(CVector3*)&(rotate(angle, v) * vec4(u, 1.0f));
 //}
 
-void Draw3DSGrid()
+static void Draw3DSGrid()
 {
 	// Turn the lines GREEN
 	glColor3ub(0, 255, 0);
@@ -180,6 +180,83 @@ void Draw3DSGrid()
 		// Stop drawing lines
 		glEnd();
 	}
+}
+
+static void DrawAxis()
+{
+	glBegin(GL_LINES);
+	glColor3ub(255, 0, 0);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(1.f, 0.f, 0.f);
+	glColor3ub(0, 255, 0);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 1.f, 0.f);
+	glColor3ub(0, 0, 255);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 1.f);
+	glEnd();
+}
+
+static void DrawBBox(vec3 min, vec3 max)
+{
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(min.x, min.y, min.z);
+	glVertex3f(max.x, min.y, min.z);
+	glVertex3f(max.x, min.y, max.z);
+	glVertex3f(min.x, min.y, max.z);
+	glEnd();
+
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(min.x, max.y, min.z);
+	glVertex3f(max.x, max.y, min.z);
+	glVertex3f(max.x, max.y, max.z);
+	glVertex3f(min.x, max.y, max.z);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glVertex3f(min.x, min.y, min.z);
+	glVertex3f(min.x, max.y, min.z);
+
+	glVertex3f(max.x, min.y, min.z);
+	glVertex3f(max.x, max.y, min.z);
+
+	glVertex3f(max.x, min.y, max.z);
+	glVertex3f(max.x, max.y, max.z);
+
+	glVertex3f(min.x, min.y, max.z);
+	glVertex3f(min.x, max.y, max.z);
+	glEnd();
+}
+
+static void DrawBBox(vec3int min, vec3int max)
+{
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(min.x, min.y, min.z);
+	glVertex3f(max.x, min.y, min.z);
+	glVertex3f(max.x, min.y, max.z);
+	glVertex3f(min.x, min.y, max.z);
+	glEnd();
+
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(min.x, max.y, min.z);
+	glVertex3f(max.x, max.y, min.z);
+	glVertex3f(max.x, max.y, max.z);
+	glVertex3f(min.x, max.y, max.z);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glVertex3f(min.x, min.y, min.z);
+	glVertex3f(min.x, max.y, min.z);
+
+	glVertex3f(max.x, min.y, min.z);
+	glVertex3f(max.x, max.y, min.z);
+
+	glVertex3f(max.x, min.y, max.z);
+	glVertex3f(max.x, max.y, max.z);
+
+	glVertex3f(min.x, min.y, max.z);
+	glVertex3f(min.x, max.y, max.z);
+	glEnd();
 }
 
 //поверхность
