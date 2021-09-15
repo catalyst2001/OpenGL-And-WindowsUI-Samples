@@ -184,6 +184,7 @@ static void Draw3DSGrid()
 
 static void DrawAxis()
 {
+	glPushAttrib(GL_CURRENT_BIT);
 	glBegin(GL_LINES);
 	glColor3ub(255, 0, 0);
 	glVertex3f(0.f, 0.f, 0.f);
@@ -195,6 +196,7 @@ static void DrawAxis()
 	glVertex3f(0.f, 0.f, 0.f);
 	glVertex3f(0.f, 0.f, 1.f);
 	glEnd();
+	glPopAttrib();
 }
 
 static void DrawBBox(vec3 min, vec3 max)

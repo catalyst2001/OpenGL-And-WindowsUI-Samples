@@ -80,6 +80,7 @@ public:
 	vec3(float x, float y, float z) : x(x), y(y), z(z){}
 	vec3(const vec2 &u, float z) : x(u.x), y(u.y), z(z){}
 	vec3(const vec3 &u) : x(u.x), y(u.y), z(u.z){}
+	vec3(int xx, int yy, int zz) : x(xx), y(yy), z(zz){}
 	vec3& operator = (const vec3 &u){x = u.x; y = u.y; z = u.z; return *this;}
 	vec3 operator - (){return vec3(-x, -y, -z);}
 	float* operator & (){return (float*)this;}

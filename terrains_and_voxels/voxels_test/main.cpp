@@ -13,6 +13,7 @@
 #include "SimplexNoise.h"
 
 #include "voxel.h"
+#include "CWorldGenerator.h"
 
 INT Width, Height;
 
@@ -25,6 +26,8 @@ struct Triangle {
 
 CCamera cam(45.f, vec3(5.f, 5.f, 5.f));
 CChunk chunk;
+
+//CWorldGenerator worldgen;
 
 void fn_draw()
 {
@@ -44,6 +47,10 @@ void fn_draw()
 	//ray.SetDirection(cam.m_vecDirection);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
+	//CChunk *chunks = worldgen.m_pChunks;
+	//for (int i = 0; i < worldgen.m_nNumOfChunks; i++)
+	//	chunks[i].DrawMesh();
+
 	chunk.DrawMesh();
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
@@ -167,9 +174,11 @@ void fn_windowcreate(HWND hWnd)
 			voxels[COORD2OFFSET2(chunk.GetChunkWidth(), chunk.GetChunkHeight(), x, 2, z)].SetFlag(VOXEL_FLAG_AIR);
 
 	//одна дырка внутри чанка
-	voxels[COORD2OFFSET2(chunk.GetChunkWidth(), chunk.GetChunkHeight(), 2, 5, 2)].SetFlag(VOXEL_FLAG_AIR);
+	voxels[COORD2OFFSET2(chunk.GetChunkWidth(), chunk.GetChunkHeight(), 2, 50, 2)].SetFlag(VOXEL_FLAG_AIR);
 
 	chunk.RebuildMesh();
+
+	//worldgen.Init(32, 250, 10);
 }
 
 void fn_windowclose(HWND hWnd)

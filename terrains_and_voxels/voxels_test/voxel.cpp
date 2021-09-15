@@ -359,7 +359,7 @@ int CChunk::GetNumberVoxels()
 	return m_nWidth * m_nHeight * m_nWidth;
 }
 
-CVoxel *CChunk::FindVoxel(int x, int y, int z)
+CVoxel *CChunk::VoxelAt(int x, int y, int z)
 {
 	//check chunk coordinates bounds
 	if (x < m_ChunkPos.x || y < m_ChunkPos.y || z < m_ChunkPos.z)
@@ -371,12 +371,18 @@ CVoxel *CChunk::FindVoxel(int x, int y, int z)
 	return &m_pVoxels[COORD2OFFSET2(m_nWidth, m_nHeight, x, y, z)];
 }
 
-inline bool CChunk::HasIdle()
+vec3int CChunk::GlobalCoordsToLocal(vec3int &gc)
+{
+	vec3int res;
+	return res;
+}
+
+bool CChunk::HasIdle()
 {
 	return m_bIdle;
 }
 
-inline void CChunk::MarkIdle(bool idle)
+void CChunk::MarkIdle(bool idle)
 {
 	m_bIdle = idle;
 }
@@ -400,7 +406,7 @@ void CChunk::MarchCube(vec3 min_corner_pos)
 		//если воксель есть и он твердый, этот угол будет считаться в конфигурации куба
 		//также проверяем, не вышли ли мы за предел чанка по высоте
 		//границы по x и z не проверяем, потому что нет смысла рисовать сетку на гранях чанка
-		CVoxel *pvox = FindVoxel(res.x, res.y, res.z);
+		CVoxel *pvox = VoxelAt(res.x, res.y, res.z);
 		if (res.y < m_vecMax.y && pvox && pvox->IsSolid())
 			caseIndex |= 1 << i;
 	}
@@ -417,8 +423,9 @@ void CChunk::MarchCube(vec3 min_corner_pos)
 			if (edgeCase == -1)
 				return;
 
-			vec3 vert1 = min_corner_pos + edgeVertexOffsets[edgeCase][0]; // beginning of the edge
-			vec3 vert2 = min_corner_pos + edgeVertexOffsets[edgeCase][1]; // end of the edge
+			//vec3 chunkPosition = vec3(m_ChunkPos.x, m_ChunkPos.y, m_ChunkPos.z);
+			vec3 vert1 = /*chunkPosition + */min_corner_pos + edgeVertexOffsets[edgeCase][0]; // beginning of the edge
+			vec3 vert2 = /*chunkPosition + */min_corner_pos + edgeVertexOffsets[edgeCase][1]; // end of the edge
 #ifndef USE_INTERP
 			vec3 vertPos = (vert1 + vert2) / 2.0f; // non interpolated version - in the middle of the edge
 			m_vertices.push_back(vertPos);
@@ -455,10 +462,10 @@ void CChunk::DrawMesh()
 	}
 
 	//draw debug voxels
-	if (m_nDDVoxels) {
-		glVertexPointer(3, GL_FLOAT, 0, m_vertices.data());
-		glDrawArrays(GL_POINTS, 0, (m_nWidth * m_nHeight * m_nWidth));
-	}
+	//if (m_nDDVoxels) {
+	//	glVertexPointer(3, GL_FLOAT, 0, m_vertices.data());
+	//	glDrawArrays(GL_POINTS, 0, (m_nWidth * m_nHeight * m_nWidth));
+	//}
 
 	//draw debug voxels cubes
 	if (m_nDDCubes) {

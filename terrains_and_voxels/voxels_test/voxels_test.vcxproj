@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\utilites\glmath.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="CWorldGenerator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="marchingcubes.cpp" />
     <ClCompile Include="marching_cubes3.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="..\..\utilites\glmath.h" />
     <ClInclude Include="..\..\utilites\utmath.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="CWorldGenerator.h" />
     <ClInclude Include="marchingcubes.h" />
     <ClInclude Include="marching_cubes3.h" />
     <ClInclude Include="marching_cubes4.h" />

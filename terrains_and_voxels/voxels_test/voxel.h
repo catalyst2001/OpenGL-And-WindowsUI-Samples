@@ -127,13 +127,14 @@ public:
 	int GetChunkHeight();
 	int GetNumberVoxels();
 	CVoxel *GetVoxels();
-	CVoxel *FindVoxel(int x, int y, int z);
+	CVoxel *VoxelAt(int x, int y, int z);
+	vec3int GlobalCoordsToLocal(vec3int &gc);
 
 	/**
 	* For world manager
 	*/
-	inline bool HasIdle();
-	inline void MarkIdle(bool idle);
+	bool HasIdle();
+	void MarkIdle(bool idle);
 
 	/**
 	* Unsafe functions!
