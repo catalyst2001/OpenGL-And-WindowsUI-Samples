@@ -112,11 +112,15 @@ public:
 	inline bool operator >= (vec3 &v) { return x >= v.x && y >= v.y && z >= v.z; }
 	inline void operator ()(float _x, float _y, float _z) { x = _x; y = _y; z = _z; }
 	inline void operator ()(vec3 v) { x = v.x; y = v.y; z = v.z; }
+	inline float operator[](int i) { return v[i]; }
+
+	vec3 inverse() { return vec3(-x, -y, -z); }
 
 	union {
 		struct { float x, y, z; };
 		struct { float s, t, p; };
 		struct { float r, g, b; };
+		struct { float v[3]; };
 	};
 };
 

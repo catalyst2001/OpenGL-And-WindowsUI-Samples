@@ -15,6 +15,7 @@
 #include "voxel.h"
 #include "CWorldGenerator.h"
 
+GLUquadric *quadric;
 INT Width, Height;
 
 bool b_active_camera = true;
@@ -25,14 +26,38 @@ struct Triangle {
 };
 
 CCamera cam(45.f, vec3(5.f, 5.f, 5.f));
-CChunk chunk;
+//CChunk chunk;
 
-//CWorldGenerator worldgen;
+CWorldGenerator worldgen;
+
+CAABB aabb(-10, -10, -10, 5);
+CAABB viewaabb;
+CRay ray;
 
 void fn_draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
+
+	//прицел -->
+	glDisable(GL_DEPTH);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	gluOrtho2D(0, Width, 0, Height);
+	glPointSize(2);
+	glBegin(GL_POINTS);
+	glVertex2i(Width >> 1, Height >> 1);
+	glEnd();
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	glPointSize(1);
+	glEnable(GL_DEPTH);
+	//<---
 
 	if(b_active_camera)
 		cam.UpdateCameraState();
@@ -42,16 +67,58 @@ void fn_draw()
 
 	DrawAxis();
 
-	//CRay ray;
-	//ray.SetOrigin(cam.m_vecOrigin);
-	//ray.SetDirection(cam.m_vecDirection);
+	ray.SetOrigin(cam.m_vecOrigin);
+	ray.SetDirection(cam.m_vecDirection);
+
+	//calculate view aabb position from direction and origin vector
+	float aabb_size = 2.5f;
+	float distance = 60.f;
+	viewaabb.Min = ray.m_origin + normalize(ray.m_direction) * distance;
+	viewaabb.Max = vec3(viewaabb.Min.x + aabb_size, viewaabb.Min.y + aabb_size, viewaabb.Min.z + aabb_size);
+
+	glPushAttrib(GL_CURRENT_BIT);
+	glColor3ub(0, 255, 0);
+	float outmin, outmax;
+	//if (ray_aabb_intersection(ray, aabb.Min, aabb.Max, &outmin, &outmax)) {
+	if (aabb.RayIntersect(ray, &outmin, &outmax)) {
+		vec3 mmin = ray.Evaluate(outmin);
+		vec3 mmax = ray.Evaluate(outmax);
+		glColor3ub(255, 0, 0);
+
+		glPushMatrix();
+		glTranslatef(mmin.x, mmin.y, mmin.z);
+		gluSphere(quadric, 0.1, 10, 10);
+		glPopMatrix();
+
+		//glPushMatrix();
+		//glTranslatef(mmax.x, mmax.y, mmax.z);
+		//gluSphere(quadric, 0.3, 10, 10);
+		//glPopMatrix();
+	}
+	aabb.Draw();
+	glPopAttrib();
+
+	glPushAttrib(GL_CURRENT_BIT);
+	if (aabb.BboxInside(viewaabb)) {
+		glColor3ub(255, 0, 0);
+	}
+
+	viewaabb.Draw();
+	glPopAttrib();
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	//CChunk *chunks = worldgen.m_pChunks;
-	//for (int i = 0; i < worldgen.m_nNumOfChunks; i++)
-	//	chunks[i].DrawMesh();
+	CChunk *chunks = worldgen.m_pChunks;
+	for (int i = 0; i < worldgen.m_nNumOfChunks; i++) {
+		//glPushMatrix();
+		//glTranslatef(chunks->m_ChunkPos.x, chunks->m_ChunkPos.y, chunks->m_ChunkPos.z);
+		chunks[i].DrawMesh();
+		//if (aabb.RayIntersect(ray, NULL, NULL)) {
+			
+		//}
+		//glPopMatrix();
+	}
 
-	chunk.DrawMesh();
+	//chunk.DrawMesh();
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
@@ -77,8 +144,21 @@ void fn_mousemove(HWND hWnd, int x, int y)
 {
 }
 
+DWORD WINAPI Kopat(LPVOID param)
+{
+	worldgen.m_pChunks[0].RebuildMesh();
+	printf("Voxel destroyed!\n");
+	return 0;
+}
+
 void fn_mouseclick(HWND hWnd, int x, int y, int button, int state)
 {
+	if (button == LBUTTON && state == KEY_DOWN) {
+		if (worldgen.m_pChunks[0].DestroyVoxelByRay(ray)) {
+			CreateThread(0, 0, Kopat, 0, 0, 0);
+		}
+		printf("Ne robit!\n");
+	}
 }
 
 void fn_charinput(HWND hWnd, char symbol)
@@ -157,28 +237,36 @@ void fn_windowcreate(HWND hWnd)
 	glEnable(GL_DEPTH_TEST);
 	ShowCursor(!b_active_camera);
 
+	quadric = gluNewQuadric();
 	glPointSize(2);
-	chunk.Init(vec3int(0, 0, 0), 32, 250, VOXEL_FLAG_SOLID);
-	chunk.DebugDraw_ChunkBounds(true);
-	CVoxel *voxels = chunk.GetVoxels();
+	//chunk.Init(vec3int(0, 0, 0), 16, 250, VOXEL_FLAG_SOLID);
+	//chunk.DebugDraw_ChunkBounds(true);
+	//CVoxel *voxels = chunk.GetVoxels();
 
-	//прорыл вертикальную дыру от центра до самого верха
-	for (int y = chunk.GetChunkHeight() / 2; y < chunk.GetChunkHeight(); y++)
-		for (int x = chunk.GetChunkWidth() / 2; x < chunk.GetChunkWidth() - 5; x++)
-			for (int z = chunk.GetChunkWidth() / 2; z < chunk.GetChunkWidth() - 5; z++)
-				voxels[COORD2OFFSET2(chunk.GetChunkWidth(), chunk.GetChunkHeight(), x, y, z)].SetFlag(VOXEL_FLAG_AIR);
+	////прорыл вертикальную дыру от центра до самого верха
+	//for (int y = chunk.GetChunkHeight() / 2; y < chunk.GetChunkHeight(); y++)
+	//	for (int x = chunk.GetChunkWidth() / 2; x < chunk.GetChunkWidth() - 5; x++)
+	//		for (int z = chunk.GetChunkWidth() / 2; z < chunk.GetChunkWidth() - 5; z++)
+	//			voxels[COORD2OFFSET2(chunk.GetChunkWidth(), chunk.GetChunkHeight(), x, y, z)].SetFlag(VOXEL_FLAG_AIR);
 
-	//прорыл внизу дыру до обоих граней чанка
-	for (int x = 0 / 2; x < chunk.GetChunkWidth() - 5; x++)
-		for (int z = 0 / 2; z < chunk.GetChunkWidth() - 5; z++)
-			voxels[COORD2OFFSET2(chunk.GetChunkWidth(), chunk.GetChunkHeight(), x, 2, z)].SetFlag(VOXEL_FLAG_AIR);
+	////прорыл внизу дыру до обоих граней чанка
+	//for (int x = 0 / 2; x < chunk.GetChunkWidth() - 5; x++)
+	//	for (int z = 0 / 2; z < chunk.GetChunkWidth() - 5; z++)
+	//		voxels[COORD2OFFSET2(chunk.GetChunkWidth(), chunk.GetChunkHeight(), x, 2, z)].SetFlag(VOXEL_FLAG_AIR);
 
-	//одна дырка внутри чанка
-	voxels[COORD2OFFSET2(chunk.GetChunkWidth(), chunk.GetChunkHeight(), 2, 50, 2)].SetFlag(VOXEL_FLAG_AIR);
+	////одна дырка внутри чанка
+	//voxels[COORD2OFFSET2(chunk.GetChunkWidth(), chunk.GetChunkHeight(), 2, 50, 2)].SetFlag(VOXEL_FLAG_AIR);
 
-	chunk.RebuildMesh();
+	//chunk.RebuildMesh();
 
-	//worldgen.Init(32, 250, 10);
+	worldgen.Init(32, 16, 4);
+
+	for(int y = 5; y < 10; y++)
+		for(int x = 5; x < 10; x++)
+			for(int z = 5; z < 10; z++)
+				worldgen.m_pChunks[0].VoxelAt(x, y, z)->SetFlag(VOXEL_FLAG_AIR);
+
+	worldgen.m_pChunks[0].RebuildMesh();
 }
 
 void fn_windowclose(HWND hWnd)

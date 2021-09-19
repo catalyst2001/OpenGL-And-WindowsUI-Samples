@@ -343,104 +343,6 @@ public:
 };
 
 //ray
-enum rayintersecttypes {
-	RAY_INFINITY, //луч направлен в пустое пространство и ни с чем не пересекается
-	RAY_INTERSECT //луч что то пересек
-};
-
-//#define innerProduct(v,q) \
-//	((v)[0] * (q)[0] + \
-//	(v)[1] * (q)[1] + \
-//	(v)[2] * (q)[2])
-//
-//#define crossProduct(a,b,c) \
-//	(a)[0] = (b)[1] * (c)[2] - (c)[1] * (b)[2]; \
-//	(a)[1] = (b)[2] * (c)[0] - (c)[2] * (b)[0]; \
-//	(a)[2] = (b)[0] * (c)[1] - (c)[0] * (b)[1];
-//
-///* a = b - c */
-//#define vector(a,b,c) \
-//	(a)[0] = (b)[0] - (c)[0];	\
-//	(a)[1] = (b)[1] - (c)[1];	\
-//	(a)[2] = (b)[2] - (c)[2];
-//
-//static int rayIntersectsTriangle(float *p, float *d, float *v0, float *v1, float *v2) {
-//
-//	float e1[3], e2[3], h[3], s[3], q[3];
-//	float a, f, u, v;
-//	vector(e1, v1, v0);
-//	vector(e2, v2, v0);
-//
-//	crossProduct(h, d, e2);
-//	a = innerProduct(e1, h);
-//
-//	if (a > -0.00001 && a < 0.00001)
-//		return(false);
-//
-//	f = 1 / a;
-//	vector(s, p, v0);
-//	u = f * (innerProduct(s, h));
-//
-//	if (u < 0.0 || u > 1.0)
-//		return(false);
-//
-//	crossProduct(q, s, e1);
-//	v = f * innerProduct(d, q);
-//
-//	if (v < 0.0 || u + v > 1.0)
-//		return(false);
-//
-//	// at this stage we can compute t to find out where
-//	// the intersection point is on the line
-//	float t = f * innerProduct(e2, q);
-//
-//	if (t > 0.00001) // ray intersection
-//		return(true);
-//
-//	else // this means that there is a line intersection
-//		 // but not a ray intersection
-//		return (false);
-//
-//}
-
-class CAABB
-{
-	CAABB() {}
-	CAABB(vec3 vmin, vec3 vmax) : m_min(vmin), m_max(vmax) {}
-	CAABB(float x, float y, float z, float size) {
-		m_min = vec3(x, y, z);
-		m_max = vec3(x + size, y + size, z + size);
-	}
-	~CAABB() {}
-
-	void Draw() {
-		glBegin(GL_QUADS);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glEnd();
-
-		glBegin(GL_LINES);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glVertex3f(m_min.x, m_min.y, m_min.z);
-		glEnd();
-	}
-
-	vec3 m_min, m_max;
-};
-
 class CRay
 {
 public:
@@ -502,16 +404,8 @@ public:
 		return 0;
 	}
 
-	//intersectionpoint = m_origin + m_direction * t
-	vec3 ray_evaluate(const CRay& ray, float t)
-	{
-		/* o + d * t */
-		vec3 result = ray.m_direction * t;
-		result += ray.m_origin;
-		//vec3_scale(&result, &ray->dir, t);
-		//vec3_add(&result, &result, &ray->origin);
-		return result;
-	}
+	// point = origin + direction * t
+	vec3 Evaluate(float t) { return m_origin + m_direction * t; }
 
 	// Source Function Plane Intersection Test
 	//https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection
@@ -628,3 +522,87 @@ public:
 	vec3 m_direction;
 	float m_length;
 };
+
+class CAABB
+{
+public:
+	CAABB() {}
+	CAABB(vec3 vmin, vec3 vmax) : Min(vmin), Max(vmax) {}
+	CAABB(float x, float y, float z, float size) {
+		Min = vec3(x, y, z);
+		Max = vec3(x + size, y + size, z + size);
+	}
+	~CAABB() {}
+
+	void Draw() { DrawBBox(Min, Max); }
+	bool PointInside(vec3 &point) { return Min.x < point.x && Min.y < point.y && Min.z < point.z && Max.x > point.x && Max.y > point.y && Max.z > point.z; }
+	bool BboxInside(CAABB &bbox) { return Min < bbox.Min && Max > bbox.Max; }
+
+	bool RayIntersect(CRay &ray, float *ptmin, float *ptmax) {
+		double tmin = -INFINITY, tmax = INFINITY;
+		for (int i = 0; i < 3; ++i) {
+			if (ray.m_direction[i] != 0.0) {
+				double t1 = (Min[i] - ray.m_origin[i]) / ray.m_direction[i];
+				double t2 = (Max[i] - ray.m_origin[i]) / ray.m_direction[i];
+
+				tmin = max(tmin, min(t1, t2));
+				tmax = min(tmax, max(t1, t2));
+			}
+			else if (ray.m_origin[i] < Min[i] || ray.m_origin[i] > Max[i])
+				return false;
+		}
+
+		if (ptmin)
+			*ptmin = tmin;
+
+		if (ptmax)
+			*ptmax = tmax;
+
+		return tmax >= tmin && tmax >= 0.0;
+	}
+
+	vec3 Min, Max;
+};
+
+//https://tavianator.com/2011/ray_box.html
+//https://tavianator.com/2015/ray_box_nan.html
+//не проверено
+static bool aabb_intersection1(CAABB &b, CRay &r) {
+	double t1, t2, tmin = -INFINITY, tmax = INFINITY;
+	vec3 dir_inv = r.m_direction.inverse();
+	t1 = (b.Min.x - r.m_origin.x) * dir_inv.x;
+	t2 = (b.Max.x - r.m_origin.x) * dir_inv.x;
+	tmin = max(tmin, min(t1, t2));
+	tmax = min(tmax, max(t1, t2));
+
+	t1 = (b.Min.y - r.m_origin.y) * dir_inv.y;
+	t2 = (b.Max.y - r.m_origin.y) * dir_inv.y;
+	tmin = max(tmin, min(t1, t2));
+	tmax = min(tmax, max(t1, t2));
+
+	t1 = (b.Min.z - r.m_origin.z) * dir_inv.z;
+	t2 = (b.Max.z - r.m_origin.z) * dir_inv.z;
+	tmin = max(tmin, min(t1, t2));
+	tmax = min(tmax, max(t1, t2));
+
+	return tmax > max(tmin, 0.0);
+}
+
+//OK
+static bool aabb_intersection2(CAABB &b, CRay &ray, float *ptmin, float *ptmax) {
+	double tmin = -INFINITY, tmax = INFINITY;
+	for (int i = 0; i < 3; ++i) {
+		if (ray.m_direction[i] != 0.0) {
+			double t1 = (b.Min[i] - ray.m_origin[i]) / ray.m_direction[i];
+			double t2 = (b.Max[i] - ray.m_origin[i]) / ray.m_direction[i];
+
+			tmin = max(tmin, min(t1, t2));
+			tmax = min(tmax, max(t1, t2));
+		}
+		else if (ray.m_origin[i] < b.Min[i] || ray.m_origin[i] > b.Max[i])
+			return false;
+	}
+	*ptmin = tmin;
+	*ptmax = tmax;
+	return tmax >= tmin && tmax >= 0.0;
+}

@@ -361,20 +361,39 @@ int CChunk::GetNumberVoxels()
 
 CVoxel *CChunk::VoxelAt(int x, int y, int z)
 {
-	//check chunk coordinates bounds
-	if (x < m_ChunkPos.x || y < m_ChunkPos.y || z < m_ChunkPos.z)
+	//проверяем, не выходим ли мы за пределы чанка по координатам,
+	if (x < 0 || y < 0 || z < 0)
 		return NULL;
 
-	if (x > m_ChunkPos.x + m_nWidth || y > m_ChunkPos.y + m_nHeight || z > m_ChunkPos.z + m_nWidth)
+	//иначе мы выйдем за пределы памяти с вокселями
+	//максимальная координата может быть от 0 до m_nWidth-1. Аналогично и с высотой
+	if (x > m_nWidth || y > m_nHeight || z > m_nWidth)
 		return NULL;
 
 	return &m_pVoxels[COORD2OFFSET2(m_nWidth, m_nHeight, x, y, z)];
 }
 
-vec3int CChunk::GlobalCoordsToLocal(vec3int &gc)
+bool CChunk::DestroyVoxelByRay(CRay &ray, int voxflags)
 {
-	vec3int res;
-	return res;
+	int num_of_verts = m_vertices.size();
+	if (!num_of_verts)
+		return false;
+
+	vec3 intersection;
+	CVoxel *p_vox = NULL;
+	triangle_t *p_triangle = (triangle_t *)m_vertices.data();
+	int num_of_triangles = num_of_verts / 3;
+	for (int i = 0; i < num_of_triangles; i++) {
+		if (ray.TriangleIntersection(p_triangle[i].p[0], p_triangle[i].p[1], p_triangle[i].p[2], intersection)) {
+			round_vector(intersection, intersection, 1.f);
+			if ((p_vox = VoxelAt((int)intersection.x, (int)intersection.y, (int)intersection.z))) {
+				p_vox->SetFlag(voxflags);
+				return true;
+			}
+			return false;
+		}
+	}
+	return false;
 }
 
 bool CChunk::HasIdle()
@@ -399,14 +418,13 @@ void CChunk::MarchCube(vec3 min_corner_pos)
 	int caseIndex = 0;
 	for (int i = 0; i < 8; i++) {
 		vec3 res = min_corner_pos + cornerOffsets[i];
-		if (res.z >= m_ChunkPos.z + m_nWidth || res.x >= m_ChunkPos.x + m_nWidth)
-			continue;
 
 		//в координате угла куба, ищем соседний воксель и проверяем, есть ли он и является ли он твердым
 		//если воксель есть и он твердый, этот угол будет считаться в конфигурации куба
 		//также проверяем, не вышли ли мы за предел чанка по высоте
 		//границы по x и z не проверяем, потому что нет смысла рисовать сетку на гранях чанка
 		CVoxel *pvox = VoxelAt(res.x, res.y, res.z);
+
 		if (res.y < m_vecMax.y && pvox && pvox->IsSolid())
 			caseIndex |= 1 << i;
 	}
@@ -477,17 +495,9 @@ void CChunk::DrawMesh()
 
 void CChunk::BuildMesh()
 {
-	//цикл пробежки по всему чанку
-	//высота остается той же, а вот ширина на один меньше
-	//потому, что если мы будем считать крайние воксели, мы выйдем за пределы чанка по углам марширующего куба
-	//следовательно появится не нужная нам сетка на границе чанка, потому что левые углы куба будут лежать в чанке, а остальные 4 правых угла получат NULL вместо соседа, 
-	//потому что соседних вокселей за пределами чанка не может быть, и по координатам вы выйдем за пределы массива вокселей
-
-	//TODO: нужно решить проблему с m_nWidth - 1. Выше описал для чего это было сделано, но я не могу сказать что это самый оптимальный вариант,
-	//потому что мы всегда имеем на границе количество m_nWidth * m_nHeight вокселей, которые не используются. Можем сэкономить памяти
 	for (int y = 0; y < m_nHeight; y++)
-		for (int z = 0; z < m_nWidth - 1; z++)
-			for (int x = 0; x < m_nWidth - 1; x++)
+		for (int z = 0; z < m_nWidth; z++)
+			for (int x = 0; x < m_nWidth; x++)
 				MarchCube(vec3(x, y, z));
 }
 
@@ -528,7 +538,9 @@ int CChunk::Init(vec3int pos, int width, int height, int flags)
 	m_vecMax.x = pos.x + m_nWidth;
 	m_vecMax.y = pos.y + m_nHeight;
 	m_vecMax.z = pos.z + m_nWidth;
-	return AllocVoxels(m_nWidth, m_nHeight, flags);
+
+	//добавляем к ширине и высоте по 1, чтобы полностью заполнить все грани вокселями
+	return AllocVoxels(m_nWidth + 1, m_nHeight + 1, flags);
 }
 
 int CChunk::AllocVoxels(int width, int height, int flags)
@@ -539,8 +551,7 @@ int CChunk::AllocVoxels(int width, int height, int flags)
 		return 0;
 	
 	//if (flags)
-		memset(m_pVoxels, flags, size_in_bytes);
-
+	memset(m_pVoxels, flags, size_in_bytes);
 	return 1;
 }
 

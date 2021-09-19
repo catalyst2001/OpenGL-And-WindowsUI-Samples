@@ -14,6 +14,10 @@ struct vec3_compressed {
 	char x, y, z;
 };
 
+struct triangle_t {
+	vec3 p[3];
+};
+
 struct voxel {
 	char flags;
 	//vec3_compressed pos;
@@ -128,7 +132,11 @@ public:
 	int GetNumberVoxels();
 	CVoxel *GetVoxels();
 	CVoxel *VoxelAt(int x, int y, int z);
-	vec3int GlobalCoordsToLocal(vec3int &gc);
+
+	/**
+	* Building/destroying voxels
+	*/
+	bool DestroyVoxelByRay(CRay &ray, int voxflags = VOXEL_FLAG_AIR);
 
 	/**
 	* For world manager
@@ -163,10 +171,10 @@ public:
 	bool m_nDDCubes;
 #endif
 
-private:
-	bool m_bIdle;
 	vec3int m_ChunkPos;
 	vec3int m_vecMax;
+private:
+	bool m_bIdle;
 	int m_nWidth, m_nHeight;
 	CVoxel *m_pVoxels;
 	std::vector<vec3> m_vertices;
