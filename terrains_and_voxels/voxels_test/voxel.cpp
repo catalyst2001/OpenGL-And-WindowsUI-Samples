@@ -373,6 +373,29 @@ CVoxel *CChunk::VoxelAt(int x, int y, int z)
 	return &m_pVoxels[COORD2OFFSET2(m_nWidth, m_nHeight, x, y, z)];
 }
 
+vec3 TriangleNearPoint2(vec3 &p0, vec3 &p1, vec3 &p2, vec3 &point)
+{
+	vec3 verts[] = { p0 , p1 , p2 };
+	float dist[3];
+	dist[0] = distance(p0, point);
+	dist[1] = distance(p1, point);
+	dist[2] = distance(p2, point);
+	if (dist[0] < dist[1]) {
+		if (dist[0] < dist[2]) {
+			return verts[0];
+		}
+		else {
+			return verts[2];
+		}
+	}
+	else if (dist[1] < dist[2]) {
+		return verts[1];
+	}
+	else {
+		return verts[2];
+	}
+}
+
 bool CChunk::DestroyVoxelByRay(CRay &ray, int voxflags)
 {
 	int num_of_verts = m_vertices.size();
@@ -385,6 +408,7 @@ bool CChunk::DestroyVoxelByRay(CRay &ray, int voxflags)
 	int num_of_triangles = num_of_verts / 3;
 	for (int i = 0; i < num_of_triangles; i++) {
 		if (ray.TriangleIntersection(p_triangle[i].p[0], p_triangle[i].p[1], p_triangle[i].p[2], intersection)) {
+			intersection = TriangleNearPoint2(p_triangle[i].p[0], p_triangle[i].p[1], p_triangle[i].p[2], intersection);
 			round_vector(intersection, intersection, 1.f);
 			if ((p_vox = VoxelAt((int)intersection.x, (int)intersection.y, (int)intersection.z))) {
 				p_vox->SetFlag(voxflags);

@@ -13,6 +13,7 @@
     <ClCompile Include="mem.cpp" />
     <ClCompile Include="marching_cubes4.cpp" />
     <ClCompile Include="CWorldGenerator.cpp" />
+    <ClCompile Include="..\..\utilites\CBitmapFont.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="marching_cubes3.h" />
@@ -27,6 +28,7 @@
     <ClInclude Include="mem.h" />
     <ClInclude Include="marching_cubes4.h" />
     <ClInclude Include="CWorldGenerator.h" />
+    <ClInclude Include="..\..\utilites\CBitmapFont.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="camera">

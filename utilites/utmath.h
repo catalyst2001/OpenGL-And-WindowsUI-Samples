@@ -261,6 +261,19 @@ static void DrawBBox(vec3int min, vec3int max)
 	glEnd();
 }
 
+static float last_time = 0;
+
+static int FrameRate()
+{
+	//static float last_time = GetTickCount() * 0.001f;
+	float current_time = (float)GetTickCount()/* * 0.001f*/;
+	
+	float deltaTime = fabs(current_time - last_time);
+	last_time = current_time;
+	int fps = (int)1.0f / deltaTime;
+	return fps;
+}
+
 //поверхность
 //3d plane at 4 points
 class CRect3

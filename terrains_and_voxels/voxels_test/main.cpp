@@ -9,6 +9,7 @@
 #include "../../utilites/utmath.h"
 
 #include "camera.h"
+#include "../../utilites/CBitmapFont.h"
 
 #include "SimplexNoise.h"
 
@@ -17,6 +18,8 @@
 
 GLUquadric *quadric;
 INT Width, Height;
+
+#include <time.h>
 
 bool b_active_camera = true;
 bool b_draw_voxels = false;
@@ -34,11 +37,24 @@ CAABB aabb(-10, -10, -10, 5);
 CAABB viewaabb;
 CRay ray;
 
+font_t font;
+
+double prev_time;
+
+double TimeGetSeconds()
+{
+	LARGE_INTEGER frequency, time;
+	QueryPerformanceFrequency(&frequency);
+	QueryPerformanceCounter(&time);
+	return time.QuadPart / (double)frequency.QuadPart;
+}
+
 void fn_draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
+	glEnableClientState(GL_VERTEX_ARRAY);
 	//прицел -->
 	glDisable(GL_DEPTH);
 	glMatrixMode(GL_MODELVIEW);
@@ -52,13 +68,22 @@ void fn_draw()
 	glBegin(GL_POINTS);
 	glVertex2i(Width >> 1, Height >> 1);
 	glEnd();
+
+	//get current fps
+	double current_time = TimeGetSeconds();
+	double delta = (current_time - prev_time);
+	double fps = 1.0 / delta;
+	glEnable(GL_TEXTURE_2D);
+	Print(&font, 100, 100, "fps: %f");
+	glDisable(GL_TEXTURE_2D);
+
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 	glPointSize(1);
 	glEnable(GL_DEPTH);
 	//<---
-
+	
 	if(b_active_camera)
 		cam.UpdateCameraState();
 
@@ -98,15 +123,15 @@ void fn_draw()
 	aabb.Draw();
 	glPopAttrib();
 
-	glPushAttrib(GL_CURRENT_BIT);
-	if (aabb.BboxInside(viewaabb)) {
-		glColor3ub(255, 0, 0);
-	}
+	//glPushAttrib(GL_CURRENT_BIT);
+	//if (aabb.BboxInside(viewaabb)) {
+	//	glColor3ub(255, 0, 0);
+	//}
 
-	viewaabb.Draw();
-	glPopAttrib();
+	//viewaabb.Draw();
+	//glPopAttrib();
 
-	glEnableClientState(GL_VERTEX_ARRAY);
+	
 	CChunk *chunks = worldgen.m_pChunks;
 	for (int i = 0; i < worldgen.m_nNumOfChunks; i++) {
 		//glPushMatrix();
@@ -120,6 +145,7 @@ void fn_draw()
 
 	//chunk.DrawMesh();
 	glDisableClientState(GL_VERTEX_ARRAY);
+	prev_time = current_time;
 }
 
 void fn_window_resize(HWND hWnd, int width, int height)
@@ -236,6 +262,11 @@ void fn_windowcreate(HWND hWnd)
 	glLoadIdentity();
 	glEnable(GL_DEPTH_TEST);
 	ShowCursor(!b_active_camera);
+	prev_time = TimeGetSeconds();
+
+	unsigned int tex;
+	CreateTextureBMP(tex, "font.bmp");
+	init_font(&font, tex, 16);
 
 	quadric = gluNewQuadric();
 	glPointSize(2);
