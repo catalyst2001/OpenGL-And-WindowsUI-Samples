@@ -441,7 +441,18 @@ void CChunk::MarchCube(vec3 min_corner_pos)
 	// construct case index from 8 corner samples
 	int caseIndex = 0;
 	for (int i = 0; i < 8; i++) {
-		vec3 res = min_corner_pos + cornerOffsets[i];
+		
+		//комментировано 04.10.2021
+		//vec3 res = min_corner_pos + cornerOffsets[i];
+
+		//добавлено 04.10.2021
+		//вычисляем локальную координату внутри чанка из глобальной координаты
+		//Lp - локальная точка
+		//Gp - глобальная точка
+		//Min - вектор минимума
+		//формула: Lp = Gp - Min
+		vec3 localpoint = min_corner_pos - vec3(m_ChunkPos.x, m_ChunkPos.y, m_ChunkPos.z);
+		vec3 res = localpoint + cornerOffsets[i];
 
 		//в координате угла куба, ищем соседний воксель и проверяем, есть ли он и является ли он твердым
 		//если воксель есть и он твердый, этот угол будет считаться в конфигурации куба
@@ -465,16 +476,25 @@ void CChunk::MarchCube(vec3 min_corner_pos)
 			if (edgeCase == -1)
 				return;
 
+			// Commented 04.10.2021 --->
 			//vec3 chunkPosition = vec3(m_ChunkPos.x, m_ChunkPos.y, m_ChunkPos.z);
-			vec3 vert1 = /*chunkPosition + */min_corner_pos + edgeVertexOffsets[edgeCase][0]; // beginning of the edge
-			vec3 vert2 = /*chunkPosition + */min_corner_pos + edgeVertexOffsets[edgeCase][1]; // end of the edge
+			//vec3 vert1 = /*chunkPosition + */min_corner_pos + edgeVertexOffsets[edgeCase][0]; // beginning of the edge
+			//vec3 vert2 = /*chunkPosition + */min_corner_pos + edgeVertexOffsets[edgeCase][1]; // end of the edge		
+			// <---
+
+			//добавлено 04.10.2021
+			//Думал что надо прибавлять к позиции минимума угла вектор минимума чанка
+			vec3 chunkPosition = vec3(m_ChunkPos.x, m_ChunkPos.y, m_ChunkPos.z);
+			vec3 vert1 = min_corner_pos + edgeVertexOffsets[edgeCase][0]; // beginning of the edge
+			vec3 vert2 = min_corner_pos + edgeVertexOffsets[edgeCase][1]; // end of the edge
+
 #ifndef USE_INTERP
 			vec3 vertPos = (vert1 + vert2) / 2.0f; // non interpolated version - in the middle of the edge
 			m_vertices.push_back(vertPos);
 #else
 				// interpolate along the edge
-			float s1 = /*SampleValue(*/length(minCornerPos + edgeVertexOffsets[edgeCase][0]);
-			float s2 = /*SampleValue(*/length(minCornerPos + edgeVertexOffsets[edgeCase][1]);
+			float s1 = /*SampleValue(*/length(min_corner_pos + edgeVertexOffsets[edgeCase][0]);
+			float s2 = /*SampleValue(*/length(min_corner_pos + edgeVertexOffsets[edgeCase][1]);
 			float dif = s1 - s2;
 			if (dif == 0.0f)
 				dif = 0.5f;
@@ -503,6 +523,15 @@ void CChunk::DrawMesh()
 		DrawBBox(m_ChunkPos, m_vecMax);
 	}
 
+	if (m_bDDLastSelectTri) {
+		glColor3ub(0, 0, 255);
+		glBegin(GL_TRIANGLES);
+		glVertex3f(m_LastSelectTriangle.p[0].x, m_LastSelectTriangle.p[0].y, m_LastSelectTriangle.p[0].z);
+		glVertex3f(m_LastSelectTriangle.p[1].x, m_LastSelectTriangle.p[1].y, m_LastSelectTriangle.p[1].z);
+		glVertex3f(m_LastSelectTriangle.p[2].x, m_LastSelectTriangle.p[2].y, m_LastSelectTriangle.p[2].z);
+		glEnd();
+	}
+
 	//draw debug voxels
 	//if (m_nDDVoxels) {
 	//	glVertexPointer(3, GL_FLOAT, 0, m_vertices.data());
@@ -519,16 +548,46 @@ void CChunk::DrawMesh()
 
 void CChunk::BuildMesh()
 {
+	//old (changed 04.10.2021)
+	/*
 	for (int y = 0; y < m_nHeight; y++)
 		for (int z = 0; z < m_nWidth; z++)
 			for (int x = 0; x < m_nWidth; x++)
 				MarchCube(vec3(x, y, z));
+	*/
+	for (int y = m_ChunkPos.y; y < m_vecMax.y; y++) {
+		for (int z = m_ChunkPos.z; z < m_vecMax.z; z++) {
+			for (int x = m_ChunkPos.x; x < m_vecMax.x; x++) {
+				MarchCube(vec3(x, y, z));
+			}
+		}
+	}
 }
 
 void CChunk::RebuildMesh()
 {
 	ClearMesh();
 	BuildMesh();
+}
+
+vec3 *CChunk::GetVertices()
+{
+	return m_vertices.data();
+}
+
+int *CChunk::GetIndices()
+{
+	return m_indices.data();
+}
+
+int CChunk::GetNumOfVertices()
+{
+	return m_vertices.size();
+}
+
+int CChunk::GetNumOfIndices()
+{
+	return m_indices.size();
 }
 
 #ifdef DEBUG_DRAW
@@ -545,6 +604,16 @@ void CChunk::DebugDraw_ChunkVoxels(bool b)
 void CChunk::DebugDraw_ChunkCubes(bool b)
 {
 	m_nDDCubes = b;
+}
+
+void CChunk::DebugDraw_LastSelectTriangle(bool b)
+{
+	m_bDDLastSelectTri = b;
+}
+
+void CChunk::DebugDraw_SetLastSelectTriangle(triangle_t &tri)
+{
+	m_LastSelectTriangle = tri;
 }
 
 #endif

@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{BB6F702B-2EB7-4A74-81AB-B22D7A361226}</ProjectGuid>
+    <ProjectGuid>{40798C4C-17AB-40B5-BC88-21608CEC1887}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>voxelstest</RootNamespace>
+    <RootNamespace>minecrafttest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -89,13 +89,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);DEBUG_DRAW</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -105,13 +104,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);DEBUG_DRAW</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,7 +121,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);DEBUG_DRAW</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -131,7 +129,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,7 +140,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);DEBUG_DRAW</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -151,39 +148,27 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\utilites\CBitmapFont.cpp" />
-    <ClCompile Include="..\..\utilites\glmath.cpp" />
-    <ClCompile Include="camera.cpp" />
-    <ClCompile Include="CChunksManager.cpp" />
-    <ClCompile Include="CWorldGenerator.cpp" />
+    <ClCompile Include="..\..\..\utilites\CBitmapFont.cpp" />
+    <ClCompile Include="..\..\..\utilites\glmath.cpp" />
+    <ClCompile Include="..\..\..\utilites\vector.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="marchingcubes.cpp" />
-    <ClCompile Include="marching_cubes3.cpp" />
-    <ClCompile Include="marching_cubes4.cpp" />
-    <ClCompile Include="mem.cpp" />
-    <ClCompile Include="SimplexNoise.cpp" />
-    <ClCompile Include="voxel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\utilites\CBitmapFont.h" />
-    <ClInclude Include="..\..\utilites\glmath.h" />
-    <ClInclude Include="..\..\utilites\utmath.h" />
-    <ClInclude Include="camera.h" />
-    <ClInclude Include="CChunksManager.h" />
-    <ClInclude Include="CWorldGenerator.h" />
-    <ClInclude Include="marchingcubes.h" />
-    <ClInclude Include="marching_cubes3.h" />
-    <ClInclude Include="marching_cubes4.h" />
-    <ClInclude Include="mem.h" />
-    <ClInclude Include="SimplexNoise.h" />
-    <ClInclude Include="voxel.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="old_main.txt" />
+    <ClInclude Include="..\..\..\utilites\camera_utils.h" />
+    <ClInclude Include="..\..\..\utilites\CBitmapFont.h" />
+    <ClInclude Include="..\..\..\utilites\glmath.h" />
+    <ClInclude Include="..\..\..\utilites\glutils.h" />
+    <ClInclude Include="..\..\..\utilites\glwin.h" />
+    <ClInclude Include="..\..\..\utilites\glwnd.h" />
+    <ClInclude Include="..\..\..\utilites\scene_rotation.h" />
+    <ClInclude Include="..\..\..\utilites\shapes_utils.h" />
+    <ClInclude Include="..\..\..\utilites\texture.h" />
+    <ClInclude Include="..\..\..\utilites\utmath.h" />
+    <ClInclude Include="..\..\..\utilites\vector.h" />
+    <ClInclude Include="..\..\..\utilites\vertex_types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

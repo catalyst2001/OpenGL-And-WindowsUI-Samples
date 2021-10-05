@@ -23,6 +23,7 @@ INT Width, Height;
 
 bool b_active_camera = true;
 bool b_draw_voxels = false;
+bool b_wire = true;
 
 struct Triangle {
 	vec3 p1, p2, p3;
@@ -179,11 +180,23 @@ DWORD WINAPI Kopat(LPVOID param)
 
 void fn_mouseclick(HWND hWnd, int x, int y, int button, int state)
 {
-	if (button == LBUTTON && state == KEY_DOWN) {
-		if (worldgen.m_pChunks[0].DestroyVoxelByRay(ray)) {
+	if (state == KEY_DOWN) {
+		if (button == LBUTTON && worldgen.m_pChunks[0].DestroyVoxelByRay(ray)) {
 			CreateThread(0, 0, Kopat, 0, 0, 0);
 		}
-		printf("Ne robit!\n");
+
+#ifdef DEBUG_DRAW
+		if (button == RBUTTON) {
+			vec3 intersection;
+			triangle_t *p_triangle = (triangle_t *)worldgen.m_pChunks[0].GetVertices();
+			int num_of_triangles = worldgen.m_pChunks[0].GetNumOfVertices() / 3;
+			for (int i = 0; i < num_of_triangles; i++) {
+				if (ray.TriangleIntersection(p_triangle[i].p[0], p_triangle[i].p[1], p_triangle[i].p[2], intersection)) {
+					worldgen.m_pChunks[0].DebugDraw_SetLastSelectTriangle(p_triangle[i]);
+				}
+			}
+		}
+#endif
 	}
 }
 
@@ -194,7 +207,6 @@ void fn_charinput(HWND hWnd, char symbol)
 //https://docs.microsoft.com/ru-ru/windows/win32/inputdev/wm-keydown
 void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 {
-	static bool b_wire = true;
 	INT key = (INT)wparam;
 	if (state == KEY_DOWN) {
 		switch (key) {
@@ -208,8 +220,8 @@ void fn_keydown(HWND hWnd, INT state, WPARAM wparam, LPARAM lparam)
 			break;
 
 		case VK_F2:
-			b_wire = !b_wire;
 			glPolygonMode(GL_FRONT_AND_BACK, b_wire ? GL_LINE : GL_FILL);
+			b_wire = !b_wire;
 			break;
 
 		case VK_F3:
@@ -265,7 +277,10 @@ void fn_windowcreate(HWND hWnd)
 	prev_time = TimeGetSeconds();
 
 	unsigned int tex;
-	CreateTextureBMP(tex, "font.bmp");
+	if (!CreateTextureBMP(tex, "font.bmp")) {
+		printf("Failed to load font.bmp!\n");
+	}
+
 	init_font(&font, tex, 16);
 
 	quadric = gluNewQuadric();
@@ -289,15 +304,20 @@ void fn_windowcreate(HWND hWnd)
 	//voxels[COORD2OFFSET2(chunk.GetChunkWidth(), chunk.GetChunkHeight(), 2, 50, 2)].SetFlag(VOXEL_FLAG_AIR);
 
 	//chunk.RebuildMesh();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	worldgen.Init(32, 16, 4);
+#define CHUNK_WIDTH 16
+	worldgen.Init(CHUNK_WIDTH, 128, 20);
 
-	for(int y = 5; y < 10; y++)
-		for(int x = 5; x < 10; x++)
-			for(int z = 5; z < 10; z++)
+	for(int y = CHUNK_WIDTH / 2; y < CHUNK_WIDTH; y++)
+		for(int x = CHUNK_WIDTH / 2; x < CHUNK_WIDTH; x++)
+			for(int z = CHUNK_WIDTH / 2; z < CHUNK_WIDTH; z++)
 				worldgen.m_pChunks[0].VoxelAt(x, y, z)->SetFlag(VOXEL_FLAG_AIR);
 
+	worldgen.m_pChunks[0].m_bDDLastSelectTri = true;
 	worldgen.m_pChunks[0].RebuildMesh();
+
+	printf("Version: %s\n", glGetString(GL_VERSION));
 }
 
 void fn_windowclose(HWND hWnd)

@@ -161,14 +161,23 @@ public:
 	void BuildMesh();
 	void RebuildMesh(); //rebuild mesh from voxels
 
+	vec3 *GetVertices();
+	int *GetIndices();
+	int GetNumOfVertices();
+	int GetNumOfIndices();
+
 #ifdef DEBUG_DRAW
 	void DebugDraw_ChunkBounds(bool b);
 	void DebugDraw_ChunkVoxels(bool b);
 	void DebugDraw_ChunkCubes(bool b);
+	void DebugDraw_LastSelectTriangle(bool b);
+	void DebugDraw_SetLastSelectTriangle(triangle_t &tri);
 
 	bool m_nDDBounds;
 	bool m_nDDVoxels;
 	bool m_nDDCubes;
+	bool m_bDDLastSelectTri;
+	triangle_t m_LastSelectTriangle;
 #endif
 
 	vec3int m_ChunkPos;

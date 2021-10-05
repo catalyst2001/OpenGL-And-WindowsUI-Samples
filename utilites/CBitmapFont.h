@@ -35,7 +35,7 @@ static bool CreateTextureBMP(unsigned int &textureID, const char *szFileName)   
 	BITMAP  bitmap;																  // Bitmap Structure
 
 	glGenTextures(1, &textureID);                                                 // Create The Texture
-	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), szFileName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	hBMP = (HBITMAP)LoadImageA(GetModuleHandleA(NULL), szFileName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 
 	if (!hBMP)                                                                    // Does The Bitmap Exist?
 		return FALSE;                                                           // If Not Return False
