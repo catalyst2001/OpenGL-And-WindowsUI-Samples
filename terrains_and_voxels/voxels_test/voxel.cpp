@@ -396,7 +396,7 @@ vec3 TriangleNearPoint2(vec3 &p0, vec3 &p1, vec3 &p2, vec3 &point)
 	}
 }
 
-bool CChunk::DestroyVoxelByRay(CRay &ray, int voxflags)
+bool CChunk::DestroyVoxelByRay_Legacy(CRay &ray, int voxflags)
 {
 	int num_of_verts = m_vertices.size();
 	if (!num_of_verts)
@@ -416,6 +416,28 @@ bool CChunk::DestroyVoxelByRay(CRay &ray, int voxflags)
 			}
 			return false;
 		}
+	}
+	return false;
+}
+
+bool CChunk::DestroyVoxelByRay(CRay &ray, float distance, int voxflags)
+{
+	float t = 0.f;
+	while (t < distance) {
+		vec3 curr = ray.m_origin + normalize(ray.m_direction) * t;
+		round_vector(curr, curr, 1.0);
+
+		CVoxel *pvox = VoxelAt(curr.x, curr.y, curr.z);
+		if (!pvox) {
+			t++;
+			continue;
+		}
+
+		if (pvox->IsSolid()) {
+			pvox->SetFlag(voxflags);
+			return true;
+		}
+		t++;
 	}
 	return false;
 }

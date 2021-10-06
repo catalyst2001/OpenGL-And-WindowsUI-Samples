@@ -6,6 +6,7 @@
 #include "../../../utilites/camera_utils.h"
 #include "../../../utilites/utmath.h"
 #include "../../../utilites/camera_quat/camera.h"
+#include "../../../utilites/shapes_utils.h"
 
 #include <vector>
 using namespace std;
@@ -13,6 +14,8 @@ using namespace std;
 #define COORD2OFFSET(w, h, x, y, z) ((x * w + z) * h + y)
 
 #define BLOCK_HALF 0.5f
+
+CShapes *shapes = NULL;
 
 struct voxel_t {
 	bool is_solid;
@@ -42,26 +45,30 @@ void fn_draw()
 	CameraUtils_LookAt(camera);
 
 	ray.SetOrigin(camera.m_vecOrigin);
-	ray.SetDirection(camera.m_vecDirection);
+	ray.SetDirection(normalize(camera.m_vecDirection));
 
-	vec3 curr = ray.m_origin + ray.m_direction;
-	float t = 0.f;
-	while (t < 100.f) {
+
+	//float distance = 60.f;
+	//vec3 curr = ray.m_origin + normalize(ray.m_direction) * distance;
+	//shapes->DrawSphere(curr);
+
+	float d = 0.f;
+	while (d < 100.f) {
+		vec3 curr = ray.m_origin + normalize(ray.m_direction) * d;
 		round_vector(curr, curr, 1.0);
 		int offs = COORD2OFFSET(chunk.width, chunk.height, curr.x, curr.y, curr.z);
-		if (offs < 0 || offs > (chunk.width*chunk.width*chunk.height))
-			break;
+		if (offs < 0 || offs >= (chunk.width*chunk.width*chunk.height)) {
+			d++;
+			continue;
+		}
 
 		if (chunk.pvoxels[offs].is_solid) {
-			glPointSize(5.f);
-			glBegin(GL_POINTS);
-			glVertex3f(curr.x, curr.y, curr.z);
-			glEnd();
-			glPointSize(1.f);
+			shapes->DrawSphere(curr, 0.01);
+			break;
 		}
-		curr += t;
-		t++;
+		d++;
 	}
+
 
 	DrawAxis();
 	CameraUtils_DrawCrosshair(Width, Height);
@@ -125,22 +132,39 @@ void fn_mouseclick(HWND hWnd, int x, int y, int button, int state)
 			printf("LBUTTON\n");
 
 			//destroy block
-			voxel_t *pvox = NULL;
-			float tmin, tmax;
-			for (int x = 0; x < chunk.width; x++) {
-				for (int y = 0; y < chunk.height; y++) {
-					for (int z = 0; z < chunk.width; z++) {
-						pvox = &chunk.pvoxels[COORD2OFFSET(chunk.width, chunk.height, x, y, z)];
-						//printf("( %f %f %f ) ( %f %f %f )\n", pvox->bbox.Min.x, pvox->bbox.Min.y, pvox->bbox.Min.z, pvox->bbox.Max.x, pvox->bbox.Max.y, pvox->bbox.Max.z);
-						if (pvox->bbox.RayIntersect(ray, &tmin, &tmax)) {
-							pvox->is_solid = false;
-							printf("Voxel destoyed\n");
-							continue;
-						}
-					}
-				}
-			}
+			//voxel_t *pvox = NULL;
+			//float tmin, tmax;
+			//for (int x = 0; x < chunk.width; x++) {
+			//	for (int y = 0; y < chunk.height; y++) {
+			//		for (int z = 0; z < chunk.width; z++) {
+			//			pvox = &chunk.pvoxels[COORD2OFFSET(chunk.width, chunk.height, x, y, z)];
+			//			//printf("( %f %f %f ) ( %f %f %f )\n", pvox->bbox.Min.x, pvox->bbox.Min.y, pvox->bbox.Min.z, pvox->bbox.Max.x, pvox->bbox.Max.y, pvox->bbox.Max.z);
+			//			if (pvox->bbox.RayIntersect(ray, &tmin, &tmax)) {
+			//				pvox->is_solid = false;
+			//				printf("Voxel destoyed\n");
+			//				continue;
+			//			}
+			//		}
+			//	}
+			//}
 
+			float d = 1.f;
+			while (d < 10.f) {
+				vec3 curr = ray.m_origin + normalize(ray.m_direction) * d;
+				round_vector(curr, curr, 1.0);
+				int offs = COORD2OFFSET(chunk.width, chunk.height, curr.x, curr.y, curr.z);
+				if (offs < 0 || offs >= (chunk.width*chunk.width*chunk.height)) {
+					d++;
+					continue;
+				}
+
+				if (chunk.pvoxels[offs].is_solid) {
+					chunk.pvoxels[offs].is_solid = false;
+					shapes->DrawSphere(curr, 0.01);
+					break;
+				}
+				d++;
+			}
 		}
 	}
 }
@@ -177,10 +201,11 @@ void fn_windowcreate(HWND hWnd)
 	glLoadIdentity();
 
 	///////////////////////////////////////
+	shapes = new CShapes();
 	CameraUtils_CheckActive(camera, NULL, NULL);
 
-	chunk.width = 5;
-	chunk.height = 5;
+	chunk.width = 10;
+	chunk.height = 10;
 	chunk.min = vec3(0, 0, 0);
 	chunk.max = vec3(chunk.width, chunk.height, chunk.width);
 
@@ -211,12 +236,12 @@ void fn_windowcreate(HWND hWnd)
 				pvox->bbox.Max.y = y + BLOCK_HALF;
 				pvox->bbox.Max.z = z + BLOCK_HALF;
 
-				if(!y || y == chunk.height || !x || x == chunk.width || !z || z == chunk.width)
+				if(!x || x >= chunk.width || !y || y >= chunk.width || !z || z >= chunk.width)
 					pvox->is_solid = true;
 			}
 		}
 	}
-	glClearColor(0.2f, 0.1f, 0.5f, 1.5f);
+	glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
 }
 
 void fn_windowclose(HWND hWnd)

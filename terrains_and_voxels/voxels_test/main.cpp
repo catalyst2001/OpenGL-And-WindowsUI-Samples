@@ -14,7 +14,7 @@
 #include "SimplexNoise.h"
 
 #include "voxel.h"
-#include "CWorldGenerator.h"
+#include "CChunksManager.h"
 
 GLUquadric *quadric;
 INT Width, Height;
@@ -32,7 +32,7 @@ struct Triangle {
 CCamera cam(45.f, vec3(5.f, 5.f, 5.f));
 //CChunk chunk;
 
-CWorldGenerator worldgen;
+CChunksManager worldgen;
 
 CAABB aabb(-10, -10, -10, 5);
 CAABB viewaabb;
@@ -97,10 +97,10 @@ void fn_draw()
 	ray.SetDirection(cam.m_vecDirection);
 
 	//calculate view aabb position from direction and origin vector
-	float aabb_size = 2.5f;
-	float distance = 60.f;
-	viewaabb.Min = ray.m_origin + normalize(ray.m_direction) * distance;
-	viewaabb.Max = vec3(viewaabb.Min.x + aabb_size, viewaabb.Min.y + aabb_size, viewaabb.Min.z + aabb_size);
+	//float aabb_size = 2.5f;
+	//float distance = 60.f;
+	//viewaabb.Min = ray.m_origin + normalize(ray.m_direction) * distance;
+	//viewaabb.Max = vec3(viewaabb.Min.x + aabb_size, viewaabb.Min.y + aabb_size, viewaabb.Min.z + aabb_size);
 
 	glPushAttrib(GL_CURRENT_BIT);
 	glColor3ub(0, 255, 0);
@@ -171,17 +171,21 @@ void fn_mousemove(HWND hWnd, int x, int y)
 {
 }
 
+CRITICAL_SECTION cs;
+
 DWORD WINAPI Kopat(LPVOID param)
 {
+	//EnterCriticalSection(&cs);
 	worldgen.m_pChunks[0].RebuildMesh();
 	printf("Voxel destroyed!\n");
+	//LeaveCriticalSection(&cs);
 	return 0;
 }
 
 void fn_mouseclick(HWND hWnd, int x, int y, int button, int state)
 {
 	if (state == KEY_DOWN) {
-		if (button == LBUTTON && worldgen.m_pChunks[0].DestroyVoxelByRay(ray)) {
+		if (button == LBUTTON && worldgen.m_pChunks[0].DestroyVoxelByRay(ray, 10.f)) {
 			CreateThread(0, 0, Kopat, 0, 0, 0);
 		}
 
@@ -307,7 +311,7 @@ void fn_windowcreate(HWND hWnd)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 #define CHUNK_WIDTH 16
-	worldgen.Init(CHUNK_WIDTH, 128, 20);
+	worldgen.Init(CHUNK_WIDTH, 16, 10);
 
 	for(int y = CHUNK_WIDTH / 2; y < CHUNK_WIDTH; y++)
 		for(int x = CHUNK_WIDTH / 2; x < CHUNK_WIDTH; x++)
@@ -316,6 +320,8 @@ void fn_windowcreate(HWND hWnd)
 
 	worldgen.m_pChunks[0].m_bDDLastSelectTri = true;
 	worldgen.m_pChunks[0].RebuildMesh();
+
+	//InitializeCriticalSection(&cs); //0x00000400
 
 	printf("Version: %s\n", glGetString(GL_VERSION));
 }

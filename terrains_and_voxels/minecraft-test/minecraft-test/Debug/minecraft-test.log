@@ -30,5 +30,8 @@ e:\github\specialforkikker228\utilites\utmath.h(569): warning C4244: =: прео
 e:\github\specialforkikker228\utilites\utmath.h(572): warning C4244: =: преобразование "double" в "float", возможна потеря данных
 e:\github\specialforkikker228\utilites\utmath.h(618): warning C4244: =: преобразование "double" в "float", возможна потеря данных
 e:\github\specialforkikker228\utilites\utmath.h(619): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-e:\github\specialforkikker228\terrains_and_voxels\minecraft-test\minecraft-test\main.cpp(51): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\github\specialforkikker228\terrains_and_voxels\minecraft-test\minecraft-test\main.cpp(59): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\github\specialforkikker228\terrains_and_voxels\minecraft-test\minecraft-test\main.cpp(66): warning C4305: аргумент: усечение из "double" в "float"
+e:\github\specialforkikker228\terrains_and_voxels\minecraft-test\minecraft-test\main.cpp(155): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+e:\github\specialforkikker228\terrains_and_voxels\minecraft-test\minecraft-test\main.cpp(163): warning C4305: аргумент: усечение из "double" в "float"
   minecraft-test.vcxproj -> E:\GITHUB\SpecialForKikker228\terrains_and_voxels\minecraft-test\Debug\minecraft-test.exe
