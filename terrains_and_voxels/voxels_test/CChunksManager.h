@@ -12,8 +12,9 @@ public:
 	CChunksManager();
 	~CChunksManager();
 
-	int Init(int chunk_width, int chunk_height, int num_of_chunks);
+	int Init(int chunk_width, int chunk_height, int chunks_per_width, int chunks_per_height);
 
+	CChunk *ChunkAt(int gx, int gy, int gz);
 
 	int m_nNumOfChunks;
 	CChunk *m_pChunks;

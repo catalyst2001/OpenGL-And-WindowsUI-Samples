@@ -148,7 +148,7 @@ public:
 	* ¬ыставл€ет флаг вокселю наход€щемус€ в пересечении лучом.
 	* ¬ыполн€ет поиск воксел€ путем перебора сетки всего чанка
 	* ƒалее после того как был найден пересекаемый треугольник,
-	* ‘ункци€ вычисл€ет к какой точке треугольника находитс€ ближе
+	* ‘ункци€ находит точку пересечени€ треугольника лучом и вычисл€ет к какому углу треугольника находитс€ ближе
 	* пересечение, и после этого эта точка округл€етс€ до целого числа,
 	* которое €вл€етс€ координатой воксел€ в пространстве
 	* 
@@ -161,14 +161,14 @@ public:
 	__declspec(deprecated) bool DestroyVoxelByRay_Legacy(CRay &ray, int voxflags = VOXEL_FLAG_AIR);
 
 	/**
-	* DestroyVoxelByRay
+	* ChangeVoxelFlagsByRay
 	*
 	* point = origin + direction * distance
 	*
-	* ¬ыставл€ет флаг вокселю наход€щемус€ в пересечении лучом.
+	* ¬ыставл€ет флаг вокселю наход€щемус€ в пересечении лучом с заданным флагом.
 	* ¬ыполн€ет поиск воксел€ путем умножени€ увеличивающегос€ скал€ра на нормализованный вектор направлени€ луча с суммированием результата вычислени€ с вектором положени€ луча.
 	* ѕолученна€ точка в пространстве округл€етс€ до ближайшего целого. ƒалее провер€етс€ воксель в этой точке,
-	* если он есть, мы мен€ем флаг этого воксел€ и завершаем цикл. ≈сли воксел€ в этой точке нет, мы увеличиваем скал€р на 1 и пропускаем
+	* если он есть, мы мен€ем флаг этого воксел€ и завершаем цикл. ≈сли воксел€ с этим флагом в этой точке нет, мы увеличиваем скал€р на 1 и пропускаем
 	* эту итерацию цикла.
 	* —кал€р увеличиваетс€ до тех пор, пока не достигнет указанной дистанции.
 	*
@@ -176,7 +176,17 @@ public:
 	* true - если воксель был найден и изменен
 	* false - если в луче по указанной дистанции не было найдено никаких вокселей
 	*/
-	bool DestroyVoxelByRay(CRay &ray, float distance, int voxflags = VOXEL_FLAG_AIR);
+	bool FindVoxelByRay(CVoxel **ppvoxel, vec3 *ppos, CRay &ray, int checkflag, float distance, float stepoccuracy);
+	bool ChangeVoxelFlagsByRay(CRay &ray, float distance, int checkflag, int newflag);
+	bool DestroyVoxel(CRay &ray, float distance, int voxflags = VOXEL_FLAG_AIR);
+	bool PlaceVoxel(CRay &ray, float distance, int voxflags = VOXEL_FLAG_SOLID);
+
+	/**
+	* VoxelInAir
+	* Ќаходитс€ ли воксель в воздухе
+	*/
+	bool VoxelInAir(int locx, int locy, int locz);
+	bool PointInChunk(int x, int y, int z);
 
 	/**
 	* For world manager
@@ -229,3 +239,9 @@ private:
 	std::vector<vec3> m_vertices;
 	std::vector<int> m_indices;
 };
+
+//////////////////// 07.10.2021 ////////////////////////
+/**
+* Tests
+*/
+bool GetChunkMinByRay(vec3 &chunkmin, CRay &ray, float distance);

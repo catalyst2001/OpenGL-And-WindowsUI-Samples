@@ -338,6 +338,15 @@ bool voxel_in_air(voxel *pvox, chunk *pchunk)
 	return true;
 }
 
+bool GetChunkMinByRay(vec3 &chunkmin, CRay &ray, float distance)
+{
+	float t = 0.f;
+	while (t < distance) {
+		chunkmin = ray.m_origin + normalize(ray.m_direction) * t;
+	}
+	return false;
+}
+
 //-------------------------------------------------------------------------------------------------------------------------
 int CChunk::GetChunkWidth()
 {
@@ -420,7 +429,7 @@ bool CChunk::DestroyVoxelByRay_Legacy(CRay &ray, int voxflags)
 	return false;
 }
 
-bool CChunk::DestroyVoxelByRay(CRay &ray, float distance, int voxflags)
+bool CChunk::DestroyVoxel(CRay &ray, float distance, int voxflags)
 {
 	float t = 0.f;
 	while (t < distance) {
@@ -440,6 +449,107 @@ bool CChunk::DestroyVoxelByRay(CRay &ray, float distance, int voxflags)
 		t++;
 	}
 	return false;
+}
+
+bool CChunk::FindVoxelByRay(CVoxel **ppvoxel, vec3 *ppos, CRay &ray, int checkflag, float distance, float stepoccuracy)
+{
+	float t = 0.f;
+	while (t < distance) {
+		vec3 pos = ray.m_origin + normalize(ray.m_direction) * t;
+		round_vector(pos, pos, 1.0);
+		*ppvoxel = VoxelAt(pos.x, pos.y, pos.z);
+		if (!(*ppvoxel)) {
+			t++;
+			continue;
+		}
+
+		if ((*ppvoxel)->GetFlags() & checkflag) {
+			if (ppos) *ppos = pos;
+			return true;
+		}
+		
+		t += stepoccuracy;
+	}
+	return false;
+}
+
+bool CChunk::ChangeVoxelFlagsByRay(CRay &ray, float distance, int checkflag, int newflag)
+{
+	CVoxel *pvox = NULL;
+	if (!FindVoxelByRay(&pvox, NULL, ray, checkflag, distance, 1.0f))
+		return false;
+
+	pvox->SetFlag(newflag);
+	return true;
+}
+
+bool CChunk::PlaceVoxel(CRay &ray, float distance, int voxflags)
+{
+	printf("~~~ CChunk::PlaceVoxel called!\n");
+	vec3 voxpos;
+	CVoxel *pvox = NULL;
+	if (!FindVoxelByRay(&pvox, &voxpos, ray, VOXEL_FLAG_AIR, distance, 1.0f)) {
+		printf("~~~ Voxel not found!\n");
+		return false;
+	}
+
+	CVoxel *pbotvox = VoxelAt(voxpos.x, voxpos.y - 1, voxpos.z);
+	if (!pbotvox) {
+		printf("~~~ Voxel not found!\n");
+		return false;
+	}
+
+	if (pbotvox->GetFlags() & VOXEL_FLAG_SOLID) {
+		if (VoxelInAir(voxpos.x, voxpos.y, voxpos.z)) {
+			printf("~~~ Voxel in air\n");
+			return false;
+		}
+		pvox->SetFlag(voxflags);
+		printf("~~~ OK! VOX IS SET\n");
+		return true;
+	}
+	return false;
+}
+
+bool CChunk::VoxelInAir(int locx, int locy, int locz)
+{
+	CVoxel *pvox = NULL;
+
+	//проверяем сам воксель который хотим протестировать на нахождение в воздухе
+	//если сам воксель воздух, то нет смысла в проверке воздуха вокруг воздуха :)
+	if (!(pvox = VoxelAt(locx, locy, locz)) || (pvox->GetFlags() & VOXEL_FLAG_AIR))
+		return false;
+
+	//проверяем воксель слева, есть ли он вообще и является ли он воздухом
+	if (!(pvox = VoxelAt(locx - 1, locy, locz)) || !(pvox->GetFlags() & VOXEL_FLAG_AIR))
+		return false;
+
+	//проверяем воксель справа
+	if (!(pvox = VoxelAt(locx + 1, locy, locz)) || !(pvox->GetFlags() & VOXEL_FLAG_AIR))
+		return false;
+
+	//проверяем воксель спереди
+	if (!(pvox = VoxelAt(locx, locy, locz + 1)) || !(pvox->GetFlags() & VOXEL_FLAG_AIR))
+		return false;
+
+	//проверяем воксель сзади
+	if (!(pvox = VoxelAt(locx, locy, locz - 1)) || !(pvox->GetFlags() & VOXEL_FLAG_AIR))
+		return false;
+
+	//проверяем воксель сверху
+	if (!(pvox = VoxelAt(locx, locy + 1, locz)) || !(pvox->GetFlags() & VOXEL_FLAG_AIR))
+		return false;
+
+	//проверяем воксель снизу
+	if (!(pvox = VoxelAt(locx, locy - 1, locz)) || !(pvox->GetFlags() & VOXEL_FLAG_AIR))
+		return false;
+
+	return false;
+}
+
+bool CChunk::PointInChunk(int x, int y, int z)
+{
+	return m_ChunkPos.x < x && x < m_vecMax.x && m_ChunkPos.y < y && y < m_vecMax.y && m_ChunkPos.z < z && z < m_vecMax.x;
 }
 
 bool CChunk::HasIdle()

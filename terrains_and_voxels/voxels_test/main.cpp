@@ -124,6 +124,12 @@ void fn_draw()
 	aabb.Draw();
 	glPopAttrib();
 
+
+	//printf("( %f %f %f ) ( %f %f %f )\n", ray.m_origin.x, ray.m_origin.y, ray.m_origin.z, ray.m_direction.x, ray.m_direction.y, ray.m_direction.z);
+	//if (worldgen.m_pChunks[0].PointInChunk(cam.m_vecOrigin.x, cam.m_vecOrigin.y, cam.m_vecOrigin.z)) {
+	//	printf("PERESECAEM\n");
+	//}
+
 	//glPushAttrib(GL_CURRENT_BIT);
 	//if (aabb.BboxInside(viewaabb)) {
 	//	glColor3ub(255, 0, 0);
@@ -185,22 +191,19 @@ DWORD WINAPI Kopat(LPVOID param)
 void fn_mouseclick(HWND hWnd, int x, int y, int button, int state)
 {
 	if (state == KEY_DOWN) {
-		if (button == LBUTTON && worldgen.m_pChunks[0].DestroyVoxelByRay(ray, 10.f)) {
-			CreateThread(0, 0, Kopat, 0, 0, 0);
+		if (button == LBUTTON) {
+			if (worldgen.m_pChunks[0].DestroyVoxel(ray, 10.f, VOXEL_FLAG_AIR)) {
+				CreateThread(0, 0, Kopat, 0, 0, 0);
+			}
+			return;
 		}
 
-#ifdef DEBUG_DRAW
 		if (button == RBUTTON) {
-			vec3 intersection;
-			triangle_t *p_triangle = (triangle_t *)worldgen.m_pChunks[0].GetVertices();
-			int num_of_triangles = worldgen.m_pChunks[0].GetNumOfVertices() / 3;
-			for (int i = 0; i < num_of_triangles; i++) {
-				if (ray.TriangleIntersection(p_triangle[i].p[0], p_triangle[i].p[1], p_triangle[i].p[2], intersection)) {
-					worldgen.m_pChunks[0].DebugDraw_SetLastSelectTriangle(p_triangle[i]);
-				}
+			if (worldgen.m_pChunks[0].PlaceVoxel(ray, 10.f, VOXEL_FLAG_SOLID)) {
+				CreateThread(0, 0, Kopat, 0, 0, 0);
 			}
+			return;
 		}
-#endif
 	}
 }
 
@@ -311,7 +314,7 @@ void fn_windowcreate(HWND hWnd)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 #define CHUNK_WIDTH 16
-	worldgen.Init(CHUNK_WIDTH, 16, 10);
+	worldgen.Init(CHUNK_WIDTH, CHUNK_WIDTH, 10, 10);
 
 	for(int y = CHUNK_WIDTH / 2; y < CHUNK_WIDTH; y++)
 		for(int x = CHUNK_WIDTH / 2; x < CHUNK_WIDTH; x++)
