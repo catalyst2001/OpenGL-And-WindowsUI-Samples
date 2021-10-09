@@ -2,6 +2,7 @@
 // ----------------------------------------------------------------------------------------------------------------------------
 // Updated: 03.09.2021
 // Version 4.00
+// Original parts from: http://www.3dcpptutorials.sk/
 // 
 // Changelog:
 // -03.09.2021 - added basic vectors functions, quaternions class
@@ -29,34 +30,33 @@ public:
 	vec2(float num) : x(num), y(num){}
 	vec2(float x, float y) : x(x), y(y){}
 	vec2(const vec2 &u) : x(u.x), y(u.y){}
-	vec2& operator = (const vec2 &u){x = u.x; y = u.y; return *this;}
-	vec2 operator - (){return vec2(-x, -y);}
-	float* operator & (){return (float*)this;};
-	vec2& operator += (float num){x += num; y += num; return *this;}
-	vec2& operator += (const vec2 &u){x += u.x; y += u.y; return *this;}
-	vec2& operator -= (float num){x -= num; y -= num; return *this;}
-	vec2& operator -= (const vec2 &u){x -= u.x; y -= u.y; return *this;}
-	vec2& operator *= (float num){x *= num; y *= num; return *this;}
-	vec2& operator *= (const vec2 &u){x *= u.x; y *= u.y; return *this;}
-	vec2& operator /= (float num){x /= num; y /= num; return *this;}
-	vec2& operator /= (const vec2 &u){x /= u.x; y /= u.y; return *this;}
-	friend vec2 operator + (const vec2 &u, float num){return vec2(u.x + num, u.y + num);}
-	friend vec2 operator + (float num, const vec2 &u){return vec2(num + u.x, num + u.y);}
-	friend vec2 operator + (const vec2 &u, const vec2 &v){return vec2(u.x + v.x, u.y + v.y);}
-	friend vec2 operator - (const vec2 &u, float num){return vec2(u.x - num, u.y - num);}
-	friend vec2 operator - (float num, const vec2 &u){return vec2(num - u.x, num - u.y);}
-	friend vec2 operator - (const vec2 &u, const vec2 &v){return vec2(u.x - v.x, u.y - v.y);}
-	friend vec2 operator * (const vec2 &u, float num){return vec2(u.x * num, u.y * num);}
-	friend vec2 operator * (float num, const vec2 &u){return vec2(num * u.x, num * u.y);}
-	friend vec2 operator * (const vec2 &u, const vec2 &v){return vec2(u.x * v.x, u.y * v.y);}
-	friend vec2 operator / (const vec2 &u, float num){return vec2(u.x / num, u.y / num);}
-	friend vec2 operator / (float num, const vec2 &u){return vec2(num / u.x, num / u.y);}
-	friend vec2 operator / (const vec2 &u, const vec2 &v){return vec2(u.x / v.x, u.y / v.y);}
-
+	vec2& operator=(const vec2 &u){x = u.x; y = u.y; return *this;}
+	vec2 operator-(){return vec2(-x, -y);}
+	vec2 &operator+=(float num){x += num; y += num; return *this;}
+	vec2 &operator+=(const vec2 &u){x += u.x; y += u.y; return *this;}
+	vec2 &operator-=(float num){x -= num; y -= num; return *this;}
+	vec2 &operator-=(const vec2 &u){x -= u.x; y -= u.y; return *this;}
+	vec2 &operator*=(float num){x *= num; y *= num; return *this;}
+	vec2 &operator*=(const vec2 &u){x *= u.x; y *= u.y; return *this;}
+	vec2 &operator/=(float num){x /= num; y /= num; return *this;}
+	vec2 &operator/=(const vec2 &u){x /= u.x; y /= u.y; return *this;}
+	friend vec2 operator+(const vec2 &u, float num){return vec2(u.x + num, u.y + num);}
+	friend vec2 operator+(float num, const vec2 &u){return vec2(num + u.x, num + u.y);}
+	friend vec2 operator+(const vec2 &u, vec2 &v){return vec2(u.x + v.x, u.y + v.y);}
+	friend vec2 operator-(const vec2 &u, float num){return vec2(u.x - num, u.y - num);}
+	friend vec2 operator-(float num, const vec2 &u){return vec2(num - u.x, num - u.y);}
+	friend vec2 operator-(const vec2 &u, const vec2 &v){return vec2(u.x - v.x, u.y - v.y);}
+	friend vec2 operator*(const vec2 &u, float num){return vec2(u.x * num, u.y * num);}
+	friend vec2 operator*(float num, const vec2 &u){return vec2(num * u.x, num * u.y);}
+	friend vec2 operator*(const vec2 &u, const vec2 &v){return vec2(u.x * v.x, u.y * v.y);}
+	friend vec2 operator/(const vec2 &u, float num){return vec2(u.x / num, u.y / num);}
+	friend vec2 operator/(float num, const vec2 &u){return vec2(num / u.x, num / u.y);}
+	friend vec2 operator/(const vec2 &u, const vec2 &v){return vec2(u.x / v.x, u.y / v.y);}
 	union {
 		struct { float x, y; };
 		struct { float s, t; };
-		struct { float r, g; };
+		//struct { float u, v; };
+		struct { float arr[2]; };
 	};
 };
 
@@ -64,7 +64,7 @@ public:
 float dot(const vec2 &u, const vec2 &v);
 float length(const vec2 &u);
 float length2(const vec2 &u);
-vec2 mix(const vec2 &u, const vec2 &v, float a);
+//vec2 mix(const vec2 &u, const vec2 &v, float a);
 vec2 normalize(const vec2 &u);
 vec2 reflect(const vec2 &i, const vec2 &n);
 vec2 refract(const vec2 &i, const vec2 &n, float eta);
@@ -80,7 +80,7 @@ public:
 	vec3(float x, float y, float z) : x(x), y(y), z(z){}
 	vec3(const vec2 &u, float z) : x(u.x), y(u.y), z(z){}
 	vec3(const vec3 &u) : x(u.x), y(u.y), z(u.z){}
-	vec3(int xx, int yy, int zz) : x(xx), y(yy), z(zz){}
+	vec3(int xx, int yy, int zz) : x((float)xx), y((float)yy), z((float)zz){}
 	vec3& operator = (const vec3 &u){x = u.x; y = u.y; z = u.z; return *this;}
 	vec3 operator - (){return vec3(-x, -y, -z);}
 	vec3& operator += (float num){x += num; y += num; z += num; return *this;}
@@ -138,6 +138,7 @@ vec3 normalize(const vec3 &u);
 vec3 reflect(const vec3 &i, const vec3 &n);
 vec3 refract(const vec3 &i, const vec3 &n, float eta);
 vec3 rotate(const vec3 &u, float angle, const vec3 &v);
+vec3 vecabs(vec3 &v);
 
 float distance(vec3 &a, vec3 &b);
 
@@ -152,7 +153,7 @@ class vec3int
 public:
 	vec3int() : x(0), y(0), z(0) {}
 	vec3int(int xx, int yy, int zz) : x(xx), y(yy), z(zz) {}
-	vec3int(vec3 vecf) : x(vecf.x), y(vecf.y), z(vecf.z) {}
+	vec3int(vec3 vecf) : x((int)vecf.x), y((int)vecf.y), z((int)vecf.z) {}
 	~vec3int() {}
 	union {
 		struct { int x, y, z; };
@@ -320,3 +321,8 @@ mat4x4 rotate(float angle, const vec3 &u);
 mat4x4 scale(float x, float y, float z);
 mat4x4 translate(float x, float y, float z);
 mat4x4 transpose(const mat4x4 &Matrix);
+
+// ----------------------------------------------------------------------------------------------------------------------------
+// Graphics
+// ----------------------------------------------------------------------------------------------------------------------------
+void ComputeNormalWithTriangle(vec3 &destnormal, vec3 &a, vec3 &b, vec3 &c);

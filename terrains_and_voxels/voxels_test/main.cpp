@@ -1,15 +1,16 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+﻿#pragma warning(disable:4996)
 #include <Windows.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
 #include <vector>
 #include "../../utilites/glwnd.h"
+#include "../../utilites/texture.h"
 #include "../../utilites/glmath.h"
 #include "../../utilites/utmath.h"
 
+
 #include "camera.h"
-#include "../../utilites/CBitmapFont.h"
 
 #include "SimplexNoise.h"
 
@@ -18,6 +19,18 @@
 
 GLUquadric *quadric;
 INT Width, Height;
+extern Texture textures[15];
+Texture textures[15];
+
+float g_LighPos[] = { 40.f, 40.f, -20.0f, 1.0f };       // This is the position of the 'lamp' joint in the test mesh in object-local space
+float g_LightAmbient[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+float g_LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+float g_LightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+float g_LighAttenuation0 = 1.0f;
+float g_LighAttenuation1 = 0;
+float g_LighAttenuation2 = 0;
+
+
 
 #include <time.h>
 
@@ -38,8 +51,6 @@ CAABB aabb(-10, -10, -10, 5);
 CAABB viewaabb;
 CRay ray;
 
-font_t font;
-
 double prev_time;
 
 double TimeGetSeconds()
@@ -56,6 +67,7 @@ void fn_draw()
 	glLoadIdentity();
 
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	//прицел -->
 	glDisable(GL_DEPTH);
 	glMatrixMode(GL_MODELVIEW);
@@ -71,12 +83,12 @@ void fn_draw()
 	glEnd();
 
 	//get current fps
-	double current_time = TimeGetSeconds();
-	double delta = (current_time - prev_time);
-	double fps = 1.0 / delta;
-	glEnable(GL_TEXTURE_2D);
-	Print(&font, 100, 100, "fps: %f");
-	glDisable(GL_TEXTURE_2D);
+	//double current_time = TimeGetSeconds();
+	//double delta = (current_time - prev_time);
+	//double fps = 1.0 / delta;
+	
+	//Print(&font, 100, 100, "fps: %f");
+
 
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
@@ -102,27 +114,27 @@ void fn_draw()
 	//viewaabb.Min = ray.m_origin + normalize(ray.m_direction) * distance;
 	//viewaabb.Max = vec3(viewaabb.Min.x + aabb_size, viewaabb.Min.y + aabb_size, viewaabb.Min.z + aabb_size);
 
-	glPushAttrib(GL_CURRENT_BIT);
-	glColor3ub(0, 255, 0);
-	float outmin, outmax;
-	//if (ray_aabb_intersection(ray, aabb.Min, aabb.Max, &outmin, &outmax)) {
-	if (aabb.RayIntersect(ray, &outmin, &outmax)) {
-		vec3 mmin = ray.Evaluate(outmin);
-		vec3 mmax = ray.Evaluate(outmax);
-		glColor3ub(255, 0, 0);
+	//glPushAttrib(GL_CURRENT_BIT);
+	//glColor3ub(0, 255, 0);
+	//float outmin, outmax;
+	////if (ray_aabb_intersection(ray, aabb.Min, aabb.Max, &outmin, &outmax)) {
+	//if (aabb.RayIntersect(ray, &outmin, &outmax)) {
+	//	vec3 mmin = ray.Evaluate(outmin);
+	//	vec3 mmax = ray.Evaluate(outmax);
+	//	glColor3ub(255, 0, 0);
 
-		glPushMatrix();
-		glTranslatef(mmin.x, mmin.y, mmin.z);
-		gluSphere(quadric, 0.1, 10, 10);
-		glPopMatrix();
+	//	glPushMatrix();
+	//	glTranslatef(mmin.x, mmin.y, mmin.z);
+	//	gluSphere(quadric, 0.1, 10, 10);
+	//	glPopMatrix();
 
-		//glPushMatrix();
-		//glTranslatef(mmax.x, mmax.y, mmax.z);
-		//gluSphere(quadric, 0.3, 10, 10);
-		//glPopMatrix();
-	}
-	aabb.Draw();
-	glPopAttrib();
+	//	//glPushMatrix();
+	//	//glTranslatef(mmax.x, mmax.y, mmax.z);
+	//	//gluSphere(quadric, 0.3, 10, 10);
+	//	//glPopMatrix();
+	//}
+	//aabb.Draw();
+	//glPopAttrib();
 
 
 	//printf("( %f %f %f ) ( %f %f %f )\n", ray.m_origin.x, ray.m_origin.y, ray.m_origin.z, ray.m_direction.x, ray.m_direction.y, ray.m_direction.z);
@@ -138,6 +150,14 @@ void fn_draw()
 	//viewaabb.Draw();
 	//glPopAttrib();
 
+	glLightfv(GL_LIGHT0, GL_POSITION, g_LighPos);
+	glTranslatef(g_LighPos[0], g_LighPos[1], g_LighPos[2]);
+	glDisable(GL_LIGHTING);
+	glColor3f(1.0f, 1.0f, 0.0f);
+	gluSphere(quadric, 0.3f, 8, 8);
+	glEnable(GL_LIGHTING);
+	glTranslatef(-g_LighPos[0], -g_LighPos[1], -g_LighPos[2]);
+
 	
 	CChunk *chunks = worldgen.m_pChunks;
 	for (int i = 0; i < worldgen.m_nNumOfChunks; i++) {
@@ -152,7 +172,8 @@ void fn_draw()
 
 	//chunk.DrawMesh();
 	glDisableClientState(GL_VERTEX_ARRAY);
-	prev_time = current_time;
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	//prev_time = current_time;
 }
 
 void fn_window_resize(HWND hWnd, int width, int height)
@@ -282,16 +303,25 @@ void fn_windowcreate(HWND hWnd)
 	glEnable(GL_DEPTH_TEST);
 	ShowCursor(!b_active_camera);
 	prev_time = TimeGetSeconds();
-
-	unsigned int tex;
-	if (!CreateTextureBMP(tex, "font.bmp")) {
-		printf("Failed to load font.bmp!\n");
-	}
-
-	init_font(&font, tex, 16);
+	glEnable(GL_TEXTURE_2D);
+	LoadTexture("green.bmp", &textures[1]);
 
 	quadric = gluNewQuadric();
 	glPointSize(2);
+
+	//LIGHT
+	glShadeModel(GL_FLAT);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, g_LightAmbient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, g_LightDiffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, g_LightSpecular);
+	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, g_LighAttenuation0);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, g_LighAttenuation1);
+	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, g_LighAttenuation2);
+	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 	//chunk.Init(vec3int(0, 0, 0), 16, 250, VOXEL_FLAG_SOLID);
 	//chunk.DebugDraw_ChunkBounds(true);
 	//CVoxel *voxels = chunk.GetVoxels();
@@ -314,7 +344,7 @@ void fn_windowcreate(HWND hWnd)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 #define CHUNK_WIDTH 16
-	worldgen.Init(CHUNK_WIDTH, CHUNK_WIDTH, 10, 10);
+	worldgen.Init(CHUNK_WIDTH, CHUNK_WIDTH, 5, 5);
 
 	for(int y = CHUNK_WIDTH / 2; y < CHUNK_WIDTH; y++)
 		for(int x = CHUNK_WIDTH / 2; x < CHUNK_WIDTH; x++)

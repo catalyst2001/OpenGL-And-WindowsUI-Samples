@@ -31,6 +31,7 @@
     <ClInclude Include="CWorldGenerator.h" />
     <ClInclude Include="..\..\utilites\CBitmapFont.h" />
     <ClInclude Include="CChunksManager.h" />
+    <ClInclude Include="..\..\utilites\texture.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="camera">

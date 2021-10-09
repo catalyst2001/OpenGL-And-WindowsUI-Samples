@@ -1,5 +1,6 @@
 #include "voxel.h"
 
+
 // offsets from the minimal corner to other corners
 static vec3 cornerOffsets[8] =
 {
@@ -565,12 +566,18 @@ void CChunk::MarkIdle(bool idle)
 void CChunk::ClearMesh()
 {
 	m_vertices.clear();
+	m_uvs.clear();
 	m_indices.clear();
 }
 
 void CChunk::MarchCube(vec3 min_corner_pos)
 {
 	// construct case index from 8 corner samples
+	vec2 uvtypecord[2][3] = { 
+		{ vec2(0.f, 1.f) , vec2(1.f, 1.f) , vec2(0.f, 0.f) },
+		{ vec2(0.f, 0.f) , vec2(1.f, 1.f) , vec2(1.f, 0.f) }
+	};
+
 	int caseIndex = 0;
 	for (int i = 0; i < 8; i++) {
 		
@@ -601,6 +608,8 @@ void CChunk::MarchCube(vec3 min_corner_pos)
 		return;
 
 	int caseVert = 0;
+	int uv_hueta = 0;
+	bool uv_type = 1;
 	for (int i = 0; i < 5; i++) {
 		for (int tri = 0; tri < 3; tri++) {
 			// get edge index
@@ -623,6 +632,12 @@ void CChunk::MarchCube(vec3 min_corner_pos)
 #ifndef USE_INTERP
 			vec3 vertPos = (vert1 + vert2) / 2.0f; // non interpolated version - in the middle of the edge
 			m_vertices.push_back(vertPos);
+			if (!(uv_hueta % 3)) {
+				uv_type = !uv_type;
+			}
+			
+			m_uvs.push_back(uvtypecord[uv_type][uv_hueta%3]);
+			uv_hueta++;
 #else
 				// interpolate along the edge
 			float s1 = /*SampleValue(*/length(min_corner_pos + edgeVertexOffsets[edgeCase][0]);
@@ -643,8 +658,21 @@ void CChunk::MarchCube(vec3 min_corner_pos)
 	}
 }
 
+void CChunk::GNormal()
+{
+	vec3 normal;
+	triangle_t *p_triangle = (triangle_t *)m_vertices.data();
+	for (int i = 0; i < m_vertices.size() / 3; i++) {
+		ComputeNormalWithTriangle(normal, p_triangle[i].p[0], p_triangle[i].p[1], p_triangle[i].p[2]);
+		m_normals.push_back(normal);
+	}
+}
+
 void CChunk::DrawMesh()
 {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textures[1].texID);
+	glTexCoordPointer(2, GL_FLOAT, 0, m_uvs.data());
 	glVertexPointer(3, GL_FLOAT, 0, m_vertices.data());
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, m_indices.data());
 #ifdef DEBUG_DRAW
@@ -653,15 +681,6 @@ void CChunk::DrawMesh()
 	//draw debug chunk bounds
 	if (m_nDDBounds) {
 		DrawBBox(m_ChunkPos, m_vecMax);
-	}
-
-	if (m_bDDLastSelectTri) {
-		glColor3ub(0, 0, 255);
-		glBegin(GL_TRIANGLES);
-		glVertex3f(m_LastSelectTriangle.p[0].x, m_LastSelectTriangle.p[0].y, m_LastSelectTriangle.p[0].z);
-		glVertex3f(m_LastSelectTriangle.p[1].x, m_LastSelectTriangle.p[1].y, m_LastSelectTriangle.p[1].z);
-		glVertex3f(m_LastSelectTriangle.p[2].x, m_LastSelectTriangle.p[2].y, m_LastSelectTriangle.p[2].z);
-		glEnd();
 	}
 
 	//draw debug voxels
@@ -698,6 +717,7 @@ void CChunk::BuildMesh()
 
 void CChunk::RebuildMesh()
 {
+	GNormal();
 	ClearMesh();
 	BuildMesh();
 }

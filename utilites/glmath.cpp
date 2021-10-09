@@ -9,7 +9,7 @@ float dot(const vec2 &u, const vec2 &v)
 
 float length(const vec2 &u)
 {
-	return sqrt(u.x * u.x + u.y * u.y);
+	return (float)sqrt(u.x * u.x + u.y * u.y);
 }
 
 float length2(const vec2 &u)
@@ -17,10 +17,10 @@ float length2(const vec2 &u)
 	return u.x * u.x + u.y * u.y;
 }
 
-vec2 mix(const vec2 &u, const vec2 &v, float a)
-{
-	return u * (1.0f - a) + v * a;
-}
+//vec2 mix(const vec2 &u, const vec2 &b, float a)
+//{
+//	return u * (1.0f - a) + b * a;
+//}
 
 vec2 normalize(const vec2 &u)
 {
@@ -35,14 +35,10 @@ vec2 reflect(const vec2 &i, const vec2 &n)
 vec2 refract(const vec2 &i, const vec2 &n, float eta)
 {
 	vec2 r;
-
 	float ndoti = dot(n, i), k = 1.0f - eta * eta * (1.0f - ndoti * ndoti);
-
-	if(k >= 0.0f)
-	{
+	if(k >= 0.0f) {
 		r = eta * i - n * (eta * ndoti + sqrt(k));
 	}
-
 	return r;
 }
 
@@ -149,6 +145,15 @@ vec3 refract(const vec3 &i, const vec3 &n, float eta)
 vec3 rotate(const vec3 &u, float angle, const vec3 &v)
 {
 	return *(vec3*)&(rotate(angle, v) * vec4(u, 1.0f));
+}
+
+vec3 vecabs(vec3 &v)
+{
+	vec3 res;
+	res.x = (float)fabs(v.x);
+	res.y = (float)fabs(v.y);
+	res.z = (float)fabs(v.z);
+	return res;
 }
 
 float distance(vec3 &a, vec3 &b)
@@ -899,4 +904,10 @@ mat4x4 transpose(const mat4x4 &Matrix)
 	Transpose.M[15] = Matrix.M[15];
 
 	return Transpose;
+}
+
+void ComputeNormalWithTriangle(vec3 &destnormal, vec3 &a, vec3 &b, vec3 &c)
+{
+	vec3 d = (b - a) * (c - a);
+	destnormal = d / length(d);
 }

@@ -4,9 +4,11 @@
 #include <malloc.h>
 #include "../../utilites/glmath.h"
 #include "../../utilites/utmath.h" //draw bbox
+#include "../../utilites/texture.h"
 
 #include <vector> //for renderer vertex buffer, indices buffer
 
+extern Texture textures[15];
 typedef char chunk_cell_t;
 typedef short voxel_cell_t;
 
@@ -206,6 +208,7 @@ public:
 	//int GetVoxelTerrace(CVoxel *pvox); //TODO: Implement this later
 
 	void MarchCube(vec3 min_corner_pos);
+	void GNormal();
 	void DrawMesh(); //draw
 	void ClearMesh();
 	void BuildMesh();
@@ -237,6 +240,8 @@ private:
 	int m_nWidth, m_nHeight;
 	CVoxel *m_pVoxels;
 	std::vector<vec3> m_vertices;
+	std::vector<vec3> m_normals;
+	std::vector<vec2> m_uvs;
 	std::vector<int> m_indices;
 };
 
