@@ -1,8 +1,10 @@
 #pragma once
+#pragma warning(disable:4996)
 #include <windows.h>
 #include <gl/gl.h>
 #include <gl/glu.h>
 #include <stdio.h>
+
 
 #ifndef __cplusplus
 	#include <stdbool.h>
@@ -133,7 +135,7 @@ static bool CreateTexture(const char *szFileName, Texture *texture, unsigned int
 	return TRUE;                                                                  // Loading Was Successful
 }
 
-bool LoadTexture(const char *filename, Texture *texture)
+static bool LoadTexture(const char *filename, Texture *texture)
 {
 	if (!filename || !filename[0])
 		return false;

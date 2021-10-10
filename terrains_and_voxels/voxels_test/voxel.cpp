@@ -598,8 +598,7 @@ void CChunk::MarchCube(vec3 min_corner_pos)
 		//также проверяем, не вышли ли мы за предел чанка по высоте
 		//границы по x и z не проверяем, потому что нет смысла рисовать сетку на гранях чанка
 		CVoxel *pvox = VoxelAt(res.x, res.y, res.z);
-
-		if (res.y < m_vecMax.y && pvox && pvox->IsSolid())
+		if (pvox && pvox->IsSolid())
 			caseIndex |= 1 << i;
 	}
 
@@ -785,7 +784,7 @@ int CChunk::Init(vec3int pos, int width, int height, int flags)
 	m_vecMax.z = pos.z + m_nWidth;
 
 	//добавляем к ширине и высоте по 1, чтобы полностью заполнить все грани вокселями
-	return AllocVoxels(m_nWidth + 1, m_nHeight + 1, flags);
+	return AllocVoxels(m_nWidth + 1, m_nHeight + 1, flags); //TODO: ||
 }
 
 int CChunk::AllocVoxels(int width, int height, int flags)

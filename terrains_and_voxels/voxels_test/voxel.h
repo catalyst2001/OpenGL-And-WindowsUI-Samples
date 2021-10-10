@@ -235,7 +235,7 @@ public:
 
 	vec3int m_ChunkPos;
 	vec3int m_vecMax;
-private:
+//private:
 	bool m_bIdle;
 	int m_nWidth, m_nHeight;
 	CVoxel *m_pVoxels;
