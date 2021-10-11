@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="marching_cubes3.cpp" />
+    <ClCompile Include="SimplexNoise.cpp" />
+    <ClCompile Include="..\..\utilites\glmath.cpp" />
+    <ClCompile Include="voxel.cpp" />
+    <ClCompile Include="camera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="marchingcubes.cpp" />
+    <ClCompile Include="mem.cpp" />
+    <ClCompile Include="marching_cubes4.cpp" />
+    <ClCompile Include="CWorldGenerator.cpp" />
+    <ClCompile Include="..\..\utilites\CBitmapFont.cpp" />
+    <ClCompile Include="CChunksManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="marching_cubes3.h" />
+    <ClInclude Include="SimplexNoise.h" />
+    <ClInclude Include="..\..\utilites\glmath.h" />
+    <ClInclude Include="..\..\utilites\utmath.h" />
+    <ClInclude Include="voxel.h" />
+    <ClInclude Include="camera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="marchingcubes.h" />
+    <ClInclude Include="mem.h" />
+    <ClInclude Include="marching_cubes4.h" />
+    <ClInclude Include="CWorldGenerator.h" />
+    <ClInclude Include="..\..\utilites\CBitmapFont.h" />
+    <ClInclude Include="CChunksManager.h" />
+    <ClInclude Include="..\..\utilites\texture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="camera">
+      <UniqueIdentifier>{7ad3d192-93a0-4bbb-92e4-efff299d26f4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="old_main.txt" />
+  </ItemGroup>
+</Project>
