@@ -47,6 +47,7 @@ void DrawCrosshair()
 {
 	//прицел -->
 	glDisable(GL_DEPTH);
+	glDisable(GL_LIGHTING);
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
@@ -54,6 +55,8 @@ void DrawCrosshair()
 	glPushMatrix();
 	glLoadIdentity();
 	gluOrtho2D(0, Width, 0, Height);
+	glPushAttrib(GL_CURRENT_BIT);
+	glColor3ub(255, 0, 0);
 	glPointSize(2);
 	glBegin(GL_POINTS);
 	glVertex2i(Width >> 1, Height >> 1);
@@ -63,6 +66,8 @@ void DrawCrosshair()
 	glPopMatrix();
 	glPointSize(1);
 	glEnable(GL_DEPTH);
+	glEnable(GL_LIGHTING);
+	glPopAttrib();
 	//<---
 }
 
@@ -127,7 +132,7 @@ void fn_windowcreate(HWND hWnd)
 	ShowCursor(!b_active_camera);
 	prev_time = TimeGetSeconds();
 	glEnable(GL_TEXTURE_2D);
-	LoadTexture("green.bmp", &textures[1]);
+	LoadTexture("green1.bmp", &textures[1]);
 
 	quadric = gluNewQuadric();
 	glPointSize(2);
@@ -279,7 +284,7 @@ int main()
 		fn_windowcreate,	  //Window create function
 		fn_windowclose,		  //Window close function
 		0, 0,
-		1280,				  //Window width
-		1024);				  //Window height
+		800,				  //Window width
+		600);				  //Window height
 	return 0;
 }

@@ -19,7 +19,7 @@ public:
 
 	CChunk *GetRegionChunk(int gx, int gy, int gz);
 	CVoxel *GetRegionVoxel(int gx, int gy, int gz);
-	bool GetVoxelByRay(CChunk **ppchunk, CVoxel **ppvox, CRay &ray, vec3 *pos, float distance, int checkflag, int newflag = VOXEL_FLAG_AIR);
+	bool GetVoxelByRay(CChunk **ppchunk, CVoxel **ppvox, CRay &ray, vec3 *pos, bool *krai, float distance, int checkflag);
 	bool RemoveSolidVoxel(CRay &ray, float distance, int newflag = VOXEL_FLAG_AIR);
 	bool PlaceSolidVoxel(CRay &ray, float distance, int newflag = VOXEL_FLAG_SOLID);
 
@@ -31,5 +31,6 @@ public:
 	int m_nNumberOfChunks;
 private:
 	void iskl(vec3 *pos, int newflag = VOXEL_FLAG_AIR);
+	void iskl_krai(vec3 *pos, int newflag = VOXEL_FLAG_AIR);
 };
 
