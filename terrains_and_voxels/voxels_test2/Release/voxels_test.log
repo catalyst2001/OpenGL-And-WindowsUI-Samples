@@ -28,11 +28,8 @@ c:\users\kikker\documents\github\utilites\utmath.h(569): warning C4244: =: пр�
 c:\users\kikker\documents\github\utilites\utmath.h(572): warning C4244: =: преобразование "double" в "float", возможна потеря данных
 c:\users\kikker\documents\github\utilites\utmath.h(618): warning C4244: =: преобразование "double" в "float", возможна потеря данных
 c:\users\kikker\documents\github\utilites\utmath.h(619): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\cchunksmanager.cpp(103): warning C4244: =: преобразование "int" в "float", возможна потеря данных
-c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\cchunksmanager.cpp(106): warning C4244: =: преобразование "int" в "float", возможна потеря данных
-c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\cchunksmanager.cpp(109): warning C4244: =: преобразование "int" в "float", возможна потеря данных
   Создание кода
-  2 of 355 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
+  3 of 356 functions ( 0.8%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     1 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
