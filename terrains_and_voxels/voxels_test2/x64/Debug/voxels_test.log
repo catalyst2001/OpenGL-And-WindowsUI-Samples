@@ -1,0 +1,226 @@
+﻿  CBitmapFont.cpp
+c:\users\kikker\documents\github\utilites\cbitmapfont.cpp(109): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
+  glmath.cpp
+c:\users\kikker\documents\github\utilites\glmath.cpp(27): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(40): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(49): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(104): warning C4244: return: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(119): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(139): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(164): warning C4244: return: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(187): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(188): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(189): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(269): warning C4244: return: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(368): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(371): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(378): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(379): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(407): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(408): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(828): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\glmath.cpp(848): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  camera.cpp
+  CChunksManager.cpp
+c:\users\kikker\documents\github\utilites\utmath.h(167): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(173): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(174): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(177): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(178): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(236): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(237): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(238): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(239): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(243): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(244): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(245): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(246): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(250): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(251): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(253): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(254): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(256): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(257): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(259): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(260): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(271): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(273): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(308): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(309): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(569): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(572): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(618): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(619): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+  CWorldGenerator.cpp
+c:\users\kikker\documents\github\utilites\utmath.h(167): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(173): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(174): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(177): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(178): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(236): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(237): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(238): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(239): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(243): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(244): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(245): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(246): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(250): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(251): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(253): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(254): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(256): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(257): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(259): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(260): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(271): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(273): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(308): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(309): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(569): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(572): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(618): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(619): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+  main.cpp
+c:\users\kikker\documents\github\utilites\utmath.h(167): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(173): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(174): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(177): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(178): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(236): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(237): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(238): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(239): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(243): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(244): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(245): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(246): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(250): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(251): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(253): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(254): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(256): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(257): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(259): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(260): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(273): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(569): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(572): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(618): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(619): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+  marchingcubes.cpp
+c:\users\kikker\documents\github\utilites\utmath.h(167): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(173): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(174): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(177): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(178): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(236): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(237): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(238): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(239): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(243): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(244): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(245): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(246): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(250): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(251): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(253): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(254): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(256): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(257): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(259): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(260): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(271): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(273): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(308): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(309): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(569): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(572): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(618): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(619): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\marchingcubes.h(331): warning C4305: инициализация: усечение из "double" в "float"
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\marchingcubes.h(340): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\marchingcubes.cpp(33): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+  marching_cubes3.cpp
+  marching_cubes4.cpp
+c:\users\kikker\documents\github\utilites\utmath.h(167): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(173): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(174): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(177): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(178): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(236): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(237): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(238): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(239): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(243): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(244): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(245): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(246): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(250): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(251): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(253): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(254): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(256): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(257): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(259): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(260): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(273): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(569): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(572): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(618): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(619): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\marching_cubes4.h(420): warning C4267: аргумент: преобразование из "size_t" в "_Ty"; возможна потеря данных
+          with
+          [
+              _Ty=int
+          ]
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\marching_cubes4.h(430): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
+  mem.cpp
+  SimplexNoise.cpp
+  voxel.cpp
+c:\users\kikker\documents\github\utilites\utmath.h(167): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(173): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(174): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(177): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(178): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(236): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(237): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(238): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(239): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(243): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(244): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(245): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(246): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(250): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(251): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(253): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(254): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(256): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(257): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(259): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(260): warning C4244: аргумент: преобразование "int" в "GLfloat", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(271): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(273): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(308): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(309): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(569): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(572): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(618): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\utilites\utmath.h(619): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\voxel.cpp(411): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\voxel.cpp(440): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\voxel.cpp(461): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\voxel.cpp(496): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\voxel.cpp(500): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\voxel.cpp(530): error C2660: distance: функция не принимает 6 аргументов
+  c:\users\kikker\documents\github\utilites\glmath.h(143): note:  см. объявление "distance"
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\voxel.cpp(677): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\voxel.cpp(731): warning C4267: аргумент: преобразование из "size_t" в "_Ty"; возможна потеря данных
+          with
+          [
+              _Ty=int
+          ]
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\voxel.cpp(753): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\voxel.cpp(795): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
+c:\users\kikker\documents\github\terrains_and_voxels\voxels_test2\voxel.cpp(800): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
+  Создание кода...

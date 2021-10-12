@@ -93,7 +93,7 @@ bool voxel_in_air(voxel *pvox, chunk *pchunk);
 * New code
 * Updated: 06.10.2021
 */
-#define COORD2OFFSET2(w, h, x, y, z) ((x * w + z) * h + y) //(x * width + y) * width + z
+#define COORD2OFFSET2(w, h, x, y, z) ((y * w + x) * h + z) //(x * width + y) * width + z
 //#define COORD2OFFSET2(w, x, y, z) ((y * w + z) * w + x) //(x * width + y) * width + z
 //#define OFFSET2COORD2(x, y, z, w, offset) \
 //    x = offset / (w * w)/* % ARRAY_SIZE*/;\

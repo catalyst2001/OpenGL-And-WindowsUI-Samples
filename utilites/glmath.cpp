@@ -156,6 +156,14 @@ vec3 vecabs(vec3 &v)
 	return res;
 }
 
+float distance(float ax, float ay, float az, float bx, float by, float bz)
+{
+	float diffX = ax - bx;
+	float diffY = ay - by;
+	float diffZ = az - bz;
+	return sqrt((diffY * diffY) + (diffX * diffX) + (diffZ * diffZ));
+}
+
 float distance(vec3 &a, vec3 &b)
 {
 	float diffX = a.x - b.x;

@@ -140,6 +140,7 @@ vec3 refract(const vec3 &i, const vec3 &n, float eta);
 vec3 rotate(const vec3 &u, float angle, const vec3 &v);
 vec3 vecabs(vec3 &v);
 
+float distance(float ax, float ay, float az, float bx, float by, float bz);
 float distance(vec3 &a, vec3 &b);
 
 vec3 Min(const vec3 &a, const vec3 &b);
