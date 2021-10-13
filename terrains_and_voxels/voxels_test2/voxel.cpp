@@ -756,7 +756,17 @@ void CChunk::DrawMesh()
 	glColor3ub(0, 100, 0);
 	//draw debug chunk bounds
 	if (m_nDDBounds) {
+		if (glIsEnabled(GL_TEXTURE_2D))
+			glDisable(GL_TEXTURE_2D);
+		if(glIsEnabled(GL_LIGHTING))
+			glDisable(GL_LIGHTING);
+
 		DrawBBox(m_ChunkPos, m_vecMax);
+
+		if (!glIsEnabled(GL_TEXTURE_2D))
+			glEnable(GL_TEXTURE_2D);
+		if (!glIsEnabled(GL_LIGHTING))
+			glEnable(GL_LIGHTING);
 	}
 	glPopAttrib();
 #endif

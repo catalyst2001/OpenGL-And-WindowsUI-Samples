@@ -89,189 +89,205 @@ CChunk *CChunksManager::GetRegionChunk(int gx, int gy, int gz)
 void CChunksManager::iskl_krai(vec3 *pos, int newflag) {
 	CChunk *pchunk;
 	CVoxel *pvoxel;
-	int sx = int((*(pos)).x) % m_nChunkWidth, sy = int((*(pos)).y) % m_nChunkHeight, sz = int((*(pos)).z) % m_nChunkWidth;
-	if (int((*(pos)).z) == (m_nChunkWidth * m_nChunksPerWidth) && int((*(pos)).y) == (m_nChunkHeight * m_nChunksPerHeight) && int((*(pos)).x) == (m_nChunkWidth * m_nChunksPerWidth)) {
-		pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
+	vec3int ipos = vec3int((int)pos->x, (int)pos->y, (int)pos->z);
+	int sx = ipos.x % m_nChunkWidth;
+	int sy = ipos.y % m_nChunkHeight;
+	int sz = ipos.z % m_nChunkWidth;
+	if (ipos.z == (m_nChunkWidth * m_nChunksPerWidth) && ipos.y == (m_nChunkHeight * m_nChunksPerHeight) && ipos.x == (m_nChunkWidth * m_nChunksPerWidth)) {
+		pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y - m_nChunkHeight, ipos.z - m_nChunkWidth);
 		if (!(pchunk))
-			return;// goto __sx_sz_sy_end;
+			return;
+
 		pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
 		pvoxel->SetFlag(newflag);
 		pchunk->RebuildMesh();
 		return;
 	}
+
 	//
 	//	y z
 	//
-	if (int((*(pos)).z) == (m_nChunkWidth * m_nChunksPerWidth) && int((*(pos)).y) == (m_nChunkHeight * m_nChunksPerHeight)) {
+	if (ipos.z == (m_nChunkWidth * m_nChunksPerWidth) && ipos.y == (m_nChunkHeight * m_nChunksPerHeight)) {
 		if (!sx) {
-			pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
-			if (!(pchunk))
-				goto sx_y_z;
-			pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y - m_nChunkHeight, ipos.z - m_nChunkWidth);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sx_y_z:
-		pchunk = GetRegionChunk((int)(*(pos)).x, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
+
+		pchunk = GetRegionChunk(ipos.x, ipos.y - m_nChunkHeight, ipos.z - m_nChunkWidth);
 		if (!(pchunk))
 			return;
+
 		pvoxel = pchunk->VoxelAt(sx, m_nChunkHeight, m_nChunkWidth);
 		pvoxel->SetFlag(newflag);
 		pchunk->RebuildMesh();
 		return;
 	}
+
 	//
 	//	y x
 	//
-	if (int((*(pos)).x) == (m_nChunkWidth * m_nChunksPerWidth) && int((*(pos)).y) == (m_nChunkHeight * m_nChunksPerHeight)) {
+	if (ipos.x == (m_nChunkWidth * m_nChunksPerWidth) && ipos.y == (m_nChunkHeight * m_nChunksPerHeight)) {
 		if (!sz) {
-			pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
-			if (!(pchunk))
-				goto sz_y_x;
-			pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y - m_nChunkHeight, ipos.z - m_nChunkWidth);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sz_y_x:
-		pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z);
+
+		pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y - m_nChunkHeight, ipos.z);
 		if (!(pchunk))
 			return;
+
 		pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, sz);
 		pvoxel->SetFlag(newflag);
 		pchunk->RebuildMesh();
 		return;
 	}
+
 	//
 	//	x z
 	//
-	if (int((*(pos)).x) == (m_nChunkWidth * m_nChunksPerWidth) && int((*(pos)).z) == (m_nChunkWidth * m_nChunksPerWidth)) {
+	if (ipos.x == (m_nChunkWidth * m_nChunksPerWidth) && ipos.z == (m_nChunkWidth * m_nChunksPerWidth)) {
 		if (!sy) {
-			pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
-			if (!(pchunk))
-				goto sy_x_z;
-			pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y - m_nChunkHeight, ipos.z - m_nChunkWidth);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sy_x_z:
-		pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y, (int)(*(pos)).z - m_nChunkWidth);
+
+		pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y, ipos.z - m_nChunkWidth);
 		if (!(pchunk))
 			return;
+
 		pvoxel = pchunk->VoxelAt(m_nChunkWidth, sy, m_nChunkWidth);
 		pvoxel->SetFlag(newflag);
 		pchunk->RebuildMesh();
 		return;
 	}
+
 	//
 	//	x
 	//
-	if (int((*(pos)).x) == (m_nChunkWidth * m_nChunksPerWidth)) {
+	if (ipos.x == (m_nChunkWidth * m_nChunksPerWidth)) {
 		if (!sy) {
-			pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z);
-			if (!(pchunk))
-				goto sy_x;
-			pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, sz);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y - m_nChunkHeight, ipos.z);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, sz);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sy_x:
+
 		if (!sz) {
-			pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y, (int)(*(pos)).z - m_nChunkWidth);
-			if (!(pchunk))
-				goto sz_x;
-			pvoxel = pchunk->VoxelAt(m_nChunkWidth, sy, m_nChunkWidth);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y, ipos.z - m_nChunkWidth);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(m_nChunkWidth, sy, m_nChunkWidth);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sz_x:
+
 		if (!sz && !sy) {
-			pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
-			if (!(pchunk))
-				goto sz_sy_x;
-			pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y - m_nChunkHeight, ipos.z - m_nChunkWidth);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sz_sy_x:
-		pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y, (int)(*(pos)).z);
+
+		pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y, ipos.z);
 		if (!(pchunk))
 			return;
+
 		pvoxel = pchunk->VoxelAt(m_nChunkWidth, sy, sz);
 		pvoxel->SetFlag(newflag);
 		pchunk->RebuildMesh();
 	}
+
 	//
 	//	y
 	//
-	if (int((*(pos)).y) == (m_nChunkHeight * m_nChunksPerHeight)) {
+	if (ipos.y == (m_nChunkHeight * m_nChunksPerHeight)) {
 		if (!sx) {
-			pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z);
-			if (!(pchunk))
-				goto sx_y;
-			pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, sz);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y - m_nChunkHeight, ipos.z);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, sz);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sx_y:
+
 		if (!sz) {
-			pchunk = GetRegionChunk((int)(*(pos)).x, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
-			if (!(pchunk))
-				goto sz_y;
-			pvoxel = pchunk->VoxelAt(sx, m_nChunkHeight, m_nChunkWidth);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x, ipos.y - m_nChunkHeight, ipos.z - m_nChunkWidth);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(sx, m_nChunkHeight, m_nChunkWidth);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sz_y:
+
 		if (!sz && !sx) {
-			pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
-			if (!(pchunk))
-				goto sz_sy_x;
-			pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y - m_nChunkHeight, ipos.z - m_nChunkWidth);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sz_sz_y:
-		pchunk = GetRegionChunk((int)(*(pos)).x, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z);
+
+		pchunk = GetRegionChunk(ipos.x, ipos.y - m_nChunkHeight, ipos.z);
 		if (!(pchunk))
 			return;
+
 		pvoxel = pchunk->VoxelAt(sx, m_nChunkHeight, sz);
 		pvoxel->SetFlag(newflag);
 		pchunk->RebuildMesh();
 	}
+
 	//
 	//	z
 	//
-	if (int((*(pos)).z) == (m_nChunkWidth * m_nChunksPerWidth)) {
+	if (ipos.z == (m_nChunkWidth * m_nChunksPerWidth)) {
 		if (!sy) {
-			pchunk = GetRegionChunk((int)(*(pos)).x, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
-			if (!(pchunk))
-				goto sy_z;
-			pvoxel = pchunk->VoxelAt(sx, m_nChunkHeight, m_nChunkWidth);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x, ipos.y - m_nChunkHeight, ipos.z - m_nChunkWidth);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(sx, m_nChunkHeight, m_nChunkWidth);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sy_z:
+
 		if (!sx) {
-			pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y, (int)(*(pos)).z - m_nChunkWidth);
-			if (!(pchunk))
-				goto sx_z;
-			pvoxel = pchunk->VoxelAt(m_nChunkWidth, sy, m_nChunkWidth);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y, ipos.z - m_nChunkWidth);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(m_nChunkWidth, sy, m_nChunkWidth);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sx_z:
+
 		if (!sy && !sx) {
-			pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
-			if (!(pchunk))
-				goto sx_sy_z;
-			pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
-			pvoxel->SetFlag(newflag);
-			pchunk->RebuildMesh();
+			pchunk = GetRegionChunk(ipos.x - m_nChunkWidth, ipos.y - m_nChunkHeight, ipos.z - m_nChunkWidth);
+			if (pchunk) {
+				pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
+				pvoxel->SetFlag(newflag);
+				pchunk->RebuildMesh();
+			}
 		}
-	sx_sy_z:
-		pchunk = GetRegionChunk((int)(*(pos)).x, (int)(*(pos)).y, (int)(*(pos)).z - m_nChunkWidth);
+
+		pchunk = GetRegionChunk(ipos.x, ipos.y, ipos.z - m_nChunkWidth);
 		if (!(pchunk))
 			return;
+
 		pvoxel = pchunk->VoxelAt(sx, sy, m_nChunkWidth);
 		pvoxel->SetFlag(newflag);
 		pchunk->RebuildMesh();
@@ -282,65 +298,68 @@ void CChunksManager::iskl(vec3 *pos, int newflag)
 {
 	CChunk *pchunk;
 	CVoxel *pvoxel;
-	int sx = int((*(pos)).x) % m_nChunkWidth, sy = int((*(pos)).y) % m_nChunkHeight, sz = int((*(pos)).z) % m_nChunkWidth;
+	int sx = int(pos->x) % m_nChunkWidth;
+	int sy = int(pos->y) % m_nChunkHeight;
+	int sz = int(pos->z) % m_nChunkWidth;
 	if (!sx) {
-		pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y, (int)(*(pos)).z);
-		if (!(pchunk))
-			goto __sx_end;
-		pvoxel = pchunk->VoxelAt(m_nChunkWidth, sy, sz);
-		pvoxel->SetFlag(newflag);
-		pchunk->RebuildMesh();
+		pchunk = GetRegionChunk((int)pos->x - m_nChunkWidth, (int)pos->y, (int)pos->z);
+		if (pchunk) {
+			pvoxel = pchunk->VoxelAt(m_nChunkWidth, sy, sz);
+			pvoxel->SetFlag(newflag);
+			pchunk->RebuildMesh();
+		}
 	}
-__sx_end:
+
 	if (!sy) {
-		pchunk = GetRegionChunk((int)(*(pos)).x, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z);
-		if (!(pchunk))
-			goto __sy_end;
-		pvoxel = pchunk->VoxelAt(sx, m_nChunkHeight, sz);
-		pvoxel->SetFlag(newflag);
-		pchunk->RebuildMesh();
+		pchunk = GetRegionChunk((int)pos->x, (int)pos->y - m_nChunkHeight, (int)pos->z);
+		if (pchunk) {
+			pvoxel = pchunk->VoxelAt(sx, m_nChunkHeight, sz);
+			pvoxel->SetFlag(newflag);
+			pchunk->RebuildMesh();
+		}
 	}
-__sy_end:
+
 	if (!sz) {
-		pchunk = GetRegionChunk((int)(*(pos)).x, (int)(*(pos)).y, (int)(*(pos)).z - m_nChunkWidth);
-		if (!(pchunk))
-			goto __sz_end;
-		pvoxel = pchunk->VoxelAt(sx, sy, m_nChunkWidth);
-		pvoxel->SetFlag(newflag);
-		pchunk->RebuildMesh();
+		pchunk = GetRegionChunk((int)pos->x, (int)pos->y, (int)pos->z - m_nChunkWidth);
+		if (pchunk) {
+			pvoxel = pchunk->VoxelAt(sx, sy, m_nChunkWidth);
+			pvoxel->SetFlag(newflag);
+			pchunk->RebuildMesh();
+		}
 	}
-__sz_end:
+
 	if (!sx && !sy) {
-		pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z);
-		if (!(pchunk))
-			goto __sx_sy_end;
-		pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, sz);
-		pvoxel->SetFlag(newflag);
-		pchunk->RebuildMesh();
+		pchunk = GetRegionChunk((int)pos->x - m_nChunkWidth, (int)pos->y - m_nChunkHeight, (int)pos->z);
+		if (pchunk) {
+			pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, sz);
+			pvoxel->SetFlag(newflag);
+			pchunk->RebuildMesh();
+		}
 	}
-__sx_sy_end:
+
 	if (!sz && !sy) {
-		pchunk = GetRegionChunk((int)(*(pos)).x, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
-		if (!(pchunk))
-			goto __sz_sy_end;
-		pvoxel = pchunk->VoxelAt(sx, m_nChunkHeight, m_nChunkWidth);
-		pvoxel->SetFlag(newflag);
-		pchunk->RebuildMesh();
+		pchunk = GetRegionChunk((int)pos->x, (int)pos->y - m_nChunkHeight, (int)pos->z - m_nChunkWidth);
+		if (pchunk) {
+			pvoxel = pchunk->VoxelAt(sx, m_nChunkHeight, m_nChunkWidth);
+			pvoxel->SetFlag(newflag);
+			pchunk->RebuildMesh();
+		}
 	}
-__sz_sy_end:
+
 	if (!sx && !sz) {
-		pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y, (int)(*(pos)).z - m_nChunkWidth);
-		if (!(pchunk))
-			goto __sx_sz_end;
-		pvoxel = pchunk->VoxelAt(m_nChunkWidth, sy, m_nChunkWidth);
-		pvoxel->SetFlag(newflag);
-		pchunk->RebuildMesh();
+		pchunk = GetRegionChunk((int)pos->x - m_nChunkWidth, (int)pos->y, (int)pos->z - m_nChunkWidth);
+		if (pchunk) {
+			pvoxel = pchunk->VoxelAt(m_nChunkWidth, sy, m_nChunkWidth);
+			pvoxel->SetFlag(newflag);
+			pchunk->RebuildMesh();
+		}
 	}
-__sx_sz_end:
+
 	if (!sz && !sy && !sx) {
-		pchunk = GetRegionChunk((int)(*(pos)).x - m_nChunkWidth, (int)(*(pos)).y - m_nChunkHeight, (int)(*(pos)).z - m_nChunkWidth);
+		pchunk = GetRegionChunk((int)pos->x - m_nChunkWidth, (int)pos->y - m_nChunkHeight, (int)pos->z - m_nChunkWidth);
 		if (!(pchunk))
 			return;
+
 		pvoxel = pchunk->VoxelAt(m_nChunkWidth, m_nChunkHeight, m_nChunkWidth);
 		pvoxel->SetFlag(newflag);
 		pchunk->RebuildMesh();
@@ -353,19 +372,17 @@ bool CChunksManager::GetVoxelByRay(CChunk **ppchunk, CVoxel **ppvox, CRay &ray, 
 	while (dist < distance) {
 		*(pos) = ray.m_origin + ray.m_direction * dist;
 		round_vector(*(pos), *(pos), 1.0f);
-		*(ppchunk) = GetRegionChunk((int)(*(pos)).x, (int)(*(pos)).y, (int)(*(pos)).z);
+		*(ppchunk) = GetRegionChunk((int)pos->x, (int)pos->y, (int)pos->z);
 		if (!*(ppchunk))
 			goto __end;
 
-		if (int((*(pos)).x) == m_nChunkWidth * m_nChunksPerWidth || int((*(pos)).y) == m_nChunkHeight * m_nChunksPerHeight || int((*(pos)).z) == m_nChunkWidth * m_nChunksPerWidth) {
-			*krai = true;
-		}
-		else {
-			*krai = false;
-		}
+		*krai = (int(pos->x) == m_nChunkWidth * m_nChunksPerWidth || int(pos->y) == m_nChunkHeight * m_nChunksPerHeight || int(pos->z) == m_nChunkWidth * m_nChunksPerWidth);
 
 		*(ppvox) = (*ppchunk)->VoxelAt(
-		int((*(pos)).x) == m_nChunkWidth * m_nChunksPerWidth ? m_nChunkWidth : (int((*(pos)).x) % m_nChunkWidth), int((*(pos)).y) == m_nChunkHeight * m_nChunksPerHeight ? m_nChunkHeight : (int((*(pos)).y) % m_nChunkHeight), int((*(pos)).z) == m_nChunkWidth * m_nChunksPerWidth ?  m_nChunkWidth : (int((*(pos)).z) % m_nChunkWidth));
+			int(pos->x) == m_nChunkWidth * m_nChunksPerWidth ? m_nChunkWidth : (int(pos->x) % m_nChunkWidth),
+			int(pos->y) == m_nChunkHeight * m_nChunksPerHeight ? m_nChunkHeight : (int(pos->y) % m_nChunkHeight),
+			int(pos->z) == m_nChunkWidth * m_nChunksPerWidth ?  m_nChunkWidth : (int(pos->z) % m_nChunkWidth)
+		);
 		
 		if (!*(ppvox))
 			goto __end;

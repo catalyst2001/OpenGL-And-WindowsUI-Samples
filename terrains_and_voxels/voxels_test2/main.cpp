@@ -270,6 +270,8 @@ void fn_windowclose(HWND hWnd)
 	exit(0);
 }
 
+//#define ROMA
+
 int main()
 {
 	create_window("Voxels Test", __FILE__ __TIME__,
@@ -284,7 +286,13 @@ int main()
 		fn_windowcreate,	  //Window create function
 		fn_windowclose,		  //Window close function
 		0, 0,
+#ifdef ROMA
 		800,				  //Window width
-		600);				  //Window height
+		600                   //Window height
+#else
+		1280,
+		1024
+#endif
+	);				 
 	return 0;
 }
