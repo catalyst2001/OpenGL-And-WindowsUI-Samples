@@ -4,9 +4,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="glextsloader.cpp" />
     <ClCompile Include="CShader.cpp" />
+    <ClCompile Include="CMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glextsloader.h" />
     <ClInclude Include="CShader.h" />
+    <ClInclude Include="CVertexBufferObject.h" />
+    <ClInclude Include="CMesh.h" />
   </ItemGroup>
 </Project>

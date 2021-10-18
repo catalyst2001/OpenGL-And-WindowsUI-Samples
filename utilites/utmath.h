@@ -1,4 +1,7 @@
 #pragma once
+#define _USE_MATH_DEFINES
+#include <Windows.h>
+#include <gl/GL.h>
 #include <math.h>
 #include <float.h> //FLT_EPSILON, FLT_PI
 #include "glmath.h"

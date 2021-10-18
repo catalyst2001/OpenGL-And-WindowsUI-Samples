@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{344EA683-1AF7-471B-9DAD-159FB3BB0A3B}</ProjectGuid>
+    <ProjectGuid>{5008A489-55F9-4C7A-A379-3A36DD827C02}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>parallaxmapping</RootNamespace>
+    <RootNamespace>shadertest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -151,16 +151,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CMesh.cpp" />
-    <ClCompile Include="CShader.cpp" />
+    <ClCompile Include="CFileSystem.cpp" />
     <ClCompile Include="glextsloader.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="shader_test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CMesh.h" />
-    <ClInclude Include="CShader.h" />
-    <ClInclude Include="CVertexBufferObject.h" />
+    <ClInclude Include="CFileSystem.h" />
     <ClInclude Include="glextsloader.h" />
+    <ClInclude Include="IFileSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,7 +9,6 @@
 // 
 // 
 // ----------------------------------------------------------------------------------------------------------------------------
-#define _USE_MATH_DEFINES
 #include <math.h>
 #include <assert.h>
 
@@ -307,12 +306,12 @@ public:
 	friend vec4 operator * (const mat4x4 &Matrix, const vec4 &u);
 };
 
-// ----------------------------------------------------------------------------------------------------------------------------
-
-extern mat4x4 BiasMatrix;
-extern mat4x4 BiasMatrixInverse;
-
-// ----------------------------------------------------------------------------------------------------------------------------
+#define Mat2x2_zero      mat2x2(0, 0,  0, 0);
+#define Mat2x2_identity  mat2x2(1, 0,  0, 1);
+#define Mat3x3_zero      mat3x3( 0, 0, 0,  0, 0, 0,  0, 0, 0);
+#define Mat3x3_identity  mat3x3(1, 0, 0,  0, 1, 0,  0, 0, 1);
+#define Mat4x4_zero     mat4x4(0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0);
+#define Mat4x4_identity mat4x4(1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0,  0, 0, 0, 1);
 
 mat4x4 inverse(const mat4x4 &Matrix);
 mat4x4 look(const vec3 &eye, const vec3 &center, const vec3 &up);
