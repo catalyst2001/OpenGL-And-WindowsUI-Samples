@@ -132,13 +132,13 @@ void fn_windowcreate(HWND hWnd)
 	ShowCursor(!b_active_camera);
 	prev_time = TimeGetSeconds();
 	glEnable(GL_TEXTURE_2D);
-	LoadTexture("green1.bmp", &textures[1]);
+	LoadTexture("green.bmp", &textures[1]);
 
 	quadric = gluNewQuadric();
 	glPointSize(2);
 
 	//LIGHT
-	glShadeModel(GL_FLAT);
+	glShadeModel(GL_SMOOTH);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
@@ -154,6 +154,29 @@ void fn_windowcreate(HWND hWnd)
 
 #define CHUNK_WIDTH 20
 	chunksmgr.Init(CHUNK_WIDTH, CHUNK_WIDTH, 5, 5);
+
+	//Generation
+	vec3 pos;
+	CVoxel *pvox = NULL;
+	SimplexNoise nn(2.0, 2.0);
+	for (int x = 0; x < chunksmgr.m_nChunksPerWidth * chunksmgr.m_nChunkWidth; x++)
+		for (int y = 0; y < chunksmgr.m_nChunksPerHeight * chunksmgr.m_nChunkHeight; y++)
+			for (int z = 0; z < chunksmgr.m_nChunksPerWidth * chunksmgr.m_nChunkWidth; z++) {
+				
+				if (pvox = chunksmgr.GetRegionVoxel(x, y, z)) {
+					bool b = nn.noise((float)x * 0.1025f, (float)y * 0.1025f, (float)z * 0.1025f) > 0.1f;
+					if (b) {
+						pos((float)x, (float)y, (float)z);
+						pvox->SetFlag(VOXEL_FLAG_SOLID);
+						chunksmgr.iskl(&pos, VOXEL_FLAG_SOLID);
+						chunksmgr.iskl_krai(&pos, VOXEL_FLAG_SOLID);
+					}
+				}
+			}
+
+	for (int c = 0; c < chunksmgr.m_nNumberOfChunks; c++)
+		chunksmgr.m_pChunks[c].RebuildMesh();
+
 
 	#define GL_SHADING_LANGUAGE_VERSION 0x8B8C
 	printf("Version: %s\n", glGetString(GL_VERSION));

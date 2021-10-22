@@ -241,7 +241,11 @@ class mat4x4;
 class mat2x2
 {
 public:
-	float M[4];
+	union {
+		struct { float M[4]; };
+		struct { float m[2][2]; };
+	};
+	
 	mat2x2();
 	~mat2x2();
 	mat2x2(const mat2x2 &Matrix);
@@ -266,7 +270,10 @@ mat2x2 transpose(const mat2x2 &Matrix);
 class mat3x3
 {
 public:
-	float M[9];
+	union {
+		struct { float M[9]; };
+		struct { float m[3][3]; };
+	};
 	mat3x3();
 	~mat3x3();
 	mat3x3(const mat3x3 &Matrix);
@@ -276,7 +283,6 @@ public:
 	explicit mat3x3(const mat4x4 &Matrix);
 	mat3x3& operator = (const mat3x3 &Matrix);
 	float& operator [] (int i);
-	float* operator & ();
 	friend mat3x3 operator * (const mat3x3 &Matrix1, const mat3x3 &Matrix2);
 	friend vec3 operator * (const mat3x3 &Matrix, const vec3 &u);
 };
@@ -286,12 +292,30 @@ public:
 mat3x3 inverse(const mat3x3 &Matrix);
 mat3x3 transpose(const mat3x3 &Matrix);
 
+void EulerAnglesToMatrix3x3(mat3x3 &mat, vec3 &theta);
+
+//// Warning! If Y axis ~== 90.0 deg, then epic fail :) 
+////https://stackoverflow.com/questions/15022630/how-to-calculate-the-angle-from-rotation-matrix
+//		 | r11 r12 r13 |
+//	 R = | r21 r22 r23 |
+//		 | r31 r32 r33 |
+//	 0x = atan2( r32, r33)
+//	 
+//	 0y = atan2(-r31, sqrt( ( r32 * r32 ) + ( r33 * r33 )))
+//	 0z = atan2( r21, r11)
+//
+void Matrix3x3ToEulerAngles(vec3 &eulerangles, mat3x3 &mat);
+
 // ----------------------------------------------------------------------------------------------------------------------------
 
 class mat4x4
 {
 public:
-	float M[16];
+	union {
+		struct { float M[16]; };
+		struct { float m[4][4]; };
+	};
+	
 	mat4x4();
 	~mat4x4();
 	mat4x4(const mat4x4 &Matrix);

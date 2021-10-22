@@ -31,10 +31,10 @@ int CChunksManager::Init(int chunk_width, int chunk_height, int chunks_per_width
 				p_current_chunk->Init(vec3int(x * chunk_width, y * chunk_height, z * chunk_width),
 					chunk_width,
 					chunk_height,
-					VOXEL_FLAG_SOLID);
+					VOXEL_FLAG_AIR);
 
-				p_current_chunk->DebugDraw_ChunkBounds(true);
-				p_current_chunk->DebugDraw_LastSelectTriangle(true);
+				//p_current_chunk->DebugDraw_ChunkBounds(true);
+				//p_current_chunk->DebugDraw_LastSelectTriangle(true);
 				p_current_chunk->MarkIdle(false);
 				p_current_chunk->RebuildMesh();
 				//hThreads[i] = CreateThread(0, 0, thread, p_current_chunk, 0, 0);

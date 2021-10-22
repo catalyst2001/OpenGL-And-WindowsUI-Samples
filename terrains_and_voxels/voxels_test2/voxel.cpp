@@ -785,7 +785,7 @@ void CChunk::BuildMesh()
 
 void CChunk::RebuildMesh()
 {
-	GNormal();
+	//GNormal();
 	ClearMesh();
 	BuildMesh();
 }

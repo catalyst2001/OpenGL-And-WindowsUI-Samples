@@ -44,7 +44,7 @@ vec2 refract(const vec2 &i, const vec2 &n, float eta)
 
 vec2 rotate(const vec2 &u, float angle)
 {
-	angle = angle / 180.0f * (float)M_PI;
+	angle = angle / 180.0f * (float)PI;
 
 	float c = cos(angle), s = sin(angle);
 
@@ -535,11 +535,6 @@ float& mat3x3::operator [] (int i)
 	return M[i];
 }
 
-float* mat3x3::operator & ()
-{
-	return (float*)this;
-}
-
 mat3x3 operator * (const mat3x3 &Matrix1, const mat3x3 &Matrix2)
 {
 	mat3x3 Matrix3;
@@ -621,6 +616,38 @@ mat3x3 transpose(const mat3x3 &Matrix)
 	Transpose.M[8] = Matrix.M[8];
 
 	return Transpose;
+}
+
+void EulerAnglesToMatrix3x3(mat3x3 & mat, vec3 & theta)
+{
+	//compute rotation about x axis
+	mat3x3 R_x(
+		1, 0, 0,
+		0, cos(theta[0]), -sin(theta[0]),
+		0, sin(theta[0]), cos(theta[0])
+	);
+
+	//calcomputeculate rotation about y axis
+	mat3x3 R_y(
+		cos(theta[1]), 0, sin(theta[1]),
+		0, 1, 0,
+		-sin(theta[1]), 0, cos(theta[1])
+	);
+
+	//compute rotation about z axis
+	mat3x3 R_z(
+		cos(theta[2]), -sin(theta[2]), 0,
+		sin(theta[2]), cos(theta[2]), 0,
+		0, 0, 1
+	);
+	mat = R_z * R_y * R_x; //combined rotation matrix
+}
+
+void Matrix3x3ToEulerAngles(vec3 & eulerangles, mat3x3 & mat)
+{
+	eulerangles.x = (float)atan2(mat.m[2][1], mat.m[2][2]);
+	eulerangles.y = (float)atan2(-mat.m[2][0], sqrt((mat.m[2][1] * mat.m[2][1]) + (mat.m[2][2] * mat.m[2][2])));
+	eulerangles.x = (float)atan2(mat.m[2][1], mat.m[2][2]);
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -833,7 +860,7 @@ mat4x4 perspective(float fovy, float aspect, float n, float f)
 {
 	mat4x4 Perspective;
 
-	float coty = 1.0f / tan(fovy * (float)M_PI / 360.0f);
+	float coty = 1.0f / tan(fovy * (float)PI / 360.0f);
 
 	Perspective.M[0] = coty / aspect;
 	Perspective.M[5] = coty;
@@ -849,7 +876,7 @@ mat4x4 rotate(float angle, const vec3 &u)
 {
 	mat4x4 Rotate;
 
-	angle = angle / 180.0f * (float)M_PI;
+	angle = angle / 180.0f * (float)PI;
 
 	vec3 v = normalize(u);
 

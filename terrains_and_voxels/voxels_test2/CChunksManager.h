@@ -1,5 +1,6 @@
 #pragma once
 #include "voxel.h"
+#include "SimplexNoise.h"
 
 //OK: реализовать расчет смещения в трехмерном массиве чанков по формуле (РЕАЛИЗОВАНО)
 //xpos = min.x / chunk_width
@@ -18,7 +19,7 @@ public:
 	int Init(int chunk_width, int chunk_height, int chunks_per_width, int chunks_per_height);
 
 	CChunk *GetRegionChunk(int gx, int gy, int gz);
-	CVoxel *GetRegionVoxel(int gx, int gy, int gz);
+	CVoxel *GetRegionVoxel(int gx, int gy, int gz); //!!!!
 	bool GetVoxelByRay(CChunk **ppchunk, CVoxel **ppvox, CRay &ray, vec3 *pos, bool *krai, float distance, int checkflag);
 	bool RemoveSolidVoxel(CRay &ray, float distance, int newflag = VOXEL_FLAG_AIR);
 	bool PlaceSolidVoxel(CRay &ray, float distance, int newflag = VOXEL_FLAG_SOLID);
@@ -29,8 +30,8 @@ public:
 	int m_nChunkWidth;
 	int m_nChunkHeight;
 	int m_nNumberOfChunks;
-private:
 	void iskl(vec3 *pos, int newflag = VOXEL_FLAG_AIR);
 	void iskl_krai(vec3 *pos, int newflag = VOXEL_FLAG_AIR);
+private:
 };
 

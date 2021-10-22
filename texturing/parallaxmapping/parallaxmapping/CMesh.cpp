@@ -16,9 +16,11 @@ void CMesh::CreateMesh(vec3 position, vec3 rotation, Vertex *p_vertices, uint32_
 	m_nIndices = num_of_indices;
 	m_matRotation = Mat3x3_identity;
 
+	//vertex arrays object
 	glGenVertexArrays(1, &m_nVAO);
 	glBindVertexArray(m_nVAO);
 
+	//vertex buffers
 	glGenBuffers(2, m_nVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_nVBO[vbo_vertices]);
 	glBufferData(GL_ARRAY_BUFFER, m_nVertices * sizeof(Vertex), p_vertices, GL_STATIC_DRAW);
