@@ -15,6 +15,7 @@
     <ClCompile Include="CWorldGenerator.cpp" />
     <ClCompile Include="..\..\utilites\CBitmapFont.cpp" />
     <ClCompile Include="CChunksManager.cpp" />
+    <ClCompile Include="region_saver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="marching_cubes3.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="..\..\utilites\CBitmapFont.h" />
     <ClInclude Include="CChunksManager.h" />
     <ClInclude Include="..\..\utilites\texture.h" />
+    <ClInclude Include="region_saver.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="camera">

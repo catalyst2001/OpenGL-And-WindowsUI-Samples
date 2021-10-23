@@ -165,6 +165,7 @@
     <ClCompile Include="marching_cubes3.cpp" />
     <ClCompile Include="marching_cubes4.cpp" />
     <ClCompile Include="mem.cpp" />
+    <ClCompile Include="region_saver.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="voxel.cpp" />
   </ItemGroup>
@@ -180,6 +181,7 @@
     <ClInclude Include="marching_cubes3.h" />
     <ClInclude Include="marching_cubes4.h" />
     <ClInclude Include="mem.h" />
+    <ClInclude Include="region_saver.h" />
     <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="voxel.h" />
   </ItemGroup>

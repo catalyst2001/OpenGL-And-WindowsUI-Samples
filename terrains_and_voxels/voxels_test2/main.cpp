@@ -117,6 +117,45 @@ void fn_draw()
 	//prev_time = current_time;
 }
 
+void RebuildRegion()
+{
+	for (int c = 0; c < chunksmgr.m_nNumberOfChunks; c++)
+		chunksmgr.m_pChunks[c].RebuildMesh();
+}
+
+void TerrainGenerationTest()
+{
+	//Generation
+	vec3 pos;
+	CVoxel *pvox = NULL;
+	SimplexNoise nn(1.0, 1.0);
+
+	float freq = 0.0125f;
+
+	int current_height;
+	float this_height;
+	int maxWidth = chunksmgr.m_nChunksPerWidth * chunksmgr.m_nChunkWidth;
+	int maxHeight = chunksmgr.m_nChunksPerHeight * chunksmgr.m_nChunkHeight;
+
+	float testscale = 2.f;
+
+	for (int x = 0; x <= maxWidth; x++) {
+		for (int z = 0; z <= maxWidth; z++) {
+			for (int y = 0; y <= maxHeight; y++) {
+				this_height = (/*maxHeight - */nn.noise((float)x * freq, (float)z * freq)) * testscale;
+				//printf("%f\n", this_height);
+				//testscale += 0.0001f;
+
+				current_height = (int)(y < (int)this_height) ? y : this_height;
+				//bool b = nn.noise((float)x * 0.1025f, (float)current_height * 0.1025f, (float)z * 0.1025f) > 0.001f;
+				//if (b) {
+					chunksmgr.SetVoxel(vec3int(x, current_height, z), VOXEL_FLAG_SOLID);
+				//}
+			}
+		}
+	}
+}
+
 //Add this GL functions
 void fn_windowcreate(HWND hWnd)
 {
@@ -154,29 +193,8 @@ void fn_windowcreate(HWND hWnd)
 
 #define CHUNK_WIDTH 20
 	chunksmgr.Init(CHUNK_WIDTH, CHUNK_WIDTH, 5, 5);
-
-	//Generation
-	vec3 pos;
-	CVoxel *pvox = NULL;
-	SimplexNoise nn(2.0, 2.0);
-	for (int x = 0; x < chunksmgr.m_nChunksPerWidth * chunksmgr.m_nChunkWidth; x++)
-		for (int y = 0; y < chunksmgr.m_nChunksPerHeight * chunksmgr.m_nChunkHeight; y++)
-			for (int z = 0; z < chunksmgr.m_nChunksPerWidth * chunksmgr.m_nChunkWidth; z++) {
-				
-				if (pvox = chunksmgr.GetRegionVoxel(x, y, z)) {
-					bool b = nn.noise((float)x * 0.1025f, (float)y * 0.1025f, (float)z * 0.1025f) > 0.1f;
-					if (b) {
-						pos((float)x, (float)y, (float)z);
-						pvox->SetFlag(VOXEL_FLAG_SOLID);
-						chunksmgr.iskl(&pos, VOXEL_FLAG_SOLID);
-						chunksmgr.iskl_krai(&pos, VOXEL_FLAG_SOLID);
-					}
-				}
-			}
-
-	for (int c = 0; c < chunksmgr.m_nNumberOfChunks; c++)
-		chunksmgr.m_pChunks[c].RebuildMesh();
-
+	TerrainGenerationTest();
+	RebuildRegion();
 
 	#define GL_SHADING_LANGUAGE_VERSION 0x8B8C
 	printf("Version: %s\n", glGetString(GL_VERSION));

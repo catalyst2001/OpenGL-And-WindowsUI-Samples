@@ -76,6 +76,7 @@ voxel *chunk_find_voxel(chunk *pchunk, float x, float y, float z);
 #define VOXEL_FLAG_SOLID	(1 << 1)
 #define VOXEL_FLAG_LIQUID	(1 << 2)
 #define VOXEL_FLAG_SHAPE	(1 << 3) //вокруг вокселя будет построена фигура (куб и тд)
+#define VOXEL_FLAG_NOTOUCH (1 << 4)
 
 /**
 * Legacy macroses

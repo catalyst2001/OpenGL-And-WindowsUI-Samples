@@ -33,7 +33,7 @@ int CChunksManager::Init(int chunk_width, int chunk_height, int chunks_per_width
 					chunk_height,
 					VOXEL_FLAG_AIR);
 
-				//p_current_chunk->DebugDraw_ChunkBounds(true);
+				p_current_chunk->DebugDraw_ChunkBounds(false);
 				//p_current_chunk->DebugDraw_LastSelectTriangle(true);
 				p_current_chunk->MarkIdle(false);
 				p_current_chunk->RebuildMesh();
@@ -425,4 +425,25 @@ bool CChunksManager::RemoveSolidVoxel(CRay &ray, float distance, int newflag)
 bool CChunksManager::PlaceSolidVoxel(CRay &ray, float distance, int newflag)
 {
 	return false;
+}
+
+void CChunksManager::SetVoxel(vec3int position, int flags)
+{
+	//check is not valid coords
+	if(position.x < 0 || position.y < 0 || position.z < 0)
+		return;
+
+	vec3 voxpos(position.x, position.y, position.z);
+	if (position.x == GetRegionWidth() || position.y == GetRegionHeight() || position.z == GetRegionWidth()) {
+		iskl_krai(&voxpos, flags);
+	}
+	else
+	{
+		CVoxel *pvox = GetRegionVoxel(position.x, position.y, position.z);
+		if (!pvox)
+			return;
+
+		pvox->SetFlag(flags);
+		iskl(&voxpos, flags);
+	}
 }
