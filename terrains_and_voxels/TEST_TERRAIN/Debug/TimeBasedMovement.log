@@ -1,0 +1,2 @@
+﻿Camera.obj : warning LNK4075: не учитывается "/EDITANDCONTINUE" из-за спецификации "/SAFESEH"
+  TimeBasedMovement.vcxproj -> E:\SpecialForKikker228\terrains_and_voxels\TEST_TERRAIN\.\Debug\TimeBasedMovement.exe

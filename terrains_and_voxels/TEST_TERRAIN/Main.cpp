@@ -123,7 +123,7 @@ WPARAM MainLoop()
 }
 
 
-#define GIRD_SIZE 200
+#define GIRD_SIZE 100
 float world[GIRD_SIZE][GIRD_SIZE];
 
 struct vec3_t {
@@ -218,25 +218,40 @@ int size = 3000;
 //	0.f, 0.f, 1.f
 //};
 
+float scale = 0.001f;
+float heightscale = 1.0f;
+
+void Build()
+{
+	SimplexNoise snoise;
+	for (int x = 0; x < GIRD_SIZE; x++) {
+		for (int y = 0; y < GIRD_SIZE; y++) {
+			world[y][x] = snoise.noise((float)x * scale, (float)y * scale) * heightscale;
+		}
+	}
+}
+
 void Draw3DSGrid(CCamera camera)
 {
-	//if (GetKeyState(VK_F3) & 0x80) {
-	//	//for (int ix = 0; ix < GIRD_SIZE; ix++)
-	//	//	for (int iy = 0; iy < GIRD_SIZE; iy++)
-	//	//		world[iy][ix] = 0.0;
+	if (GetKeyState(VK_F3) & 0x80) {
+		scale -= 0.001;
+		Build();
+	}
 
-	//	for (int x = 0; x < GIRD_SIZE; x++) {
-	//		for (int y = 0; y < GIRD_SIZE; y++) {
-	//			float nx = x * 3.f / GIRD_SIZE;
-	//			float ny = y * 3.f / GIRD_SIZE;
+	if (GetKeyState(VK_F4) & 0x80) {
+		scale += 0.001;
+		Build();
+	}
 
-	//			float vertex = SimplexNoise::noise(nx * 300.0f, ny * 300.0f);
-	//			if (vertex < 4.0f)
-	//				world[y][x] = vertex;
-	//			else world[y][x] = 1.0f;
-	//		}
-	//	}
-	//}
+	if (GetKeyState(VK_F5) & 0x80) {
+		heightscale -= 0.1;
+		Build();
+	}
+	
+	if (GetKeyState(VK_F6) & 0x80) {
+		heightscale += 0.1;
+		Build();
+	}
 
 	//Draw axises
 	glLineWidth(5);
@@ -259,60 +274,20 @@ void Draw3DSGrid(CCamera camera)
 	glEnd();
 	glLineWidth(1);
 
-	int distance = 100;
+	//glColor3ub(0, 255, 0);
+	for(int z = 0; z < GIRD_SIZE; z++) {
+		glBegin(GL_TRIANGLE_STRIP);
+		for (int x = 0; x < GIRD_SIZE; x++) {
+			glVertex3f((float)x, world[x][z], (float)z);
+			glVertex3f((float)x, world[x][z+1], (float)z+1);
+		}
+		glEnd();
+	}
 
-
-	//CVector3 pos = g_Camera.Position();
-
-
-
-	//static CVector3 prev_coord;
-	//
 	//glEnableClientState(GL_VERTEX_ARRAY);
 	//glVertexPointer(3, GL_FLOAT, 0, world_array);
-	//
-	//if (!(prev_coord == pos))
-	//{
-	//	printf("Pos:   X: %f  Z: %f\n", roundf(pos.x), round(pos.z));
-	//}
-	//
-	//if (GetAsyncKeyState(VK_F5))
-	//{
-	//	glColor3ub(0, 255, 0);
-	//	glDrawArrays(GL_LINE_STRIP, 10, (size * size * 2) + size + (size * 2)); //+3
-	//}
-	//
-	//glColor3ub(255, 255, 255);
-	////glVertexPointer(3, GL_FLOAT, 0, world_array);
-	//glDrawArrays(GL_TRIANGLE_STRIP, startX, endX);
+	//glDrawArrays(GL_TRIANGLE_STRIP, 0, size*size);
 	//glDisableClientState(GL_VERTEX_ARRAY);
-
-	//glColor3ub(0, 255, 0);
-	//for(int z = 0; z < GIRD_SIZE; z++) {
-	//	glBegin(GL_TRIANGLE_STRIP);
-	//	for (int x = 0; x < GIRD_SIZE; x++) {
-	//		glVertex3f((float)x, world[x][z], (float)z);
-	//		glVertex3f((float)x, world[x][z+1], (float)z+1);
-	//	}
-	//	glEnd();
-	//}
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glTranslatef(current_point.x, 0.f, current_point.z);
-	glPushAttrib(GL_CURRENT_BIT);
-	glColor3ub(255, 255, 0);
-	draw_cube();
-	glPopAttrib();
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glPopMatrix();
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, world_array);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, size*size);
-	glDisableClientState(GL_VERTEX_ARRAY);
-
 	//prev_coord = pos;
 }
 
