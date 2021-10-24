@@ -123,7 +123,7 @@ WPARAM MainLoop()
 }
 
 
-#define GIRD_SIZE 100
+#define GIRD_SIZE 300
 float world[GIRD_SIZE][GIRD_SIZE];
 
 struct vec3_t {
@@ -226,7 +226,7 @@ void Build()
 	SimplexNoise snoise;
 	for (int x = 0; x < GIRD_SIZE; x++) {
 		for (int y = 0; y < GIRD_SIZE; y++) {
-			world[y][x] = snoise.noise((float)x * scale, (float)y * scale) * heightscale;
+			world[y][x] = (snoise.noise((float)x * scale, (float)y * scale) + snoise.noise((float)x * 0.0111, (float)y * 0.0111)) * heightscale;
 		}
 	}
 }
