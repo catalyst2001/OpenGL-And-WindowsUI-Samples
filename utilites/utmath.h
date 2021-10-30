@@ -553,6 +553,7 @@ public:
 	void Draw() { DrawBBox(Min, Max); }
 	bool PointInside(vec3 &point) { return Min.x < point.x && Min.y < point.y && Min.z < point.z && Max.x > point.x && Max.y > point.y && Max.z > point.z; }
 	bool BboxInside(CAABB &bbox) { return Min < bbox.Min && Max > bbox.Max; }
+	bool BboxInside(vec3 &min, vec3 &max) { return Min < min && Max > max; }
 
 	bool RayIntersect(CRay &ray, float *ptmin, float *ptmax) {
 		double tmin = -INFINITY, tmax = INFINITY;
@@ -578,6 +579,24 @@ public:
 	}
 
 	vec3 Min, Max;
+};
+
+class CAABBi
+{
+public:
+	CAABBi() {}
+	CAABBi(vec3int vmin, vec3int vmax) : Min(vmin), Max(vmax) {}
+	CAABBi(float x, float y, float z, float size) {
+		Min = vec3(x, y, z);
+		Max = vec3(x + size, y + size, z + size);
+	}
+	~CAABBi() {}
+
+	void Draw() { DrawBBox(Min, Max); }
+	bool PointInside(vec3int &point) { return Min.x < point.x && Min.y < point.y && Min.z < point.z && Max.x > point.x && Max.y > point.y && Max.z > point.z; }
+	bool BboxInside(CAABBi &bbox) { return Min < bbox.Min && Max > bbox.Max; }
+	bool BboxInside(vec3int &min, vec3int &max) { return Min < min && Max > max; }
+	vec3int Min, Max;
 };
 
 //https://tavianator.com/2011/ray_box.html

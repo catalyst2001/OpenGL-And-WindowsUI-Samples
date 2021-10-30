@@ -42,43 +42,6 @@ public:
 	void RegionVoxel(int x, int y, int z);
 };
 
-
-/**
-* Потокобезопасная очередь
-*/
-template <typename _type>
-class ThreadSafeQueue
-{
-public:
-	ThreadSafeQueue() : m_pQueueData(NULL), m_nCurrentTask(0) {}
-	ThreadSafeQueue(int queuesize) : m_pQueueData(NULL), m_nCurrentTask(0) {
-		m_pQueueData = (_type *)malloc(sizeof(_type) * queuesize > 0 ? queuesize : 4);
-		assert(m_pQueueData);
-	}
-	~ThreadSafeQueue() {
-		if (m_pQueueData)
-			free(m_pQueueData);
-	}
-
-	bool Push(_type data) {
-		assert(m_pQueueData);
-		m_pQueueData[m_nCurrentTask] = data;
-		InterlockedIncrement(&m_nCurrentTask);
-	}
-
-	_type Front() {
-		_type data = m_pQueueData[m_nCurrentTask];
-		InterlockedDecrement(&m_nCurrentTask);
-		return data;
-	}
-
-	bool IsEmpty() { return !m_nCurrentTask; }
-
-private:
-	_type *m_pQueueData;
-	volatile uint32_t m_nCurrentTask;
-};
-
 class CWorldGenerator
 {
 public:

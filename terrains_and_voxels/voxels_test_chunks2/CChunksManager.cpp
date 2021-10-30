@@ -8,12 +8,6 @@ CChunksManager::~CChunksManager()
 {
 }
 
-DWORD WINAPI thread(LPVOID param)
-{
-	((CChunk *)param)->RebuildMesh();
-	return 0;
-}
-
 int CChunksManager::Init(int chunk_width, int chunk_height, int chunks_per_width, int chunks_per_height)
 {
 	m_nChunkWidth = chunk_width;
@@ -22,7 +16,6 @@ int CChunksManager::Init(int chunk_width, int chunk_height, int chunks_per_width
 	m_nChunksPerHeight = chunks_per_height;
 	m_nNumberOfChunks = chunks_per_width * chunks_per_width * chunks_per_height;
 	m_pChunks = new CChunk[m_nNumberOfChunks];
-	//HANDLE *hThreads = (HANDLE *)malloc(m_nNumOfChunks * sizeof(HANDLE));
 	CChunk *p_current_chunk = NULL;
 	for (int y = 0; y < chunks_per_height; y++) {
 		for (int x = 0; x < chunks_per_width; x++) {
@@ -34,15 +27,11 @@ int CChunksManager::Init(int chunk_width, int chunk_height, int chunks_per_width
 					VOXEL_FLAG_AIR);
 
 				p_current_chunk->DebugDraw_ChunkBounds(false);
-				//p_current_chunk->DebugDraw_LastSelectTriangle(true);
 				p_current_chunk->MarkIdle(false);
 				p_current_chunk->RebuildMesh();
-				//hThreads[i] = CreateThread(0, 0, thread, p_current_chunk, 0, 0);
 			}
 		}
 	}
-	//WaitForMultipleObjects(m_nNumOfChunks, hThreads, TRUE, INFINITE);
-	//free(hThreads);
 	return 0;
 }
 
@@ -446,4 +435,195 @@ void CChunksManager::SetVoxel(vec3int position, int flags)
 		pvox->SetFlag(flags);
 		iskl(&voxpos, flags);
 	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CChunksGeneratorTest::CChunksGeneratorTest()
+{
+}
+
+CChunksGeneratorTest::~CChunksGeneratorTest()
+{
+}
+
+void CChunksGeneratorTest::InitProperties(int distance, int chunk_width, int chunk_height)
+{
+	m_nChunkWidth = chunk_width;
+	m_nChunkHeight = chunk_height;
+	m_nDistanceInChunks = distance;
+
+	int layer_area = (m_nDistanceInChunks * 2) + 1;
+	m_nNumberOfChunks = layer_area * layer_area;
+}
+
+int CChunksGeneratorTest::StartGeneration2(vec3int &playerpos, int distance, int chunk_width, int chunk_height)
+{
+	InitProperties(distance, chunk_width, chunk_height);
+	m_Chunks.reserve(m_nNumberOfChunks);
+
+	//пока что из центра мира а не с места спавна игрока
+	for (int x = -m_nDistanceInChunks; x <= m_nDistanceInChunks; x++) {
+		for (int z = -m_nDistanceInChunks; z <= m_nDistanceInChunks; z++) {
+
+			//добавляем новые чанки вокруг главного
+			CChunk chunk;
+			chunk.InitNoAlloc(vec3int(x * m_nChunkWidth, 0, z * m_nChunkWidth), m_nChunkWidth, m_nChunkHeight);
+			chunk.DebugDraw_ChunkBounds(true);
+			chunk.DebugDraw_ChunkVoxels(false);
+			m_Chunks.push_back(chunk);
+			
+			//ищем центральный чанк
+			CChunk *p_curr_chunk = &m_Chunks[m_Chunks.size() - 1];
+			if (!p_curr_chunk->m_ChunkPos.x && !p_curr_chunk->m_ChunkPos.y && !p_curr_chunk->m_ChunkPos.z) //так же проверка по центру мира а не по месту спавна игрока
+				m_pMainChunk = p_curr_chunk;
+		}
+	}
+	return 1;
+}
+
+void CChunksGeneratorTest::Update(vec3int pos)
+{
+	if (pos.x < m_pMainChunk->m_ChunkPos.x || pos.z < m_pMainChunk->m_ChunkPos.z || pos.x >= m_pMainChunk->m_vecMax.x || pos.z >= m_pMainChunk->m_vecMax.z) {
+		//printf("%d MainChunkPos( %d %d %d )  player( %d %d %d ) vmax( %d %d %d )\n",
+		//	m_pMainChunk->m_ChunkPos.x, m_pMainChunk->m_ChunkPos.y, m_pMainChunk->m_ChunkPos.z,
+		//	pos.x, pos.y, pos.z,
+		//	m_pMainChunk->m_vecMax.x, m_pMainChunk->m_vecMax.y, m_pMainChunk->m_vecMax.z
+		//	);
+
+		vec3int new_chunk_dir;
+		for (int i = 0; i < m_Chunks.size(); i++) {
+			if (pos.x >= m_Chunks[i].m_ChunkPos.x && pos.z >= m_Chunks[i].m_ChunkPos.z && pos.x < m_Chunks[i].m_vecMax.x && pos.z < m_Chunks[i].m_vecMax.z) {
+				new_chunk_dir = vec3int((m_Chunks[i].m_ChunkPos.x - m_pMainChunk->m_ChunkPos.x) / m_nChunkWidth, 0, (m_Chunks[i].m_ChunkPos.z - m_pMainChunk->m_ChunkPos.z) / m_nChunkWidth); //TODO:  / m_nChunkWidth
+				m_pMainChunk = &m_Chunks[i];
+				printf("new_chunk_dir( %d %d %d )\n", new_chunk_dir.x, new_chunk_dir.y, new_chunk_dir.z);
+				break;
+			}
+		}
+
+		for (int i = m_Chunks.size() - 1; i >= 0; i--) {
+			int ax = abs(m_Chunks[i].m_ChunkPos.x - m_pMainChunk->m_ChunkPos.x) / m_nChunkWidth;
+			int az = abs(m_Chunks[i].m_ChunkPos.z - m_pMainChunk->m_ChunkPos.z) / m_nChunkWidth;
+			printf("abss ( %d %d )\n", ax, az);
+			if (ax > m_nDistanceInChunks || az > m_nDistanceInChunks) {
+				//m_Chunks.erase(m_Chunks.begin() + i); // pointer stuff
+				m_Chunks[i].DebugDraw_ChunkBounds(false);
+				//break;
+			}
+		}
+
+		//ищем по краям чанки , генерируем их и переставляем местами с удалёнными
+#define GenerateChunk(x, y, z)
+		if (new_chunk_dir.x != 0) {
+			for (int i = -m_nDistanceInChunks; i <= m_nDistanceInChunks; i++) {
+				GenerateChunk(m_pMainChunk->m_ChunkPos.x + newChunkDirection.x * m_nDistanceInChunks, m_pMainChunk->m_ChunkPos.z + i);
+			}
+		}
+
+		if (new_chunk_dir.z != 0) {
+			for (int i = -m_nDistanceInChunks; i <= m_nDistanceInChunks; i++) {
+				GenerateChunk(m_pMainChunk->m_ChunkPos.x + i, m_pMainChunk->m_ChunkPos.z + newChunkDirection.z * m_nDistanceInChunks);
+			}
+		}
+	}
+}
+
+void CChunksGeneratorTest::OnChunksLoad(vec3int &playerpos)
+{
+}
+
+//////////////////////// THREADS AND GENERATION ///////////////////////////////
+CRITICAL_SECTION cs;
+CCollector<CVoxel *> g_chunks_voxels;
+uint32_t ready_threads;
+
+DWORD WINAPI ThreadProcGeneration(LPVOID parameter)
+{
+	DWORD thread_id = GetCurrentThreadId();
+	chunk_information_s *p_chunk_info = (chunk_information_s *)parameter;
+	printf("Thread %d is started. Chunk width: %d  height: %d  startX: %d  startZ: %d\n",
+		thread_id, p_chunk_info->chunk_width, p_chunk_info->chunk_height, p_chunk_info->xpos, p_chunk_info->zpos);
+
+	/* allocate memory for voxels */
+	CVoxel *p_voxels = new CVoxel[p_chunk_info->chunk_width * p_chunk_info->chunk_width * p_chunk_info->chunk_height];
+
+	/* failed allocate memory for voxels in chunk */
+	if (!p_voxels)
+		return -1;
+
+	/* walk all over the space to generate */
+	SimplexNoise perlin;
+	for (int y = 0; y < p_chunk_info->chunk_height; y++) {
+		for (int z = 0; z < p_chunk_info->chunk_width; z++) {
+			for (int x = 0; x < p_chunk_info->chunk_width; x++) {
+				if (perlin.noise((float)x, (float)z) > 0.01f) {
+					p_voxels[COORD2OFFSET2(p_chunk_info->chunk_width, p_chunk_info->chunk_height, x, y, z)].SetFlag(VOXEL_FLAG_SOLID);
+				}
+			}
+		}
+	}
+
+	/* set voxels heap address to chunk */
+	EnterCriticalSection(&cs);
+	p_chunk_info->p_chunk->SetVoxels(p_voxels);
+	p_chunk_info->p_chunk->RebuildMesh();
+	LeaveCriticalSection(&cs);
+
+	InterlockedIncrement(&ready_threads);
+	printf("Thread %d is dead\n", thread_id);
+	return 1;
+}
+
+#define COORD2D2OFFS(width, x, y) ((x * width) + y)
+
+int CChunksGeneratorTest::StartGeneration(int chunk_width, int chunk_height, int chunks_per_width, int chunks_per_height)
+{
+
+
+	return 1; //TODO: ПОКА ЧТО ТУТ СТОПИМ
+
+
+
+	/* Get number of logical processors */
+	SYSTEM_INFO sysinf;
+	int32_t number_of_processors;
+	GetSystemInfo(&sysinf);
+	number_of_processors = sysinf.dwNumberOfProcessors;
+	ready_threads = number_of_processors;
+
+	/* allocate memory for thread handles for each core */
+	HANDLE *p_core_threads = (HANDLE *)malloc(sizeof(HANDLE) * number_of_processors);
+	if (!p_core_threads)
+		return 1;
+
+	/* init critical section for synchronized access to queue */
+	InitializeCriticalSection(&cs);
+
+	int i = 0;
+	int x = 0, z = 0;
+	CChunk *p_chunk = NULL;
+	for (int i = 0; i < m_nNumberOfChunks; i++, z++) {
+		if (!(i % m_nChunksPerWidth)) {
+			x++;
+			z = 0;
+		}
+		//p_chunk = &m_pChunks[COORD2D2OFFS(m_nChunksPerWidth, x, z)];
+		p_chunk->InitNoAlloc(vec3int(x * chunk_width, 0, z * chunk_width), chunk_width, chunk_height);
+
+		while (ready_threads < number_of_processors)
+			Sleep(10);
+
+		/* Fill chunk information for generation in thread */
+		chunk_information_s chunk_info;
+		chunk_info.chunk_width = m_nChunkWidth;
+		chunk_info.chunk_height = m_nChunkHeight;
+		chunk_info.xpos = x * m_nChunkWidth;
+		chunk_info.zpos = z * m_nChunkWidth;
+		chunk_info.p_chunk = p_chunk; //set current chunk address
+		p_core_threads[i] = CreateThread(NULL, NULL, ThreadProcGeneration, &chunk_info, NULL, NULL);
+	}
+
+	//p_current_chunk->DebugDraw_ChunkBounds(false);
+	//p_current_chunk->MarkIdle(false);
+	//p_current_chunk->RebuildMesh();
+	return 0;
 }

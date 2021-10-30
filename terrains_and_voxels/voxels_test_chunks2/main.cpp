@@ -14,12 +14,15 @@
 #include "voxel.h"
 #include "CChunksManager.h"
 
+//замеры производительности
+#include "CPerfomanceCalculator.h"
+
 GLUquadric *quadric;
 INT Width, Height;
 extern Texture textures[15];
 Texture textures[15];
 
-CChunksManager chunksmgr;
+CChunksGeneratorTest chunksmgr;
 
 float g_LighPos[] = { 40.f, 40.f, -20.0f, 1.0f };       // This is the position of the 'lamp' joint in the test mesh in object-local space
 float g_LightAmbient[] = { 0.8f, 0.8f, 0.8f, 1.0f };
@@ -79,6 +82,8 @@ double TimeGetSeconds()
 	return time.QuadPart / (double)frequency.QuadPart;
 }
 
+
+
 void fn_draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -99,6 +104,8 @@ void fn_draw()
 	ray.SetOrigin(cam.m_vecOrigin);
 	ray.SetDirection(cam.m_vecDirection);
 
+	chunksmgr.Update(vec3int(cam.m_vecOrigin));
+
 	glLightfv(GL_LIGHT0, GL_POSITION, g_LighPos);
 	glTranslatef(g_LighPos[0], g_LighPos[1], g_LighPos[2]);
 	glDisable(GL_LIGHTING);
@@ -107,8 +114,19 @@ void fn_draw()
 	glEnable(GL_LIGHTING);
 	glTranslatef(-g_LighPos[0], -g_LighPos[1], -g_LighPos[2]);
 
-	for (int i = 0; i < chunksmgr.m_nNumberOfChunks; i++)
-		chunksmgr.m_pChunks[i].DrawMesh();
+	for (int i = 0; i < chunksmgr.m_Chunks.size(); i++)
+		chunksmgr.m_Chunks[i].DrawMesh();
+
+	glPushAttrib(GL_CURRENT_BIT);
+	vec3int vmin(chunksmgr.m_pMainChunk->m_ChunkPos.x, chunksmgr.m_pMainChunk->m_ChunkPos.y - 20, chunksmgr.m_pMainChunk->m_ChunkPos.z);
+	vec3int vmax(chunksmgr.m_pMainChunk->m_vecMax.x, chunksmgr.m_pMainChunk->m_vecMax.y + 20, chunksmgr.m_pMainChunk->m_vecMax.z);
+	glColor3ub(255, 0, 255);
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_LIGHTING);
+	DrawBBox(vmin, vmax);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_LIGHTING);
+	glPopAttrib();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -119,8 +137,8 @@ void fn_draw()
 
 void RebuildRegion()
 {
-	for (int c = 0; c < chunksmgr.m_nNumberOfChunks; c++)
-		chunksmgr.m_pChunks[c].RebuildMesh();
+	//for (int c = 0; c < chunksmgr.m_nNumberOfChunks; c++)
+	//	chunksmgr.m_pChunks[c].RebuildMesh();
 }
 
 void TerrainGenerationTest()
@@ -139,7 +157,10 @@ void TerrainGenerationTest()
 
 	float testscale = 2.f;
 
+	CPerfomanceCalculator pc;
+
 	for (int x = 0; x <= maxWidth; x++) {
+		pc.Start();
 		for (int z = 0; z <= maxWidth; z++) {
 			for (int y = 0; y <= maxHeight; y++) {
 				this_height = (/*maxHeight - */nn.noise((float)x * freq, (float)z * freq)) * testscale;
@@ -149,11 +170,16 @@ void TerrainGenerationTest()
 				current_height = (int)(y < (int)this_height) ? y : this_height;
 				//bool b = nn.noise((float)x * 0.1025f, (float)current_height * 0.1025f, (float)z * 0.1025f) > 0.001f;
 				//if (b) {
-					chunksmgr.SetVoxel(vec3int(x, current_height, z), VOXEL_FLAG_SOLID);
+				
+					//chunksmgr.SetVoxel(vec3int(x, current_height, z), VOXEL_FLAG_SOLID);
+
 				//}
 			}
 		}
+		pc.End();
+		pc.PrintElapsedTime();
 	}
+	pc.PrintTotalElapsedTime();
 }
 
 
@@ -194,9 +220,9 @@ void fn_windowcreate(HWND hWnd)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 #define CHUNK_WIDTH 20
-	chunksmgr.Init(CHUNK_WIDTH, CHUNK_WIDTH, 5, 5);
-	TerrainGenerationTest();
-	RebuildRegion();
+#define DISTANCE 3
+	vec3int playerpos = vec3int(cam.m_vecOrigin.x, cam.m_vecOrigin.y, cam.m_vecOrigin.z);
+	chunksmgr.StartGeneration2(playerpos, DISTANCE, CHUNK_WIDTH, CHUNK_WIDTH);
 
 	#define GL_SHADING_LANGUAGE_VERSION 0x8B8C
 	printf("Version: %s\n", glGetString(GL_VERSION));
@@ -205,29 +231,16 @@ void fn_windowcreate(HWND hWnd)
 	printf("Renderer: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 }
 
-//DWORD WINAPI Kopat(LPVOID param)
-//{
-//	chunk.RebuildMesh();
-//	printf("Thread is dead\n");
-//	return 0;
-//}
-
 void fn_mouseclick(HWND hWnd, int x, int y, int button, int state)
 {
 	if (state == KEY_DOWN) {
 		if (button == LBUTTON) {
-			//if (chunksmgr.GetVoxelByRay(ray, 10.f, VOXEL_FLAG_AIR)) {
-			//	//CreateThread(0, 0, Kopat, 0, 0, 0);
-			//}
-			chunksmgr.RemoveSolidVoxel(ray, 100.f);
+
 			return;
 		}
 
 		if (button == RBUTTON) {
-			//if (chunk.PlaceVoxel(ray, 10.f, VOXEL_FLAG_SOLID)) {
-			//	//CreateThread(0, 0, Kopat, 0, 0, 0);
-			//}
-			chunksmgr.PlaceSolidVoxel(ray, 100.f);
+
 			return;
 		}
 	}

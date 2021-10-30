@@ -364,6 +364,13 @@ CVoxel *CChunk::GetVoxels()
 	return m_pVoxels;
 }
 
+CVoxel *CChunk::SetVoxels(CVoxel *pvoxels)
+{
+	CVoxel *olptr = m_pVoxels;
+	m_pVoxels = pvoxels;
+	return olptr;
+}
+
 int CChunk::GetNumberVoxels()
 {
 	return m_nWidth * m_nHeight * m_nWidth;
@@ -854,6 +861,19 @@ int CChunk::Init(vec3int pos, int width, int height, int flags)
 	m_vecMax.y = pos.y + height;
 	m_vecMax.z = pos.z + width;
 	return AllocVoxels(m_nMeshgenClipWidth, m_nMeshgenClipHeight, flags);
+}
+
+int CChunk::InitNoAlloc(vec3int pos, int width, int height)
+{
+	m_nWidth = width;
+	m_nHeight = height;
+	m_nMeshgenClipWidth = width + 1;
+	m_nMeshgenClipHeight = height + 1;
+	m_ChunkPos = pos;
+	m_vecMax.x = pos.x + width;
+	m_vecMax.y = pos.y + height;
+	m_vecMax.z = pos.z + width;
+	return 1;
 }
 
 int CChunk::AllocVoxels(int width, int height, int flags)

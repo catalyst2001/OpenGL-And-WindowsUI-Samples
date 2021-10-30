@@ -159,11 +159,10 @@
     <ClCompile Include="..\..\utilites\glmath.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="CChunksManager.cpp" />
+    <ClCompile Include="CommonUtils.cpp" />
     <ClCompile Include="CWorldGenerator.cpp" />
+    <ClCompile Include="GenerationTests.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="marchingcubes.cpp" />
-    <ClCompile Include="marching_cubes3.cpp" />
-    <ClCompile Include="marching_cubes4.cpp" />
     <ClCompile Include="mem.cpp" />
     <ClCompile Include="region_saver.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />
@@ -176,10 +175,10 @@
     <ClInclude Include="..\..\utilites\utmath.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="CChunksManager.h" />
+    <ClInclude Include="CommonUtils.h" />
+    <ClInclude Include="CPerfomanceCalculator.h" />
     <ClInclude Include="CWorldGenerator.h" />
-    <ClInclude Include="marchingcubes.h" />
-    <ClInclude Include="marching_cubes3.h" />
-    <ClInclude Include="marching_cubes4.h" />
+    <ClInclude Include="GenerationTests.h" />
     <ClInclude Include="mem.h" />
     <ClInclude Include="region_saver.h" />
     <ClInclude Include="SimplexNoise.h" />

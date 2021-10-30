@@ -80,6 +80,7 @@ public:
 	vec3(const vec2 &u, float z) : x(u.x), y(u.y), z(z){}
 	vec3(const vec3 &u) : x(u.x), y(u.y), z(u.z){}
 	vec3(int xx, int yy, int zz) : x((float)xx), y((float)yy), z((float)zz){}
+
 	vec3& operator = (const vec3 &u){x = u.x; y = u.y; z = u.z; return *this;}
 	vec3 operator - (){return vec3(-x, -y, -z);}
 	vec3& operator += (float num){x += num; y += num; z += num; return *this;}
@@ -155,9 +156,18 @@ public:
 	vec3int(int xx, int yy, int zz) : x(xx), y(yy), z(zz) {}
 	vec3int(vec3 vecf) : x((int)vecf.x), y((int)vecf.y), z((int)vecf.z) {}
 	~vec3int() {}
+	inline bool operator == (vec3int &v) { return x == v.x && y == v.y && z == v.z; }
+	inline bool operator < (vec3int &v) { return x < v.x && y < v.y && z < v.z; }
+	inline bool operator <= (vec3int &v) { return x <= v.x && y <= v.y && z <= v.z; }
+	inline bool operator > (vec3int &v) { return x > v.x && y > v.y && z > v.z; }
+	inline bool operator >= (vec3int &v) { return x >= v.x && y >= v.y && z >= v.z; }
+	inline void operator ()(int _x, int _y, int _z) { x = _x; y = _y; z = _z; }
+	inline void operator ()(vec3int v) { x = v.x; y = v.y; z = v.z; }
+	inline float operator[](int i) { return v[i]; }
 	union {
 		struct { int x, y, z; };
 		struct { int i, j, k; };
+		struct { int v[3]; };
 	};
 };
 // ----------------------------------------------------------------------------------------------------------------------------

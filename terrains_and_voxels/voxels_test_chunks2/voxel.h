@@ -130,6 +130,7 @@ public:
 	~CChunk() {}
 
 	int Init(vec3int pos, int width, int height, int flags = VOXEL_FLAG_AIR);
+	int InitNoAlloc(vec3int pos, int width, int height);
 	int AllocVoxels(int width, int height, int flags = VOXEL_FLAG_AIR);
 	int FreeVoxels();
 
@@ -140,7 +141,12 @@ public:
 	int GetChunkWidth();
 	int GetChunkHeight();
 	int GetNumberVoxels();
+
+	//TODO: для генератора
 	CVoxel *GetVoxels();
+	CVoxel *SetVoxels(CVoxel *pvoxels);
+
+
 	CVoxel *VoxelAt(int x, int y, int z);
 
 	/**
@@ -237,6 +243,11 @@ public:
 	bool m_bDDLastSelectTri;
 	triangle_t m_LastSelectTriangle;
 #endif
+
+	CChunk *m_pLeft;
+	CChunk *m_pRight;
+	CChunk *m_pFront;
+	CChunk *m_pBack;
 
 	vec3int m_ChunkPos;
 	vec3int m_vecMax;

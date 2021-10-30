@@ -1,8 +1,0 @@
-﻿  Main.cpp
-e:\specialforkikker228\terrains_and_voxels\test_terrain\main.cpp(85): warning C4244: аргумент: преобразование "GLdouble" в "float", возможна потеря данных
-e:\specialforkikker228\terrains_and_voxels\test_terrain\main.cpp(229): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-e:\specialforkikker228\terrains_and_voxels\test_terrain\main.cpp(237): warning C4305: -=: усечение из "double" в "float"
-e:\specialforkikker228\terrains_and_voxels\test_terrain\main.cpp(242): warning C4305: +=: усечение из "double" в "float"
-e:\specialforkikker228\terrains_and_voxels\test_terrain\main.cpp(247): warning C4305: -=: усечение из "double" в "float"
-e:\specialforkikker228\terrains_and_voxels\test_terrain\main.cpp(252): warning C4305: +=: усечение из "double" в "float"
-  TimeBasedMovement.vcxproj -> E:\SpecialForKikker228\terrains_and_voxels\TEST_TERRAIN\.\Debug\TimeBasedMovement.exe
