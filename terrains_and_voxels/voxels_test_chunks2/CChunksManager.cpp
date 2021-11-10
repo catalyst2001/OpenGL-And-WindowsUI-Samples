@@ -491,6 +491,8 @@ void CChunksGeneratorTest::Update(vec3int pos)
 		//	);
 
 		vec3int new_chunk_dir;
+
+		//ищем новый чанк
 		for (int i = 0; i < m_Chunks.size(); i++) {
 			if (pos.x >= m_Chunks[i].m_ChunkPos.x && pos.z >= m_Chunks[i].m_ChunkPos.z && pos.x < m_Chunks[i].m_vecMax.x && pos.z < m_Chunks[i].m_vecMax.z) {
 				new_chunk_dir = vec3int((m_Chunks[i].m_ChunkPos.x - m_pMainChunk->m_ChunkPos.x) / m_nChunkWidth, 0, (m_Chunks[i].m_ChunkPos.z - m_pMainChunk->m_ChunkPos.z) / m_nChunkWidth); //TODO:  / m_nChunkWidth
@@ -500,28 +502,26 @@ void CChunksGeneratorTest::Update(vec3int pos)
 			}
 		}
 
+		//переставляем дальние чанки вперед
+		int j = -m_nDistanceInChunks;
+		int k = -m_nDistanceInChunks;
 		for (int i = m_Chunks.size() - 1; i >= 0; i--) {
 			int ax = abs(m_Chunks[i].m_ChunkPos.x - m_pMainChunk->m_ChunkPos.x) / m_nChunkWidth;
 			int az = abs(m_Chunks[i].m_ChunkPos.z - m_pMainChunk->m_ChunkPos.z) / m_nChunkWidth;
-			printf("abss ( %d %d )\n", ax, az);
 			if (ax > m_nDistanceInChunks || az > m_nDistanceInChunks) {
-				//m_Chunks.erase(m_Chunks.begin() + i); // pointer stuff
-				m_Chunks[i].DebugDraw_ChunkBounds(false);
-				//break;
-			}
-		}
+				if (new_chunk_dir.x != 0) {
+					if (j <= m_nDistanceInChunks) {
+						m_Chunks[i].InitNoAlloc(vec3int(((m_pMainChunk->m_ChunkPos.x / m_nChunkWidth) + new_chunk_dir.x * m_nDistanceInChunks) * m_nChunkWidth, 0, m_pMainChunk->m_ChunkPos.z + (j * m_nChunkWidth)), m_nChunkWidth, m_nChunkHeight);
+						j++;
+					}
+				}
 
-		//ищем по краям чанки , генерируем их и переставляем местами с удалёнными
-#define GenerateChunk(x, y, z)
-		if (new_chunk_dir.x != 0) {
-			for (int i = -m_nDistanceInChunks; i <= m_nDistanceInChunks; i++) {
-				GenerateChunk(m_pMainChunk->m_ChunkPos.x + newChunkDirection.x * m_nDistanceInChunks, m_pMainChunk->m_ChunkPos.z + i);
-			}
-		}
-
-		if (new_chunk_dir.z != 0) {
-			for (int i = -m_nDistanceInChunks; i <= m_nDistanceInChunks; i++) {
-				GenerateChunk(m_pMainChunk->m_ChunkPos.x + i, m_pMainChunk->m_ChunkPos.z + newChunkDirection.z * m_nDistanceInChunks);
+				if (new_chunk_dir.z != 0) {
+					if (k <= m_nDistanceInChunks) {
+						m_Chunks[i].InitNoAlloc(vec3int(m_pMainChunk->m_ChunkPos.x + (k * m_nChunkWidth), 0, ((m_pMainChunk->m_ChunkPos.z / m_nChunkWidth) + new_chunk_dir.z * m_nDistanceInChunks) * m_nChunkWidth), m_nChunkWidth, m_nChunkHeight);
+						k++;
+					}
+				}
 			}
 		}
 	}

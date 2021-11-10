@@ -219,8 +219,8 @@ void fn_windowcreate(HWND hWnd)
 	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-#define CHUNK_WIDTH 20
-#define DISTANCE 3
+#define CHUNK_WIDTH 40
+#define DISTANCE 5
 	vec3int playerpos = vec3int(cam.m_vecOrigin.x, cam.m_vecOrigin.y, cam.m_vecOrigin.z);
 	chunksmgr.StartGeneration2(playerpos, DISTANCE, CHUNK_WIDTH, CHUNK_WIDTH);
 
